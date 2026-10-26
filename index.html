@@ -354,7 +354,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   // ---------- 儲存 ----------
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
-  const settings = Object.assign({ lvCount: 1, stCount: 0, lvTidy: 1, stTidy: 0, lvColors: 1, stColors: 0, lvShapes: 1, stShapes: 0, play: 15, rest: 20, night: false, sound: true, music: 'lullaby', musicVol: 1, level: 1, streak: 0, voice: 'sister', voiceName: '', rec: 'A' }, load('wt_settings', {}));
+  const settings = Object.assign({ lvCount: 1, stCount: 0, lvTidy: 1, stTidy: 0, lvColors: 1, stColors: 0, lvShapes: 1, stShapes: 0, play: 15, rest: 20, night: false, sound: true, music: 'lullaby', musicVol: 1, level: 1, streak: 0, voice: 'sister', voiceName: '', rec: 'A', enRec: 'A' }, load('wt_settings', {}));
   // 輕柔的姐姐聲：音調只微調，避免變得像機器
   const VOICES = { girl: { pitch: 1.4, rate: 0.9 }, sister: { pitch: 1.12, rate: 0.88 } };
   let session = load('wt_session', null); // { end, warned, restEnd }
@@ -380,8 +380,12 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   };
   if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
   // 事先錄好的聲音檔（voice/manifest.json：文字 → 檔名）；沒有檔案的句子改用裝置語音
-  const clips = { zh: {}, en: {}, voices: [] };
+  const clips = { zh: {}, en: {}, voices: [], enVoices: [] };
   const recDir = () => clips.voices.includes(settings.rec) ? settings.rec + '/' : null;
+  // 英文錄音：A＝姐姐 A 唸英文，K＝英語母語女聲；off 用裝置語音
+  const EN_LABEL = { A: '姐姐 A', K: '英語老師' };
+  const enRecV = () => settings.enRec === 'off' ? null : clips.enVoices.includes(settings.enRec) ? settings.enRec : clips.enVoices[0] || null;
+  const enFile = (en) => en && enRecV() && clips.en[en] ? `en/${enRecV()}/` + clips.en[en] : null;
   try { fetch('voice/manifest.json').then(r => r.ok ? r.json() : null).then(m => { if (m) Object.assign(clips, m); }).catch(() => {}); } catch {}
   const player = new Audio();
   let playToken = 0;
@@ -403,8 +407,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     if (dir && parts.every(p => clips.zh[p])) {
       try { speechSynthesis.cancel(); } catch {}
       const files = parts.map(p => dir + clips.zh[p]);
-      if (en && clips.en[en]) files.push(clips.en[en]);
-      playSeq(files, en && !clips.en[en] ? () => say_tts('', en) : null);
+      const ef = enFile(en);
+      if (ef) files.push(ef);
+      playSeq(files, en && !ef ? () => say_tts('', en) : null);
       return;
     }
     playToken++; player.pause();
@@ -1665,6 +1670,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       <div class="row"><span>整理難度</span>${pills('lvTidy', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>夜間模式</span><button class="pill${settings.night ? ' on' : ''}" data-k="night" data-v="1">開</button><button class="pill${!settings.night ? ' on' : ''}" data-k="night" data-v="0">關</button></div>
       <div class="row"><span>錄好的聲音</span>${clips.voices.map(v => `<button class="pill${settings.rec === v ? ' on' : ''}" data-rec="${v}">姐姐 ${v}</button>`).join('')}<button class="pill${recDir() ? '' : ' on'}" data-rec="off">用裝置語音</button></div>
+      <div class="row"><span>英文聲音</span>${clips.enVoices.map(v => `<button class="pill${enRecV() === v ? ' on' : ''}" data-enrec="${v}">${EN_LABEL[v] || v}</button>`).join('')}<button class="pill${enRecV() ? '' : ' on'}" data-enrec="off">用裝置語音</button></div>
       <div class="row"><span>裝置語音</span><button class="pill${settings.voice === 'sister' ? ' on' : ''}" data-k="voice" data-v="sister">輕柔姐姐</button><button class="pill${settings.voice === 'girl' ? ' on' : ''}" data-k="voice" data-v="girl">小女孩</button><button class="pill" id="pTry">試聽</button></div>
       <div class="row"><span>台灣語音</span>${zhVoices.length ? zhVoices.map(v => `<button class="pill${voice && v.name === voice.name ? ' on' : ''}" data-vn="${v.name}">${v.name}</button>`).join('') : '<span style="min-width:0">這台裝置找不到台灣中文語音</span>'}</div>
       <p class="hint" style="text-align:left;font-size:15px">想要更自然的台灣口音：到 iPad「設定 › 輔助使用 › 朗讀內容 › 聲音 › 中文（台灣）」下載「美佳（加強版）」，回來重新整理就會自動使用。</p>
@@ -1673,6 +1679,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       <p class="hint" style="text-align:left;font-size:15px">提示：搭配 iPad 的「引導使用模式」可把小孩鎖在這個畫面。</p></div>`;
     sheet.hidden = false;
     $('pTry').addEventListener('click', () => { unlockAudio(); say('你好，我們一起幫兔子找家吧', 'Rabbit'); });
+    sheet.querySelectorAll('.pill[data-enrec]').forEach(p => p.addEventListener('click', () => {
+      settings.enRec = p.dataset.enrec; saveSettings(); unlockAudio(); say('兔子', 'Rabbit'); openPanel();
+    }));
     sheet.querySelectorAll('.pill[data-rec]').forEach(p => p.addEventListener('click', () => {
       settings.rec = p.dataset.rec; saveSettings(); unlockAudio(); say('你好，我們一起幫兔子找家吧'); openPanel();
     }));
