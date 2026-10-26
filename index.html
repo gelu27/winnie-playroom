@@ -386,7 +386,17 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   const EN_LABEL = { A: '姐姐 A', K: '英語老師' };
   const enRecV = () => settings.enRec === 'off' ? null : clips.enVoices.includes(settings.enRec) ? settings.enRec : clips.enVoices[0] || null;
   const enFile = (en) => en && enRecV() && clips.en[en] ? `en/${enRecV()}/` + clips.en[en] : null;
-  try { fetch('voice/manifest.json').then(r => r.ok ? r.json() : null).then(m => { if (m) Object.assign(clips, m); }).catch(() => {}); } catch {}
+  // 聲音包：manifest.packs = { 'en/K': { file: 'en-K-pack.mp3', idx: { 'en001.mp3': [起點, 長度] } } }，（一個大 mp3）下載一次後切成小段播放
+  const packData = {};
+  const loadPacks = () => Object.entries(clips.packs || {}).forEach(([k, pk]) => {
+    fetch('voice/' + pk.file).then(r => r.ok ? r.arrayBuffer() : null).then(b => { if (b) packData[k] = { buf: b, urls: {} }; }).catch(() => {});
+  });
+  const clipSrc = (f) => {
+    const cut = f.lastIndexOf('/'), k = f.slice(0, cut), name = f.slice(cut + 1), d = packData[k], at = d && clips.packs[k].idx[name];
+    if (!at) return 'voice/' + f;
+    return d.urls[name] || (d.urls[name] = URL.createObjectURL(new Blob([d.buf.slice(at[0], at[0] + at[1])], { type: 'audio/mpeg' })));
+  };
+  try { fetch('voice/manifest.json').then(r => r.ok ? r.json() : null).then(m => { if (m) { Object.assign(clips, m); loadPacks(); } }).catch(() => {}); } catch {}
   const player = new Audio();
   let playToken = 0;
   const playSeq = (files, done) => {
@@ -394,7 +404,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const next = () => {
       if (t !== playToken) return;
       if (i >= files.length) { if (done) done(); return; }
-      player.src = 'voice/' + files[i++]; player.onended = () => setTimeout(next, 150);
+      player.src = clipSrc(files[i++]); player.onended = () => setTimeout(next, 150);
       player.play().catch(() => {});
     };
     next();
