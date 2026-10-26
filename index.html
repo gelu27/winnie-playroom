@@ -244,6 +244,13 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   .puz { width: min(680px, 100%, calc(40vh * var(--c) / var(--r))); }
 }
 
+/* 名詞字幕（中文＋英文），不擋手指 */
+.subt { position: fixed; left: 50%; top: max(12px, env(safe-area-inset-top, 0px)); transform: translate(-50%, -8px); z-index: 30; pointer-events: none; background: var(--panel); border-radius: 22px; padding: 6px 22px; display: flex; align-items: baseline; gap: 14px; white-space: nowrap; max-width: calc(100% - 340px); opacity: 0; transition: opacity .3s ease, transform .3s ease; box-shadow: 0 2px 10px color-mix(in srgb, var(--ink) 12%, transparent); }
+.subt.on { opacity: 1; transform: translate(-50%, 0); }
+.subt .zh { font-size: 36px; letter-spacing: .06em; }
+.subt .en { font-size: 26px; color: var(--soft); }
+@media (max-width: 700px) { .subt { top: 84px; max-width: calc(100% - 32px); } .subt .zh { font-size: 30px; } .subt .en { font-size: 22px; } }
+
 /* 休息 */
 #rest { gap: 20px; }
 .moon { width: 120px; height: 120px; border-radius: 50%; box-shadow: -28px 10px 0 0 #E9D9A8; transform: translateX(14px); }
@@ -339,6 +346,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   <button class="parent" id="parentBtn" aria-label="家長設定（長按三秒）"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="25"/></svg>⚙</button>
 </div>
 
+<div class="subt" id="subt" aria-live="polite"></div>
 <div class="sheet" id="sheet" hidden></div>
 
 <script>
@@ -409,6 +417,16 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     // Android Chrome 在 cancel 後馬上 speak 常會沒聲音，稍等一下再說
     setTimeout(() => speakNow(text, en), busy ? 120 : 0);
   };
+  // 唸名詞：畫面上顯示中文＋英文字幕，接著唸中文和英文（spoken 是要唸的中文句子，預設就是名詞）
+  let subtT = null;
+  const sayName = (zh, en, spoken) => {
+    if (current === 'game') showCap(zh, en);
+    else if (current !== 'learn') {
+      const el = $('subt'); el.innerHTML = `<span class="zh">${zh}</span><span class="en">${en}</span>`;
+      el.classList.add('on'); clearTimeout(subtT); subtT = setTimeout(() => el.classList.remove('on'), 4000);
+    }
+    say(spoken || zh, en);
+  };
   const speakNow = (text, en) => {
     try { speechSynthesis.resume(); } catch {}
     const vp = VOICES[settings.voice] || VOICES.sister;
@@ -454,6 +472,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   const show = (id) => {
     for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
     current = id;
+    const st = document.getElementById('subt'); if (st) st.classList.remove('on');
   };
 
   // 防止縮放與長按選單
@@ -519,9 +538,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 動物回家 ----------
   const ZONES = {
-    water: { icon: '🌊', name: '水裡', phrase: '住在水裡' },
-    land: { icon: '🌳', name: '陸地上', phrase: '住在陸地上' },
-    sky: { icon: '☁️', name: '天空', phrase: '會在天空飛' },
+    water: { icon: '🌊', name: '水裡', en: 'Water', phrase: '住在水裡' },
+    land: { icon: '🌳', name: '陸地上', en: 'Land', phrase: '住在陸地上' },
+    sky: { icon: '☁️', name: '天空', en: 'Sky', phrase: '會在天空飛' },
   };
   const ANIMALS = [
     ['魚', '🐟', 'Fish', ['water']],
@@ -620,7 +639,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       const z = document.createElement('div');
       z.className = 'zone'; z.dataset.z = k;
       z.innerHTML = `<button class="label" aria-label="${ZONES[k].name}">${ZONES[k].icon}</button><div class="home-of"></div>`;
-      z.querySelector('.label').addEventListener('click', () => say(ZONES[k].name));
+      z.querySelector('.label').addEventListener('click', () => sayName(ZONES[k].name, ZONES[k].en));
       zb.appendChild(z);
     }
     show('game');
@@ -755,8 +774,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 顏色排排站 ----------
   const HUES = [
-    { name: '紅色', h: 0, s: 52 }, { name: '藍色', h: 212, s: 48 }, { name: '黃色', h: 46, s: 70 },
-    { name: '綠色', h: 125, s: 34 }, { name: '橘色', h: 26, s: 66 }, { name: '紫色', h: 278, s: 34 }, { name: '咖啡色', h: 28, s: 36 },
+    { name: '紅色', en: 'Red', h: 0, s: 52 }, { name: '藍色', en: 'Blue', h: 212, s: 48 }, { name: '黃色', en: 'Yellow', h: 46, s: 70 },
+    { name: '綠色', en: 'Green', h: 125, s: 34 }, { name: '橘色', en: 'Orange', h: 26, s: 66 }, { name: '紫色', en: 'Purple', h: 278, s: 34 }, { name: '咖啡色', en: 'Brown', h: 28, s: 36 },
   ];
   const startColors = () => {
     const lv = settings.lvColors, n = [3, 5, 7][lv - 1];
@@ -772,7 +791,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       const wrong = slots.filter((sl, i) => +sl.firstChild.dataset.i !== i);
       if (!wrong.length) {
         slots.forEach((sl, i) => setTimeout(() => sl.classList.add('glow'), i * 120));
-        say(`你把${hue.name}從深排到淺了`);
+        sayName(hue.name, hue.en, `你把${hue.name}從深排到淺了`);
         return finishPlay('lvColors', 'stColors', errs, startColors);
       }
       errs++;
@@ -800,13 +819,13 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 形狀嵌板 ----------
   const SHAPES = [
-    { name: '圓形', svg: '<circle cx="50" cy="50" r="42"/>' },
-    { name: '三角形', svg: '<polygon points="50,8 93,88 7,88"/>' },
-    { name: '正方形', svg: '<rect x="12" y="12" width="76" height="76" rx="4"/>' },
-    { name: '長方形', svg: '<rect x="4" y="26" width="92" height="48" rx="4"/>' },
-    { name: '星形', svg: '<polygon points="50,5 61,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 39,38"/>' },
-    { name: '心形', svg: '<path d="M50 88 C20 66 6 50 6 32 C6 18 17 8 30 8 C40 8 46 14 50 22 C54 14 60 8 70 8 C83 8 94 18 94 32 C94 50 80 66 50 88 Z"/>' },
-    { name: '橢圓形', svg: '<ellipse cx="50" cy="50" rx="46" ry="30"/>' },
+    { name: '圓形', en: 'Circle', svg: '<circle cx="50" cy="50" r="42"/>' },
+    { name: '三角形', en: 'Triangle', svg: '<polygon points="50,8 93,88 7,88"/>' },
+    { name: '正方形', en: 'Square', svg: '<rect x="12" y="12" width="76" height="76" rx="4"/>' },
+    { name: '長方形', en: 'Rectangle', svg: '<rect x="4" y="26" width="92" height="48" rx="4"/>' },
+    { name: '星形', en: 'Star', svg: '<polygon points="50,5 61,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 39,38"/>' },
+    { name: '心形', en: 'Heart', svg: '<path d="M50 88 C20 66 6 50 6 32 C6 18 17 8 30 8 C40 8 46 14 50 22 C54 14 60 8 70 8 C83 8 94 18 94 32 C94 50 80 66 50 88 Z"/>' },
+    { name: '橢圓形', en: 'Oval', svg: '<ellipse cx="50" cy="50" rx="46" ry="30"/>' },
   ];
   const PIECE_COLORS = ['#C98B7A', '#8FA9C0', '#D8B866', '#8FAE8B', '#D59A6A', '#A897BC', '#B08A5A'];
   const startShapes = () => {
@@ -829,7 +848,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         const h = hitAt(holes.filter(q => !q.dataset.done), x, y, 50);
         if (h && h.dataset.n === sh.name) {
           h.dataset.done = '1'; h.innerHTML = p.innerHTML; p.remove();
-          ding(880); say(sh.name);
+          ding(880); sayName(sh.name, sh.en);
           if (--left === 0) setTimeout(() => { say('每個形狀都回到自己的位置了'); finishPlay('lvShapes', 'stShapes', errs, startShapes); }, 900);
           return true;
         }
@@ -838,7 +857,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
           if (tries >= 2) { const right = holes.find(q => q.dataset.n === sh.name); right.classList.remove('hop'); void right.offsetWidth; right.classList.add('hop'); }
         }
         return false;
-      }, () => say(sh.name));
+      }, () => sayName(sh.name, sh.en));
     });
     show('play');
     say('把形狀放回一樣的洞裡');
@@ -847,7 +866,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 數一數 ----------
   const NUMS = ['零', '一', '二', '三', '四', '五'];
-  const FRUITS = [{ pic: '🍎', name: '蘋果' }, { pic: '🍓', name: '草莓' }, { pic: '🍊', name: '橘子' }, { pic: '🍃', name: '葉子' }];
+  const NUM_EN = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+  const FRUITS = [{ pic: '🍎', name: '蘋果', en: 'Apple' }, { pic: '🍓', name: '草莓', en: 'Strawberry' }, { pic: '🍊', name: '橘子', en: 'Orange' }, { pic: '🍃', name: '葉子', en: 'Leaf' }];
   let lastCount = 0;
   const startCount = () => {
     // 不分關卡：每次一個籃子，1–5 隨機，不和上一次一樣
@@ -862,7 +882,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       const f = fruit || FRUITS[bi];
       const b = document.createElement('div'); b.className = 'basket'; b.dataset.t = t; b.dataset.c = 0; b.dataset.f = f.pic;
       b.innerHTML = `<button class="num" aria-label="${NUMS[t]}">${t}</button><div class="in"></div>`;
-      b.querySelector('.num').addEventListener('click', () => say(NUMS[t]));
+      b.querySelector('.num').addEventListener('click', () => sayName(NUMS[t], NUM_EN[t]));
       board.appendChild(b); return b;
     });
     // 物品：多放兩個，讓孩子數到就自己停下來
@@ -877,7 +897,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (b.dataset.f !== pic || +b.dataset.c >= +b.dataset.t) { errs++; return false; }
         const c = +b.dataset.c + 1; b.dataset.c = c;
         const s = document.createElement('span'); s.textContent = pic; b.querySelector('.in').appendChild(s);
-        it.remove(); ding(520 + c * 70); say(NUMS[c]);
+        it.remove(); ding(520 + c * 70); sayName(NUMS[c], NUM_EN[c]);
         if (c === +b.dataset.t) {
           b.classList.add('full');
           setTimeout(() => say(`${NUMS[c]}個，剛剛好`), 700);
@@ -886,7 +906,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
           }
         }
         return true;
-      }, () => say((FRUITS.find(f => f.pic === pic) || {}).name || ''));
+      }, () => { const f = FRUITS.find(f => f.pic === pic); if (f) sayName(f.name, f.en); });
     }
     show('play');
     say(nBaskets === 1 ? `籃子要放${NUMS[targets[0]]}個，一個一個放進去` : '看看籃子上的數字，放進一樣多的水果');
@@ -894,16 +914,16 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 整理房間 ----------
   const SPOTS = {
-    toy: { icon: '🎁', name: '玩具箱' }, book: { icon: '📚', name: '書架' }, cloth: { icon: '👔', name: '衣櫃' },
-    wash: { icon: '🧺', name: '洗衣籃' }, shoe: { icon: '👢', name: '鞋架' },
+    toy: { icon: '🎁', name: '玩具箱', en: 'Toy box' }, book: { icon: '📚', name: '書架', en: 'Bookshelf' }, cloth: { icon: '👔', name: '衣櫃', en: 'Closet' },
+    wash: { icon: '🧺', name: '洗衣籃', en: 'Laundry basket' }, shoe: { icon: '👢', name: '鞋架', en: 'Shoe rack' },
   };
   const THINGS = [
-    ['泰迪熊', '🧸', 'toy'], ['小汽車', '🚗', 'toy'], ['球', '⚽', 'toy'], ['積木', '🧩', 'toy'],
-    ['故事書', '📕', 'book'], ['繪本', '📗', 'book'], ['書', '📘', 'book'],
-    ['衣服', '👕', 'cloth'], ['裙子', '👗', 'cloth'], ['褲子', '👖', 'cloth'],
-    ['襪子', '🧦', 'wash'], ['毛巾', '🧣', 'wash'],
-    ['布鞋', '👟', 'shoe'], ['雨鞋', '🥾', 'shoe'],
-  ].map(([name, pic, to]) => ({ name, pic, to }));
+    ['泰迪熊', '🧸', 'toy', 'Teddy bear'], ['小汽車', '🚗', 'toy', 'Toy car'], ['球', '⚽', 'toy', 'Ball'], ['積木', '🧩', 'toy', 'Blocks'],
+    ['故事書', '📕', 'book', 'Storybook'], ['繪本', '📗', 'book', 'Picture book'], ['書', '📘', 'book', 'Book'],
+    ['衣服', '👕', 'cloth', 'Clothes'], ['裙子', '👗', 'cloth', 'Dress'], ['褲子', '👖', 'cloth', 'Pants'],
+    ['襪子', '🧦', 'wash', 'Socks'], ['毛巾', '🧣', 'wash', 'Towel'],
+    ['布鞋', '👟', 'shoe', 'Sneakers'], ['雨鞋', '🥾', 'shoe', 'Rain boots'],
+  ].map(([name, pic, to, en]) => ({ name, pic, to, en }));
   const startTidy = () => {
     const lv = settings.lvTidy;
     const keys = [['toy', 'book'], ['toy', 'book', 'cloth'], ['toy', 'book', 'cloth', 'wash', 'shoe']][lv - 1];
@@ -917,7 +937,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const spots = keys.map(k => {
       const d = document.createElement('div'); d.className = 'spot'; d.dataset.k = k;
       d.innerHTML = `<button class="label" aria-label="${SPOTS[k].name}">${SPOTS[k].icon}</button><div class="in"></div>`;
-      d.querySelector('.label').addEventListener('click', () => say(SPOTS[k].name));
+      d.querySelector('.label').addEventListener('click', () => sayName(SPOTS[k].name, SPOTS[k].en));
       board.appendChild(d); return d;
     });
     for (const t of shuffle(things)) {
@@ -928,13 +948,13 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         const sp = hitAt(spots, x, y, 50);
         if (sp && sp.dataset.k === t.to) {
           const s = document.createElement('span'); s.textContent = t.pic; sp.querySelector('.in').appendChild(s);
-          it.remove(); ding(880); say(`${t.name}放在${SPOTS[t.to].name}`);
+          it.remove(); ding(880); sayName(t.name, t.en, `${t.name}放在${SPOTS[t.to].name}`);
           if (--left === 0) setTimeout(() => { board.classList.add('lit'); say('房間整理好了，好舒服'); finishPlay('lvTidy', 'stTidy', errs, startTidy); }, 1300);
           return true;
         }
         if (sp) { errs++; if (++tries >= 2) { const r = spots.find(q => q.dataset.k === t.to); r.classList.remove('hint-me'); void r.offsetWidth; r.classList.add('hint-me'); } }
         return false;
-      }, () => say(t.name));
+      }, () => sayName(t.name, t.en));
     }
     show('play');
     say('幫忙把東西放回它的家');
@@ -973,7 +993,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const reach = (i) => {
       dots[i].classList.remove('next'); dots[i].classList.add('done');
       if (i > 0) line(pts[i - 1], pts[i]);
-      ding(500 + i * 40); say(NUM_ZH[i + 1]);
+      ding(500 + i * 40); sayName(NUM_ZH[i + 1], NUM_EN[i + 1]);
       next = i + 1;
       if (next < pts.length) { dots[next].classList.add('next'); return; }
       // 最後一點連回第一點，顯示動物
@@ -981,7 +1001,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       setTimeout(() => {
         svg.querySelector('.fill').classList.add('on'); svg.querySelector('.who').classList.add('on');
         ding(660); setTimeout(() => ding(880), 220);
-        say(`是${o.name}`, o.en);
+        sayName(o.name, o.en, `是${o.name}`);
         tray.innerHTML = `<div class="done-row"><button class="round-btn" id="again3" aria-label="下一隻">🔁</button><button class="round-btn" id="toMenu3" aria-label="回選單">🏠</button></div>`;
         $('again3').addEventListener('click', () => { if (!maybeRest()) startDots(); });
         $('toMenu3').addEventListener('click', () => { goMenu(false); maybeRest(); });
@@ -1006,15 +1026,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 認識東西（點一下唸中英文並顯示字卡，不計分） ----------
   const CATS = [
-    { id: 'water', name: '水裡動物', pic: '🐟', items: null },
-    { id: 'sky', name: '天空動物', pic: '🦋', items: null },
-    { id: 'land', name: '陸地動物', pic: '🐰', items: null },
-    { id: 'fruit', name: '水果', pic: '🍎', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['西瓜','🍉','Watermelon'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['桃子','🍑','Peach'],['櫻桃','🍒','Cherry'],['檸檬','🍋','Lemon'],['奇異果','🥝','Kiwi'],['芒果','🥭','Mango'],['梨子','🍐','Pear'],['藍莓','🫐','Blueberry'],['椰子','🥥','Coconut'],['哈密瓜','🍈','Melon'],['青蘋果','🍏','Green apple'],['酪梨','🥑','Avocado']] },
-    { id: 'veg', name: '蔬菜', pic: '🥕', items: [['紅蘿蔔','🥕','Carrot'],['玉米','🌽','Corn'],['番茄','🍅','Tomato'],['花椰菜','🥦','Broccoli'],['茄子','🍆','Eggplant'],['馬鈴薯','🥔','Potato'],['小黃瓜','🥒','Cucumber'],['洋蔥','🧅','Onion'],['甜椒','🫑','Bell pepper'],['大蒜','🧄','Garlic']] },
-    { id: 'car', name: '交通工具', pic: '🚗', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['計程車','🚕','Taxi'],['消防車','🚒','Fire truck'],['救護車','🚑','Ambulance'],['警車','🚓','Police car'],['卡車','🚚','Truck'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['直升機','🚁','Helicopter'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['機車','🛵','Scooter'],['火箭','🚀','Rocket'],['廂型車','🚐','Van'],['拖拉機','🚜','Tractor'],['重型機車','🏍️','Motorcycle'],['滑板車','🛴','Kick scooter'],['蒸汽火車','🚂','Steam train'],['高鐵','🚄','High-speed train'],['捷運','🚇','Subway'],['纜車','🚠','Cable car'],['帆船','⛵','Sailboat'],['快艇','🚤','Speedboat'],['獨木舟','🛶','Canoe'],['賽車','🏎️','Race car']] },
-    { id: 'home', name: '家電', pic: '📺', items: [['電視','📺','TV'],['電話','☎️','Telephone'],['手機','📱','Phone'],['電腦','💻','Computer'],['電燈','💡','Light bulb'],['收音機','📻','Radio'],['鬧鐘','⏰','Alarm clock'],['相機','📷','Camera'],['電池','🔋','Battery'],['插頭','🔌','Plug'],['印表機','🖨️','Printer'],['鍵盤','⌨️','Keyboard'],['滑鼠','🖱️','Computer mouse'],['耳機','🎧','Headphones'],['手電筒','🔦','Flashlight'],['麥克風','🎤','Microphone'],['手錶','⌚','Watch'],['攝影機','🎥','Video camera'],['喇叭','🔊','Speaker'],['遊戲機','🎮','Game controller']] },
-    { id: 'daily', name: '生活用品', pic: '🪥', items: [['牙刷','🪥','Toothbrush'],['肥皂','🧼','Soap'],['乳液','🧴','Lotion'],['衛生紙','🧻','Toilet paper'],['海綿','🧽','Sponge'],['水桶','🪣','Bucket'],['掃把','🧹','Broom'],['籃子','🧺','Basket'],['椅子','🪑','Chair'],['床','🛏️','Bed'],['浴缸','🛁','Bathtub'],['馬桶','🚽','Toilet'],['門','🚪','Door'],['窗戶','🪟','Window'],['鏡子','🪞','Mirror'],['雨傘','☂️','Umbrella'],['書包','🎒','Backpack'],['眼鏡','👓','Glasses'],['鑰匙','🔑','Key'],['剪刀','✂️','Scissors'],['鉛筆','✏️','Pencil'],['蠟筆','🖍️','Crayon'],['尺','📏','Ruler'],['泰迪熊','🧸','Teddy bear']] },
-    { id: 'dish', name: '餐具', pic: '🥄', items: [['湯匙','🥄','Spoon'],['筷子','🥢','Chopsticks'],['碗','🥣','Bowl'],['盤子','🍽️','Plate'],['杯子','☕','Cup'],['茶壺','🫖','Teapot'],['刀叉','🍴','Fork and knife']] },
+    { id: 'water', en: 'Water animals', name: '水裡動物', pic: '🐟', items: null },
+    { id: 'sky', en: 'Sky animals', name: '天空動物', pic: '🦋', items: null },
+    { id: 'land', en: 'Land animals', name: '陸地動物', pic: '🐰', items: null },
+    { id: 'fruit', en: 'Fruit', name: '水果', pic: '🍎', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['西瓜','🍉','Watermelon'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['桃子','🍑','Peach'],['櫻桃','🍒','Cherry'],['檸檬','🍋','Lemon'],['奇異果','🥝','Kiwi'],['芒果','🥭','Mango'],['梨子','🍐','Pear'],['藍莓','🫐','Blueberry'],['椰子','🥥','Coconut'],['哈密瓜','🍈','Melon'],['青蘋果','🍏','Green apple'],['酪梨','🥑','Avocado']] },
+    { id: 'veg', en: 'Vegetables', name: '蔬菜', pic: '🥕', items: [['紅蘿蔔','🥕','Carrot'],['玉米','🌽','Corn'],['番茄','🍅','Tomato'],['花椰菜','🥦','Broccoli'],['茄子','🍆','Eggplant'],['馬鈴薯','🥔','Potato'],['小黃瓜','🥒','Cucumber'],['洋蔥','🧅','Onion'],['甜椒','🫑','Bell pepper'],['大蒜','🧄','Garlic']] },
+    { id: 'car', en: 'Vehicles', name: '交通工具', pic: '🚗', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['計程車','🚕','Taxi'],['消防車','🚒','Fire truck'],['救護車','🚑','Ambulance'],['警車','🚓','Police car'],['卡車','🚚','Truck'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['直升機','🚁','Helicopter'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['機車','🛵','Scooter'],['火箭','🚀','Rocket'],['廂型車','🚐','Van'],['拖拉機','🚜','Tractor'],['重型機車','🏍️','Motorcycle'],['滑板車','🛴','Kick scooter'],['蒸汽火車','🚂','Steam train'],['高鐵','🚄','High-speed train'],['捷運','🚇','Subway'],['纜車','🚠','Cable car'],['帆船','⛵','Sailboat'],['快艇','🚤','Speedboat'],['獨木舟','🛶','Canoe'],['賽車','🏎️','Race car']] },
+    { id: 'home', en: 'Appliances', name: '家電', pic: '📺', items: [['電視','📺','TV'],['電話','☎️','Telephone'],['手機','📱','Phone'],['電腦','💻','Computer'],['電燈','💡','Light bulb'],['收音機','📻','Radio'],['鬧鐘','⏰','Alarm clock'],['相機','📷','Camera'],['電池','🔋','Battery'],['插頭','🔌','Plug'],['印表機','🖨️','Printer'],['鍵盤','⌨️','Keyboard'],['滑鼠','🖱️','Computer mouse'],['耳機','🎧','Headphones'],['手電筒','🔦','Flashlight'],['麥克風','🎤','Microphone'],['手錶','⌚','Watch'],['攝影機','🎥','Video camera'],['喇叭','🔊','Speaker'],['遊戲機','🎮','Game controller']] },
+    { id: 'daily', en: 'Daily items', name: '生活用品', pic: '🪥', items: [['牙刷','🪥','Toothbrush'],['肥皂','🧼','Soap'],['乳液','🧴','Lotion'],['衛生紙','🧻','Toilet paper'],['海綿','🧽','Sponge'],['水桶','🪣','Bucket'],['掃把','🧹','Broom'],['籃子','🧺','Basket'],['椅子','🪑','Chair'],['床','🛏️','Bed'],['浴缸','🛁','Bathtub'],['馬桶','🚽','Toilet'],['門','🚪','Door'],['窗戶','🪟','Window'],['鏡子','🪞','Mirror'],['雨傘','☂️','Umbrella'],['書包','🎒','Backpack'],['眼鏡','👓','Glasses'],['鑰匙','🔑','Key'],['剪刀','✂️','Scissors'],['鉛筆','✏️','Pencil'],['蠟筆','🖍️','Crayon'],['尺','📏','Ruler'],['泰迪熊','🧸','Teddy bear']] },
+    { id: 'dish', en: 'Tableware', name: '餐具', pic: '🥄', items: [['湯匙','🥄','Spoon'],['筷子','🥢','Chopsticks'],['碗','🥣','Bowl'],['盤子','🍽️','Plate'],['杯子','☕','Cup'],['茶壺','🫖','Teapot'],['刀叉','🍴','Fork and knife']] },
   ];
   ['water', 'sky', 'land'].forEach((z, i) => { CATS[i].items = [...ANIMALS, ...BOTH].filter(a => a.homes[0] === z).map(a => [a.name, a.pic, a.en]); });
   let learnCat = 0;
@@ -1022,7 +1042,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     learnCat = ci;
     [...$('cats').children].forEach((b, i) => b.classList.toggle('on', i === ci));
     const box = $('cards'); box.innerHTML = ''; box.scrollTop = 0;
-    $('bigcard').innerHTML = `<div class="pic">${CATS[ci].pic}</div><div class="zh">${CATS[ci].name}</div>`;
+    $('bigcard').innerHTML = `<div class="pic">${CATS[ci].pic}</div><div class="zh">${CATS[ci].name}</div><div class="en">${CATS[ci].en}</div>`;
     for (const [zh, pic, en] of CATS[ci].items) {
       const c = document.createElement('button'); c.className = 'lcard'; c.innerHTML = pic; c.setAttribute('aria-label', `${zh} ${en}`);
       c.addEventListener('click', () => {
@@ -1039,7 +1059,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   CATS.forEach((c, i) => {
     const b = document.createElement('button'); b.className = 'cat';
     b.innerHTML = `<span class="pic">${c.pic}</span><span>${c.name}</span>`;
-    b.addEventListener('click', () => { showLearnCat(i); say(c.name); });
+    b.addEventListener('click', () => { showLearnCat(i); say(c.name, c.en); });
     cats.appendChild(b);
   });
   const startLearn = () => { roundActive = false; showLearnCat(learnCat); show('learn'); say('點一下，聽聽看它叫什麼'); };
@@ -1075,7 +1095,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         }
         if (g) { errs++; if (++tries >= 2) { const r = targets.find(q => q.k === t.k && !q.done); if (r) nudge(r.el); } }
         return false;
-      }, () => say(t.name, t.en));
+      }, () => sayName(t.name, t.en));
     }
   };
   // 一格一格的分類箱（一樣的放一起、四季與天氣）
@@ -1085,11 +1105,11 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const targets = boxes.map(b => {
       const el = document.createElement('div'); el.className = 'spot';
       el.innerHTML = `<button class="label" aria-label="${b.name}">${b.icon}</button><div class="in"></div>`;
-      el.querySelector('.label').addEventListener('click', () => say(b.name));
+      el.querySelector('.label').addEventListener('click', () => sayName(b.name, b.en));
       board.appendChild(el); return { el, k: b.k };
     });
     dragMatch(targets, items, {
-      put: (t, g) => { const s = document.createElement('span'); s.className = 'mini'; s.innerHTML = t.pic; g.el.querySelector('.in').appendChild(s); say(t.name, t.en); },
+      put: (t, g) => { const s = document.createElement('span'); s.className = 'mini'; s.innerHTML = t.pic; g.el.querySelector('.in').appendChild(s); sayName(t.name, t.en); },
       onDone: () => { board.classList.add('lit'); say(outro); finishFree(again); },
     });
     show('play'); say(intro);
@@ -1213,7 +1233,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (done) return;
         if (ch === ans) {
           done = true; b.classList.add('on'); ding(880);
-          say(ans.call ? ans.name + ans.call : '是' + ans.name, ans.en);
+          sayName(ans.name, ans.en, ans.call ? ans.name + ans.call : '是' + ans.name);
           setTimeout(() => { if (tok !== sndTok || current !== 'play') return; roundActive = false; if (!maybeRest()) nextSound(false); }, 3000);
         } else {
           b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop');
@@ -1230,7 +1250,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   $('homeBtn2').addEventListener('click', () => { sndTok++; });
 
   // ---------- 大小排排站（像粉紅塔，由大排到小） ----------
-  const SIZE_SETS = [{ name: '粉紅塔', pic: '' }, { name: '小熊', pic: '🐻' }, { name: '星星', pic: '⭐' }, { name: '蘋果', pic: '🍎' }, { name: '小魚', pic: '🐟' }, { name: '花', pic: '🌸' }];
+  const SIZE_SETS = [{ name: '粉紅塔', en: 'Pink tower', pic: '' }, { name: '小熊', en: 'Bear', pic: '🐻' }, { name: '星星', en: 'Star', pic: '⭐' }, { name: '蘋果', en: 'Apple', pic: '🍎' }, { name: '小魚', en: 'Fish', pic: '🐟' }, { name: '花', en: 'Flower', pic: '🌸' }];
   const SIZE_K = [1, .85, .7, .56, .43];
   let lastSize = -1;
   const startSize = () => {
@@ -1264,7 +1284,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
         return false;
-      }, () => say(set.name));
+      }, () => sayName(set.name, set.en));
     }
     show('play');
     say('把最大的放在最前面，一個比一個小');
@@ -1284,7 +1304,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     });
     dragMatch(targets, set, {
       margin: 40,
-      put: (t, g) => { unshadow(g); say(t.name, t.en); },
+      put: (t, g) => { unshadow(g); sayName(t.name, t.en); },
       onDone: () => { say('每個影子都找到主人了'); finishFree(startShadow); },
     });
     show('play');
@@ -1292,7 +1312,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   };
 
   // ---------- 一樣的放一起（輪流用顏色、形狀分類） ----------
-  const SORT_COLORS = [{ name: '紅色', c: '#C9776B' }, { name: '藍色', c: '#7E9CC0' }, { name: '黃色', c: '#D9B95B' }, { name: '綠色', c: '#86AA82' }];
+  const SORT_COLORS = [{ name: '紅色', en: 'Red', c: '#C9776B' }, { name: '藍色', en: 'Blue', c: '#7E9CC0' }, { name: '黃色', en: 'Yellow', c: '#D9B95B' }, { name: '綠色', en: 'Green', c: '#86AA82' }];
   const SORT_SHAPES = ['圓形', '三角形', '正方形', '星形', '心形'].map(n => SHAPES.find(s => s.name === n));
   let sortMode = 0;
   const startSort = () => {
@@ -1301,21 +1321,21 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const cols = shuffle(SORT_COLORS), shs = shuffle(SORT_SHAPES);
     const svg = (sh, fill) => `<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="${fill}">${sh.svg}</g></svg>`;
     const boxes = byColor
-      ? cols.slice(0, nb).map(c => ({ k: c.name, name: c.name, icon: `<span class="swatch" style="background:${c.c}"></span>` }))
-      : shs.slice(0, nb).map(s => ({ k: s.name, name: s.name, icon: `<span class="outl">${svg(s, 'currentColor')}</span>` }));
+      ? cols.slice(0, nb).map(c => ({ k: c.name, name: c.name, en: c.en, icon: `<span class="swatch" style="background:${c.c}"></span>` }))
+      : shs.slice(0, nb).map(s => ({ k: s.name, name: s.name, en: s.en, icon: `<span class="outl">${svg(s, 'currentColor')}</span>` }));
     const items = [];
     boxes.forEach((b, bi) => {
       for (let i = 0; i < per; i++) {
         const c = byColor ? cols[bi] : cols[(bi + i) % cols.length];
         const s = byColor ? shs[(bi + i) % shs.length] : shs[bi];
-        items.push({ k: b.k, name: b.k, pic: svg(s, c.c), cls: 'item sortit' });
+        items.push({ k: b.k, name: b.name, en: b.en, pic: svg(s, c.c), cls: 'item sortit' });
       }
     });
     boxGame(boxes, items, byColor ? '顏色一樣的放在一起' : '形狀一樣的放在一起', byColor ? '顏色一樣的都在一起了' : '形狀一樣的都在一起了', startSort);
   };
 
   // ---------- 生活小幫手（洗手、穿衣服、擺餐具，輪流出現） ----------
-  const WASH = [['打開水龍頭', '🚰'], ['抹肥皂', '🧼'], ['搓搓手', '👐'], ['用水沖乾淨', '💦'], ['擦乾手', '🧻']];
+  const WASH = [['打開水龍頭', '🚰', 'Turn on the tap'], ['抹肥皂', '🧼', 'Soap'], ['搓搓手', '👐', 'Rub your hands'], ['用水沖乾淨', '💦', 'Rinse'], ['擦乾手', '🧻', 'Dry your hands']];
   let helpMode = -1;
   const startHelp = () => { helpMode = (helpMode + 1) % 3; [helpWash, helpDress, helpTable][helpMode](); };
   const helpWash = () => {
@@ -1325,9 +1345,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       const el = document.createElement('div'); el.className = 'step'; el.innerHTML = `<b>${i + 1}</b><div class="in"></div>`;
       board.appendChild(el); return { el, k: i, single: true };
     });
-    dragMatch(targets, WASH.map(([name, pic], i) => ({ k: i, name, pic })), {
+    dragMatch(targets, WASH.map(([name, pic, en], i) => ({ k: i, name, pic, en })), {
       margin: 30,
-      put: (t, g) => { g.el.querySelector('.in').textContent = t.pic; g.el.classList.add('done'); say(t.name); },
+      put: (t, g) => { g.el.querySelector('.in').textContent = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
       onDone: () => { say('手洗得好乾淨'); finishFree(startHelp); },
     });
     show('play');
@@ -1344,7 +1364,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const targets = placeScene('kid', '<span class="face">😊</span>', spots);
     dragMatch(targets, spots.map(s => ({ k: s.k, name: s.name, en: s.en, pic: s.pic })), {
       margin: 30,
-      put: (t, g) => { unshadow(g); say(t.name, t.en); },
+      put: (t, g) => { unshadow(g); sayName(t.name, t.en); },
       onDone: () => { say('穿好了，可以出門玩了'); finishFree(startHelp); },
     });
     show('play');
@@ -1361,7 +1381,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const targets = placeScene('mat', '', spots);
     dragMatch(targets, spots.map(s => ({ k: s.k, name: s.name, en: s.en, pic: s.pic })), {
       margin: 30,
-      put: (t, g) => { unshadow(g); say(t.name, t.en); },
+      put: (t, g) => { unshadow(g); sayName(t.name, t.en); },
       onDone: () => { say('餐具擺好了，可以吃飯囉'); finishFree(startHelp); },
     });
     show('play');
@@ -1396,7 +1416,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     dragMatch(targets, targets.map((_, i) => ({ k: i, name, en, pic: '', cls: 'ppiece', style: art(i) })), {
       margin: 40,
       put: (t, g) => { g.el.style.cssText = art(t.k); g.el.classList.add('done'); },
-      onDone: () => { puz.classList.add('whole'); say(`是${name}`, en); finishFree(startPuzzle); },
+      onDone: () => { puz.classList.add('whole'); sayName(name, en, `是${name}`); finishFree(startPuzzle); },
     });
     show('play');
     requestAnimationFrame(() => {
@@ -1408,15 +1428,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 四季與天氣（天氣配衣服、季節配東西，輪流出現） ----------
   const WEATHER = [
-    { k: 'sun', name: '大太陽', icon: '☀️', items: [['短褲', '🩳', 'Shorts'], ['草帽', '👒', 'Sun hat'], ['太陽眼鏡', '🕶️', 'Sunglasses'], ['拖鞋', '🩴', 'Flip-flops'], ['泳衣', '🩱', 'Swimsuit']] },
-    { k: 'rain', name: '下雨天', icon: '🌧️', items: [['雨傘', '☂️', 'Umbrella'], ['雨鞋', '🥾', 'Rain boots']] },
-    { k: 'cold', name: '冷冷的天氣', icon: '❄️', items: [['外套', '🧥', 'Coat'], ['圍巾', '🧣', 'Scarf'], ['手套', '🧤', 'Gloves']] },
+    { k: 'sun', en: 'Sunny', name: '大太陽', icon: '☀️', items: [['短褲', '🩳', 'Shorts'], ['草帽', '👒', 'Sun hat'], ['太陽眼鏡', '🕶️', 'Sunglasses'], ['拖鞋', '🩴', 'Flip-flops'], ['泳衣', '🩱', 'Swimsuit']] },
+    { k: 'rain', en: 'Rainy', name: '下雨天', icon: '🌧️', items: [['雨傘', '☂️', 'Umbrella'], ['雨鞋', '🥾', 'Rain boots']] },
+    { k: 'cold', en: 'Cold', name: '冷冷的天氣', icon: '❄️', items: [['外套', '🧥', 'Coat'], ['圍巾', '🧣', 'Scarf'], ['手套', '🧤', 'Gloves']] },
   ];
   const SEASONS = [
-    { k: 'spring', name: '春天', icon: '🌸', items: [['花開了', '🌷', 'Flowers'], ['蝴蝶', '🦋', 'Butterfly'], ['小雞', '🐣', 'Chick']] },
-    { k: 'summer', name: '夏天', icon: '🌞', items: [['西瓜', '🍉', 'Watermelon'], ['冰淇淋', '🍦', 'Ice cream'], ['海灘', '🏖️', 'Beach']] },
-    { k: 'autumn', name: '秋天', icon: '🍁', items: [['落葉', '🍂', 'Fallen leaves'], ['月餅', '🥮', 'Mooncake'], ['月亮', '🌕', 'Full moon']] },
-    { k: 'winter', name: '冬天', icon: '⛄', items: [['雪花', '❄️', 'Snowflake'], ['火鍋', '🍲', 'Hot pot'], ['毛衣', '🧶', 'Sweater']] },
+    { k: 'spring', en: 'Spring', name: '春天', icon: '🌸', items: [['花開了', '🌷', 'Flowers'], ['蝴蝶', '🦋', 'Butterfly'], ['小雞', '🐣', 'Chick']] },
+    { k: 'summer', en: 'Summer', name: '夏天', icon: '🌞', items: [['西瓜', '🍉', 'Watermelon'], ['冰淇淋', '🍦', 'Ice cream'], ['海灘', '🏖️', 'Beach']] },
+    { k: 'autumn', en: 'Autumn', name: '秋天', icon: '🍁', items: [['落葉', '🍂', 'Fallen leaves'], ['月餅', '🥮', 'Mooncake'], ['月亮', '🌕', 'Full moon']] },
+    { k: 'winter', en: 'Winter', name: '冬天', icon: '⛄', items: [['雪花', '❄️', 'Snowflake'], ['火鍋', '🍲', 'Hot pot'], ['毛衣', '🧶', 'Sweater']] },
   ];
   let weatherMode = 1;
   const startWeather = () => {
