@@ -189,8 +189,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .learn-main { flex: 1; min-height: 0; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 34%); gap: 18px; }
 @media (max-width: 700px) { .learn-main { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); } .learn-main .bigcard { order: -1; } }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; overflow-y: auto; align-content: start; min-height: 0; padding: 4px; touch-action: pan-y; }
-.card { aspect-ratio: 1; max-width: 100%; border-radius: 20px; border: 3px solid transparent; background: var(--panel); font-size: 54px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
-.card.on { border-color: var(--wood); }
+.lcard { aspect-ratio: 1; max-width: 100%; border-radius: 20px; border: 3px solid transparent; background: var(--panel); font-size: 54px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+.lcard.on { border-color: var(--wood); }
 .bigcard { border-radius: 28px; background: var(--panel); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 18px; min-height: 0; text-align: center; }
 .bigcard .pic { font-size: clamp(90px, 15vw, 150px); line-height: 1; }
 .bigcard .zh { font-size: 42px; letter-spacing: .06em; }
@@ -519,6 +519,28 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     ['鸚鵡', '🦜', 'Parrot', ['sky']],
     ['鴿子', '🕊️', 'Dove', ['sky']],
     ['瓢蟲', '🐞', 'Ladybug', ['sky']],
+    ['河馬', '🦛', 'Hippo', ['water']],
+    ['珊瑚', '🪸', 'Coral', ['water']],
+    ['貝殼', '🐚', 'Seashell', ['water']],
+    ['紅鶴', '🦩', 'Flamingo', ['sky']],
+    ['孔雀', '🦚', 'Peacock', ['sky']],
+    ['甲蟲', '🪲', 'Beetle', ['sky']],
+    ['老虎', '🐯', 'Tiger', ['land']],
+    ['花豹', '🐆', 'Leopard', ['land']],
+    ['犀牛', '🦏', 'Rhino', ['land']],
+    ['駱駝', '🐪', 'Camel', ['land']],
+    ['大猩猩', '🦍', 'Gorilla', ['land']],
+    ['狼', '🐺', 'Wolf', ['land']],
+    ['山羊', '🐐', 'Goat', ['land']],
+    ['公雞', '🐓', 'Rooster', ['land']],
+    ['火雞', '🦃', 'Turkey', ['land']],
+    ['蝸牛', '🐌', 'Snail', ['land']],
+    ['螞蟻', '🐜', 'Ant', ['land']],
+    ['毛毛蟲', '🐛', 'Caterpillar', ['land']],
+    ['蜥蜴', '🦎', 'Lizard', ['land']],
+    ['蛇', '🐍', 'Snake', ['land']],
+    ['恐龍', '🦖', 'Dinosaur', ['land']],
+    ['長毛象', '🦣', 'Mammoth', ['land']],
     ['水豚', '<svg viewBox="0 0 100 80" width="1em" height="0.8em" aria-hidden="true"><ellipse cx="46" cy="50" rx="36" ry="22" fill="#A7764A"/><rect x="24" y="60" width="10" height="16" rx="4" fill="#8E6240"/><rect x="56" y="60" width="10" height="16" rx="4" fill="#8E6240"/><rect x="54" y="18" width="40" height="34" rx="16" fill="#B5835A"/><rect x="74" y="30" width="22" height="22" rx="10" fill="#9A6B45"/><circle cx="62" cy="21" r="6" fill="#8E6240"/><circle cx="72" cy="31" r="3.2" fill="#2E2118"/><ellipse cx="89" cy="37" rx="2" ry="1.4" fill="#2E2118"/><ellipse cx="66" cy="42" rx="4" ry="2.5" fill="#E8A79A" opacity=".6"/></svg>', 'Capybara', ['land', 'water']],
     ['水獺', '🦦', 'Otter', ['water', 'land']],
     ['河狸', '🦫', 'Beaver', ['water', 'land']],
@@ -930,14 +952,17 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 認識東西（點一下唸中英文並顯示字卡，不計分） ----------
   const CATS = [
-    { id: 'animal', name: '動物', pic: '🐰', items: null },
-    { id: 'fruit', name: '水果', pic: '🍎', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['西瓜','🍉','Watermelon'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['桃子','🍑','Peach'],['櫻桃','🍒','Cherry'],['檸檬','🍋','Lemon'],['奇異果','🥝','Kiwi'],['芒果','🥭','Mango'],['梨子','🍐','Pear'],['藍莓','🫐','Blueberry']] },
+    { id: 'water', name: '水裡動物', pic: '🐟', items: null },
+    { id: 'sky', name: '天空動物', pic: '🦋', items: null },
+    { id: 'land', name: '陸地動物', pic: '🐰', items: null },
+    { id: 'fruit', name: '水果', pic: '🍎', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['西瓜','🍉','Watermelon'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['桃子','🍑','Peach'],['櫻桃','🍒','Cherry'],['檸檬','🍋','Lemon'],['奇異果','🥝','Kiwi'],['芒果','🥭','Mango'],['梨子','🍐','Pear'],['藍莓','🫐','Blueberry'],['椰子','🥥','Coconut'],['哈密瓜','🍈','Melon'],['青蘋果','🍏','Green apple'],['酪梨','🥑','Avocado']] },
     { id: 'veg', name: '蔬菜', pic: '🥕', items: [['紅蘿蔔','🥕','Carrot'],['玉米','🌽','Corn'],['番茄','🍅','Tomato'],['花椰菜','🥦','Broccoli'],['茄子','🍆','Eggplant'],['馬鈴薯','🥔','Potato'],['小黃瓜','🥒','Cucumber'],['洋蔥','🧅','Onion'],['甜椒','🫑','Bell pepper'],['大蒜','🧄','Garlic']] },
-    { id: 'car', name: '交通工具', pic: '🚗', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['計程車','🚕','Taxi'],['消防車','🚒','Fire truck'],['救護車','🚑','Ambulance'],['警車','🚓','Police car'],['卡車','🚚','Truck'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['直升機','🚁','Helicopter'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['機車','🛵','Scooter'],['火箭','🚀','Rocket']] },
-    { id: 'home', name: '家電', pic: '📺', items: [['電視','📺','TV'],['電話','☎️','Telephone'],['手機','📱','Phone'],['電腦','💻','Computer'],['電燈','💡','Light bulb'],['收音機','📻','Radio'],['鬧鐘','⏰','Alarm clock'],['相機','📷','Camera'],['電池','🔋','Battery'],['插頭','🔌','Plug']] },
+    { id: 'car', name: '交通工具', pic: '🚗', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['計程車','🚕','Taxi'],['消防車','🚒','Fire truck'],['救護車','🚑','Ambulance'],['警車','🚓','Police car'],['卡車','🚚','Truck'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['直升機','🚁','Helicopter'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['機車','🛵','Scooter'],['火箭','🚀','Rocket'],['廂型車','🚐','Van'],['拖拉機','🚜','Tractor'],['重型機車','🏍️','Motorcycle'],['滑板車','🛴','Kick scooter'],['蒸汽火車','🚂','Steam train'],['高鐵','🚄','High-speed train'],['捷運','🚇','Subway'],['纜車','🚠','Cable car'],['帆船','⛵','Sailboat'],['快艇','🚤','Speedboat'],['獨木舟','🛶','Canoe'],['賽車','🏎️','Race car']] },
+    { id: 'home', name: '家電', pic: '📺', items: [['電視','📺','TV'],['電話','☎️','Telephone'],['手機','📱','Phone'],['電腦','💻','Computer'],['電燈','💡','Light bulb'],['收音機','📻','Radio'],['鬧鐘','⏰','Alarm clock'],['相機','📷','Camera'],['電池','🔋','Battery'],['插頭','🔌','Plug'],['印表機','🖨️','Printer'],['鍵盤','⌨️','Keyboard'],['滑鼠','🖱️','Computer mouse'],['耳機','🎧','Headphones'],['手電筒','🔦','Flashlight'],['麥克風','🎤','Microphone'],['手錶','⌚','Watch'],['攝影機','🎥','Video camera'],['喇叭','🔊','Speaker'],['遊戲機','🎮','Game controller']] },
+    { id: 'daily', name: '生活用品', pic: '🪥', items: [['牙刷','🪥','Toothbrush'],['肥皂','🧼','Soap'],['乳液','🧴','Lotion'],['衛生紙','🧻','Toilet paper'],['海綿','🧽','Sponge'],['水桶','🪣','Bucket'],['掃把','🧹','Broom'],['籃子','🧺','Basket'],['椅子','🪑','Chair'],['床','🛏️','Bed'],['浴缸','🛁','Bathtub'],['馬桶','🚽','Toilet'],['門','🚪','Door'],['窗戶','🪟','Window'],['鏡子','🪞','Mirror'],['雨傘','☂️','Umbrella'],['書包','🎒','Backpack'],['眼鏡','👓','Glasses'],['鑰匙','🔑','Key'],['剪刀','✂️','Scissors'],['鉛筆','✏️','Pencil'],['蠟筆','🖍️','Crayon'],['尺','📏','Ruler'],['泰迪熊','🧸','Teddy bear']] },
     { id: 'dish', name: '餐具', pic: '🥄', items: [['湯匙','🥄','Spoon'],['筷子','🥢','Chopsticks'],['碗','🥣','Bowl'],['盤子','🍽️','Plate'],['杯子','☕','Cup'],['茶壺','🫖','Teapot'],['刀叉','🍴','Fork and knife']] },
   ];
-  CATS[0].items = [...ANIMALS, ...BOTH].map(a => [a.name, a.pic, a.en]);
+  ['water', 'sky', 'land'].forEach((z, i) => { CATS[i].items = [...ANIMALS, ...BOTH].filter(a => a.homes[0] === z).map(a => [a.name, a.pic, a.en]); });
   let learnCat = 0;
   const showLearnCat = (ci) => {
     learnCat = ci;
@@ -945,7 +970,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const box = $('cards'); box.innerHTML = ''; box.scrollTop = 0;
     $('bigcard').innerHTML = `<div class="pic">${CATS[ci].pic}</div><div class="zh">${CATS[ci].name}</div>`;
     for (const [zh, pic, en] of CATS[ci].items) {
-      const c = document.createElement('button'); c.className = 'card'; c.innerHTML = pic; c.setAttribute('aria-label', `${zh} ${en}`);
+      const c = document.createElement('button'); c.className = 'lcard'; c.innerHTML = pic; c.setAttribute('aria-label', `${zh} ${en}`);
       c.addEventListener('click', () => {
         [...box.children].forEach(q => q.classList.toggle('on', q === c));
         const bc = $('bigcard');
