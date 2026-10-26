@@ -354,7 +354,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   // ---------- 儲存 ----------
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
-  const settings = Object.assign({ lvCount: 1, stCount: 0, lvTidy: 1, stTidy: 0, lvColors: 1, stColors: 0, lvShapes: 1, stShapes: 0, play: 15, rest: 20, night: false, sound: true, level: 1, streak: 0, voice: 'sister', voiceName: '', rec: 'A' }, load('wt_settings', {}));
+  const settings = Object.assign({ lvCount: 1, stCount: 0, lvTidy: 1, stTidy: 0, lvColors: 1, stColors: 0, lvShapes: 1, stShapes: 0, play: 15, rest: 20, night: false, sound: true, music: 'lullaby', musicVol: 1, level: 1, streak: 0, voice: 'sister', voiceName: '', rec: 'A' }, load('wt_settings', {}));
   // 輕柔的姐姐聲：音調只微調，避免變得像機器
   const VOICES = { girl: { pitch: 1.4, rate: 0.9 }, sister: { pitch: 1.12, rate: 0.88 } };
   let session = load('wt_session', null); // { end, warned, restEnd }
@@ -456,7 +456,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + 1);
     } catch {}
   };
+  let audioReady = false;
   const unlockAudio = () => {
+    audioReady = true;
     try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch {}
     try { player.muted = true; player.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='; player.play().catch(() => {}).finally(() => { player.muted = false; }); } catch {}
     if ('speechSynthesis' in window) { try { speechSynthesis.resume(); } catch {} pickVoice(); }
@@ -473,6 +475,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
     current = id;
     const st = document.getElementById('subt'); if (st) st.classList.remove('on');
+    try { bgmSync(); } catch {}
   };
 
   // 防止縮放與長按選單
@@ -1201,6 +1204,125 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       FX[name](actx, actx.currentTime + .05, out);
     } catch {}
   };
+  // ---------- 背景音樂（全部用程式產生：音樂盒搖籃曲、大自然聲、輕快木琴；唸話時自動變小聲） ----------
+  const BGM = (() => {
+    const mf = (m) => 440 * Math.pow(2, (m - 69) / 12);
+    // 公版老歌旋律：小星星、兩隻老虎（[音高, 拍數]）
+    const TWINKLE = [[72,1],[72,1],[79,1],[79,1],[81,1],[81,1],[79,2],[77,1],[77,1],[76,1],[76,1],[74,1],[74,1],[72,2],
+      [79,1],[79,1],[77,1],[77,1],[76,1],[76,1],[74,2],[79,1],[79,1],[77,1],[77,1],[76,1],[76,1],[74,2],
+      [72,1],[72,1],[79,1],[79,1],[81,1],[81,1],[79,2],[77,1],[77,1],[76,1],[76,1],[74,1],[74,1],[72,2]];
+    const TIGERS = [[72,1],[74,1],[76,1],[72,1],[72,1],[74,1],[76,1],[72,1],[76,1],[77,1],[79,2],[76,1],[77,1],[79,2],
+      [79,.5],[81,.5],[79,.5],[77,.5],[76,1],[72,1],[79,.5],[81,.5],[79,.5],[77,.5],[76,1],[72,1],[72,1],[67,1],[72,2],[72,1],[67,1],[72,2]];
+    // 木琴：自己寫的五聲音階小曲；每小節配一個烏克麗麗和弦
+    const XYLO = [[72,.5],[76,.5],[79,.5],[76,.5],[81,1],[79,1],[76,.5],[79,.5],[76,.5],[74,.5],[72,2],
+      [74,.5],[76,.5],[79,.5],[81,.5],[84,1],[81,1],[79,.5],[76,.5],[74,.5],[76,.5],[72,2],
+      [79,.5],[81,.5],[79,.5],[76,.5],[74,1],[76,1],[72,.5],[74,.5],[76,.5],[79,.5],[81,2],
+      [84,.5],[81,.5],[79,.5],[76,.5],[74,1],[79,1],[76,.5],[74,.5],[74,.5],[76,.5],[72,2]];
+    const XYLO_CHORDS = [[60,64,67],[57,60,64],[53,57,60],[55,59,62]]; // C Am F G 輪流
+    const VOL = [0, .05, .09, .14];
+    let c = null, master = null, timer = null, track = null, nodes = [], plucks = {};
+    let seq = [], si = 0, tNext = 0, beat = .8, tuneN = 0, bar = 0, beatInBar = 0, nextBird = 0;
+    const tone = (f, t, dur, peak, partials) => {
+      partials.forEach(([m, a]) => {
+        const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f * m;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak * a, t + .006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g).connect(master); o.start(t); o.stop(t + dur + .05);
+      });
+    };
+    const pluck = (f, t, v) => {
+      if (!plucks[f]) {
+        const sr = c.sampleRate, n = Math.round(sr / f), len = Math.round(sr * 1.2), b = c.createBuffer(1, len, sr), d = b.getChannelData(0);
+        for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+        for (let i = n; i < len; i++) d[i] = (d[i - n] + d[i - n + 1 < i ? i - n + 1 : i - n]) * 0.496;
+        plucks[f] = b;
+      }
+      const s = c.createBufferSource(), g = c.createGain(); s.buffer = plucks[f]; g.gain.value = v; s.connect(g).connect(master); s.start(t);
+    };
+    const loopNoise = (brown) => {
+      const len = c.sampleRate * 4, b = c.createBuffer(1, len, c.sampleRate), d = b.getChannelData(0); let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; if (brown) { last = (last + .02 * w) / 1.02; d[i] = last * 3.5; } else d[i] = w; }
+      const s = c.createBufferSource(); s.buffer = b; s.loop = true; return s;
+    };
+    const lfo = (rate, depth, target, base) => {
+      const o = c.createOscillator(), g = c.createGain(); o.frequency.value = rate; g.gain.value = depth; target.value = base;
+      o.connect(g).connect(target); o.start(); nodes.push(o);
+    };
+    const startNature = () => {
+      // 微風
+      const w = loopNoise(true), wf = c.createBiquadFilter(), wg = c.createGain(); wf.type = 'lowpass'; wf.frequency.value = 520;
+      w.connect(wf).connect(wg).connect(master); lfo(.06, .22, wg.gain, .4); w.start(); nodes.push(w);
+      // 小溪
+      const s = loopNoise(false), sf = c.createBiquadFilter(), sh = c.createBiquadFilter(), sg = c.createGain();
+      sf.type = 'bandpass'; sf.Q.value = .9; sh.type = 'highpass'; sh.frequency.value = 900;
+      s.connect(sf).connect(sh).connect(sg).connect(master); lfo(.37, 700, sf.frequency, 2400); lfo(.23, .05, sg.gain, .12); s.start(); nodes.push(s);
+      nextBird = c.currentTime + 2;
+    };
+    const bird = (t) => {
+      const n = 2 + Math.floor(Math.random() * 4), base = 2600 + Math.random() * 1600;
+      for (let i = 0; i < n; i++) {
+        const s = t + i * (.11 + Math.random() * .08), o = c.createOscillator(), g = c.createGain();
+        o.frequency.setValueAtTime(base, s); o.frequency.exponentialRampToValueAtTime(base * 1.35, s + .05); o.frequency.exponentialRampToValueAtTime(base * .95, s + .1);
+        g.gain.setValueAtTime(0.0001, s); g.gain.exponentialRampToValueAtTime(.18, s + .01); g.gain.exponentialRampToValueAtTime(0.0001, s + .12);
+        o.connect(g).connect(master); o.start(s); o.stop(s + .15);
+      }
+    };
+    const chordRoot = (m) => ({ 0: 48, 4: 48, 7: 48, 5: 53, 9: 53, 2: 55, 11: 55 })[m % 12] || 48;
+    const nextTune = () => {
+      if (track === 'lullaby') { seq = tuneN++ % 2 ? TIGERS : TWINKLE; beat = .78; }
+      else { seq = XYLO; beat = .3; }
+      si = 0; bar = 0; beatInBar = 0;
+    };
+    const schedule = () => {
+      const now = c.currentTime;
+      // 唸話、聲音配對時變小聲
+      const talking = (!player.paused && !player.ended) || ('speechSynthesis' in window && speechSynthesis.speaking);
+      const hush = current === 'play' && document.getElementById('listen');
+      const target = hush ? 0.0001 : VOL[settings.musicVol || 1] * (talking ? .3 : 1);
+      master.gain.setTargetAtTime(target, now, .2);
+      if (track === 'nature') { if (now > nextBird) { bird(now + .05); nextBird = now + 3 + Math.random() * 7; } return; }
+      while (tNext < now + .4) {
+        if (si >= seq.length) { tNext += beat * 3; nextTune(); continue; }
+        const [m, b] = seq[si++];
+        if (track === 'lullaby') {
+          tone(mf(m), tNext, 1.6, .32, [[1, 1], [3, .12], [4.2, .05]]);
+          if (beatInBar === 0) tone(mf(chordRoot(m)), tNext, 2.4, .18, [[1, 1], [2, .2]]);
+          beatInBar = (beatInBar + b) % 4;
+        } else {
+          tone(mf(m), tNext, .45, .3, [[1, 1], [4, .18], [10, .04]]);
+          // 烏克麗麗：每小節第 2、4 拍刷和弦
+          if (beatInBar === 2 || beatInBar === 6) XYLO_CHORDS[bar % 4].forEach((n, k) => pluck(mf(n + 12), tNext + k * .015, .14));
+          beatInBar += b * 2; if (beatInBar >= 8) { beatInBar -= 8; bar++; }
+        }
+        tNext += b * beat;
+      }
+    };
+    const stop = () => {
+      if (!c) return;
+      clearInterval(timer); timer = null;
+      const m = master, ns = nodes; nodes = []; track = null;
+      try { m.gain.setTargetAtTime(0.0001, c.currentTime, .15); } catch {}
+      setTimeout(() => { ns.forEach(n => { try { n.stop(); } catch {} }); try { m.disconnect(); } catch {} }, 700);
+    };
+    const play = (name) => {
+      if (track === name) return;
+      stop();
+      try {
+        actx = actx || new (window.AudioContext || window.webkitAudioContext)(); c = actx; c.resume();
+        master = c.createGain(); master.gain.value = 0.0001; master.connect(c.destination);
+        track = name; tNext = c.currentTime + .3; tuneN = 0;
+        if (name === 'nature') startNature(); else nextTune();
+        timer = setInterval(schedule, 100); schedule();
+      } catch {}
+    };
+    return { play, stop };
+  })();
+  // 依畫面決定要不要放音樂：開場、休息時不放
+  const bgmSync = () => {
+    const want = settings.sound && settings.music && settings.music !== 'off' && audioReady && !document.hidden && current !== 'start' && current !== 'rest';
+    if (want) BGM.play(settings.music); else BGM.stop();
+  };
+  document.addEventListener('visibilitychange', () => bgmSync());
+
 
   // ---------- 聲音配對（聽聲音找圖，不分關卡，一題接一題） ----------
   const SOUNDS = {
@@ -1535,6 +1657,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     sheet.innerHTML = `<div class="card"><h2>家長設定</h2><p class="hint" style="text-align:left">${status}</p>
       <div class="row"><span>遊玩時間</span>${pills('play', [10, 15, 20], ' 分')}</div>
       <div class="row"><span>休息時間</span>${pills('rest', [10, 20, 30], ' 分')}</div>
+      <div class="row"><span>背景音樂</span>${[['lullaby', '音樂盒'], ['nature', '大自然'], ['xylo', '木琴'], ['off', '關']].map(([v, n]) => `<button class="pill${(settings.music || 'off') === v ? ' on' : ''}" data-music="${v}">${n}</button>`).join('')}</div>
+      <div class="row"><span>音樂音量</span>${[[1, '小'], [2, '中'], [3, '大']].map(([v, n]) => `<button class="pill${settings.musicVol === v ? ' on' : ''}" data-mv="${v}">${n}</button>`).join('')}</div>
       <div class="row"><span>動物難度</span>${pills('level', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>顏色難度</span>${pills('lvColors', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>形狀難度</span>${pills('lvShapes', [1, 2, 3], ' 級')}</div>
@@ -1555,11 +1679,17 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     sheet.querySelectorAll('.pill[data-vn]').forEach(p => p.addEventListener('click', () => {
       settings.voiceName = p.dataset.vn; saveSettings(); pickVoice(); unlockAudio(); say('你好，我是這個聲音'); openPanel();
     }));
+    sheet.querySelectorAll('.pill[data-music]').forEach(p => p.addEventListener('click', () => {
+      settings.music = p.dataset.music; saveSettings(); unlockAudio(); bgmSync(); openPanel();
+    }));
+    sheet.querySelectorAll('.pill[data-mv]').forEach(p => p.addEventListener('click', () => {
+      settings.musicVol = +p.dataset.mv; saveSettings(); openPanel();
+    }));
     sheet.querySelectorAll('.pill[data-k]').forEach(p => p.addEventListener('click', () => {
       const k = p.dataset.k; let v = k === 'voice' ? p.dataset.v : +p.dataset.v;
       if (k === 'night' || k === 'sound') v = !!v;
       settings[k] = v; if (k === 'level') settings.streak = 0; if (k.startsWith('lv')) settings['st' + k.slice(2)] = 0;
-      saveSettings(); applyNight(); openPanel();
+      saveSettings(); applyNight(); bgmSync(); openPanel();
     }));
     $('pNew').addEventListener('click', () => { close(); unlockAudio(); session = null; saveSession(); showSetup(); });
     $('pRest').addEventListener('click', () => { close(); if (!session) session = { end: Date.now(), warned: true, restEnd: null }; session.end = Date.now(); enterRest(true); });
