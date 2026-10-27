@@ -1,3 +1,7 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F5F0E6">
 <title>Winnie Tai 遊戲室</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +20,10 @@
   --sun: #E8B86A;
   --ok: #8FAE8B;
   --font: "Huninn", "PingFang TC", "Noto Sans TC", "Heiti TC", sans-serif;
+  --cloud: color-mix(in srgb, #fff 60%, var(--bg));
+  --tint-amt: 62%;
+  --lift: 0 2px 0 color-mix(in srgb, var(--ink) 7%, transparent), 0 8px 18px -8px color-mix(in srgb, var(--ink) 22%, transparent);
+  --sink: inset 0 2px 7px color-mix(in srgb, var(--ink) 9%, transparent);
   color-scheme: light;
 }
 :root.night {
@@ -29,12 +37,15 @@
   --sky: #5A656B;
   --sun: #C99A55;
   --ok: #6F8C6B;
+  --cloud: color-mix(in srgb, var(--ink) 10%, var(--bg));
+  --tint-amt: 16%;
   color-scheme: dark;
 }
 [hidden] { display: none !important; }
-html, body { height: 100%; }
+html, body { height: 100%; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--bg); color: var(--ink); font-family: var(--font);
+  background: radial-gradient(130% 90% at 50% -20%, color-mix(in srgb, var(--sun) 13%, var(--bg)), var(--bg) 62%) var(--bg);
+  color: var(--ink); font-family: var(--font);
   margin: 0; overflow: hidden;
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   touch-action: manipulation;
@@ -42,6 +53,8 @@ body {
 }
 button { font-family: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
 button:focus-visible { outline: 3px solid var(--wood); outline-offset: 3px; }
+button { transition: transform .15s ease; }
+button:active { transform: scale(.95); }
 .app {
   position: relative; height: 100%;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -58,15 +71,34 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   width: 200px; height: 200px; border-radius: 50%; border: none; cursor: pointer;
   background: radial-gradient(circle at 40% 38%, #F3D49A, var(--sun) 70%);
   box-shadow: 0 0 0 18px color-mix(in srgb, var(--sun) 22%, transparent);
-  font-size: 34px; color: #5B4426; animation: breathe 4s ease-in-out infinite;
+  font-size: 34px; color: #5B4426; animation: breathe 4s ease-in-out infinite; position: relative; z-index: 1;
 }
+#start h1 { font-size: clamp(34px, 6vw, 56px); position: relative; z-index: 1; }
+#start h1 small { display: block; font-size: .42em; color: var(--soft); letter-spacing: .12em; margin-top: 6px; }
+#start .hint { position: relative; z-index: 1; }
+.friends { display: flex; gap: clamp(10px, 2.4vw, 22px); font-size: clamp(34px, 6vw, 52px); line-height: 1; position: relative; z-index: 1; }
+.friends span { animation: bob 3.2s ease-in-out infinite; }
+.friends span:nth-child(2n) { animation-delay: -1.6s; }
+.friends span:nth-child(3n) { animation-delay: -.8s; }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+.scenery { position: absolute; inset: -16px; overflow: hidden; pointer-events: none; z-index: 0; }
+.scenery .hill { position: absolute; border-radius: 50%; }
+.scenery .h1 { left: -12%; right: 38%; bottom: -26%; height: 46%; background: color-mix(in srgb, var(--ok) 32%, var(--bg)); }
+.scenery .h2 { left: 30%; right: -15%; bottom: -30%; height: 48%; background: color-mix(in srgb, var(--land) 45%, var(--bg)); }
+.scenery .cl { position: absolute; width: 130px; height: 42px; border-radius: 30px; background: var(--cloud); animation: drift 40s ease-in-out infinite alternate; }
+.scenery .cl::before, .scenery .cl::after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+.scenery .cl::before { width: 58px; height: 58px; left: 22px; top: -28px; }
+.scenery .cl::after { width: 44px; height: 44px; left: 66px; top: -18px; }
+.scenery .c1 { left: 9%; top: 16%; }
+.scenery .c2 { right: 10%; top: 26%; transform: scale(.8); animation-duration: 55s; animation-direction: alternate-reverse; }
+@keyframes drift { to { translate: 60px 0; } }
 @keyframes breathe { 50% { box-shadow: 0 0 0 28px color-mix(in srgb, var(--sun) 14%, transparent); } }
 
 /* 家長選時間 */
 .choices { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
 .choice {
   min-width: 120px; min-height: 96px; border-radius: 22px; border: 3px solid transparent;
-  background: var(--panel); font-size: 30px; cursor: pointer; padding: 8px 20px;
+  background: var(--panel); font-size: 30px; cursor: pointer; padding: 8px 20px; box-shadow: var(--lift);
 }
 .choice small { display: block; font-size: 16px; color: var(--soft); }
 .choice.on { border-color: var(--wood); }
@@ -75,11 +107,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 16px; width: min(1000px, 100%); max-height: 100%; min-height: 0; overflow-y: auto; touch-action: pan-y; padding: 4px; box-sizing: border-box; }
 #menu { padding-top: 70px; box-sizing: border-box; }
 .tile {
-  aspect-ratio: 1; max-width: 100%; border: none; border-radius: 28px; background: var(--panel); cursor: pointer;
+  aspect-ratio: 1; max-width: 100%; border: none; border-radius: 28px; cursor: pointer;
+  background: color-mix(in srgb, var(--tint, var(--panel)) var(--tint-amt), var(--panel)); box-shadow: var(--lift);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  font-size: 20px; white-space: nowrap;
+  font-size: 20px; white-space: nowrap; outline: 4px solid transparent; outline-offset: -4px; transition: transform .2s ease, outline-color .2s ease;
 }
-.tile .pic { font-size: 56px; line-height: 1; }
+.tile .pic { font-size: 56px; line-height: 1; filter: drop-shadow(0 3px 2px color-mix(in srgb, var(--ink) 14%, transparent)); }
+.tile.armed { outline-color: var(--wood); animation: armed 1.6s ease-in-out infinite; }
+.tile.armed .pic { animation: hop .6s ease; }
+@keyframes armed { 50% { transform: scale(1.05); } }
 .tile.locked { opacity: .45; }
 
 /* 頂部列 */
@@ -87,9 +123,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .topbar > * { pointer-events: auto; }
 .home {
   width: 64px; height: 64px; border-radius: 50%; border: none; background: var(--panel);
-  font-size: 30px; cursor: pointer;
+  font-size: 30px; cursor: pointer; box-shadow: var(--lift);
 }
-.skybox { width: 96px; height: 56px; border-radius: 14px; background: var(--sky); position: relative; overflow: hidden; }
+.skybox { width: 96px; height: 56px; border-radius: 16px; background: linear-gradient(var(--sky), color-mix(in srgb, var(--sky) 60%, var(--bg))); position: relative; overflow: hidden; box-shadow: var(--lift); }
 .skybox .s { position: absolute; left: 34px; width: 28px; height: 28px; border-radius: 50%; background: var(--sun); transition: top 1s linear, background 2s; }
 .skybox .hill { position: absolute; left: -10px; right: -10px; bottom: -22px; height: 36px; border-radius: 50%; background: var(--land); }
 
@@ -110,9 +146,10 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   flex: 1; border-radius: 26px; position: relative; display: flex; flex-direction: column; align-items: center;
   padding: 14px; box-sizing: border-box; min-width: 0; transition: transform .3s ease, box-shadow .3s ease;
 }
-.zone[data-z="water"] { background: var(--water); }
-.zone[data-z="land"] { background: var(--land); }
-.zone[data-z="sky"] { background: var(--sky); }
+.zone { box-shadow: var(--sink); }
+.zone[data-z="water"] { background: radial-gradient(60% 30% at 30% 100%, color-mix(in srgb, var(--water) 70%, var(--ink)) -60%, transparent 70%), linear-gradient(color-mix(in srgb, var(--water) 70%, var(--bg)), var(--water)); }
+.zone[data-z="land"] { background: radial-gradient(80% 26% at 50% 104%, color-mix(in srgb, var(--ok) 70%, var(--land)), transparent 72%), linear-gradient(color-mix(in srgb, var(--land) 70%, var(--bg)), var(--land)); }
+.zone[data-z="sky"] { background: radial-gradient(30% 14% at 72% 22%, var(--cloud), transparent 70%), radial-gradient(24% 11% at 26% 52%, var(--cloud), transparent 70%), linear-gradient(color-mix(in srgb, var(--sky) 60%, var(--bg)), var(--sky)); }
 .zone .label { font-size: 58px; line-height: 1; border: none; background: none; cursor: pointer; padding: 6px; }
 .zone .home-of { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-content: flex-start; margin-top: 10px; font-size: 46px; }
 .zone .home-of span { animation: settle .5s ease; }
@@ -123,23 +160,30 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .tray { height: 188px; width: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
 .animal {
   font-size: 136px; line-height: 1; width: 172px; height: 172px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; background: var(--panel); cursor: grab; touch-action: none; position: relative; z-index: 10;
+  border-radius: 50%; background: var(--panel); cursor: grab; touch-action: none; position: relative; z-index: 10; box-shadow: var(--lift);
 }
+.lifting { z-index: 40 !important; filter: drop-shadow(0 12px 10px color-mix(in srgb, var(--ink) 22%, transparent)); will-change: transform; }
 .animal.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 .done-row { display: flex; gap: 26px; }
-.round-btn { width: 120px; height: 120px; border-radius: 50%; border: none; background: var(--panel); font-size: 54px; cursor: pointer; }
+.round-btn { width: 120px; height: 120px; border-radius: 50%; border: none; background: var(--panel); font-size: 54px; cursor: pointer; box-shadow: var(--lift); }
+.done-row { animation: settle .5s ease; }
+/* 完成時慢慢飄起的小星星（不閃爍） */
+.cheer { position: fixed; inset: 0; pointer-events: none; z-index: 25; overflow: hidden; }
+.cheer i { position: absolute; bottom: -40px; font-style: normal; font-size: 34px; opacity: 0; animation: rise 2.8s ease-out forwards; }
+@keyframes rise { 15% { opacity: .85; } 100% { opacity: 0; transform: translateY(-62vh) rotate(25deg); } }
 
 /* 顏色、形狀共用 */
 #play { gap: 30px; padding-top: 76px; box-sizing: border-box; }
 .board { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; width: 100%; }
 .slot { width: clamp(72px, 12.5vw, 130px); aspect-ratio: 1; max-width: 100%; border-radius: 18px; border: 3px dashed color-mix(in srgb, var(--ink) 22%, transparent); box-sizing: border-box; display: flex; align-items: center; justify-content: center; transition: box-shadow .4s ease; }
 .slot.glow { box-shadow: 0 0 0 5px var(--sun); }
-.tray2 { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center; min-height: 130px; width: 100%; border-radius: 26px; background: var(--panel); padding: 12px; box-sizing: border-box; }
+.tray2 { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center; min-height: 130px; width: 100%; border-radius: 26px; background: var(--panel); padding: 12px; box-sizing: border-box; box-shadow: var(--sink); }
+.tray2:empty { visibility: hidden; }
 .chip { width: clamp(66px, 11.5vw, 120px); aspect-ratio: 1; border-radius: 14px; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; }
 .chip.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 .hop { animation: hop .6s ease; }
 @keyframes hop { 40% { transform: translateY(-18px); } }
-.shape-board { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 48px); width: min(900px, 100%); padding: 32px 22px; box-sizing: border-box; border-radius: 28px; background: color-mix(in srgb, var(--wood) 55%, var(--bg)); }
+.shape-board { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 48px); width: min(900px, 100%); padding: 32px 22px; box-sizing: border-box; border-radius: 28px; background: color-mix(in srgb, var(--wood) 55%, var(--bg)); box-shadow: var(--lift), inset 0 2px 0 color-mix(in srgb, #fff 18%, transparent); }
 .hole { width: clamp(92px, 14vw, 142px); aspect-ratio: 1; max-width: 100%; display: flex; align-items: center; justify-content: center; }
 .hole svg, .piece svg { width: 100%; height: 100%; display: block; }
 .hole .h { fill: color-mix(in srgb, var(--ink) 38%, var(--wood)); }
@@ -148,15 +192,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
 /* 數一數、整理房間 */
 .baskets { display: flex; gap: clamp(16px, 4vw, 40px); justify-content: center; flex-wrap: wrap; width: 100%; }
-.basket { width: clamp(150px, 24vw, 230px); min-height: 190px; border-radius: 22px 22px 60px 60px; background: color-mix(in srgb, var(--wood) 55%, var(--bg)); display: flex; flex-direction: column; align-items: center; padding: 12px; box-sizing: border-box; gap: 8px; transition: box-shadow .4s ease; }
+.basket { width: clamp(150px, 24vw, 230px); min-height: 190px; border-radius: 22px 22px 60px 60px; background: repeating-linear-gradient(90deg, transparent 0 18px, color-mix(in srgb, var(--ink) 6%, transparent) 18px 21px), color-mix(in srgb, var(--wood) 55%, var(--bg)); display: flex; flex-direction: column; align-items: center; padding: 12px; box-sizing: border-box; gap: 8px; transition: box-shadow .4s ease; box-shadow: var(--lift); }
 .basket .num { font-size: 54px; line-height: 1; border: none; background: none; cursor: pointer; font-family: inherit; color: var(--ink); }
 .basket .in { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; font-size: 42px; }
-.basket.full { box-shadow: 0 0 0 5px var(--ok); }
+.basket.full { box-shadow: 0 0 0 5px var(--ok), var(--lift); }
 .item { font-size: 78px; line-height: 1; width: 106px; height: 106px; display: flex; align-items: center; justify-content: center; border-radius: 50%; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; }
 .item.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 .room { display: flex; gap: 14px; width: 100%; justify-content: center; flex-wrap: wrap; border-radius: 28px; padding: 16px; box-sizing: border-box; background: color-mix(in srgb, var(--panel) 60%, var(--bg)); transition: background 1.2s ease, box-shadow 1.2s ease; }
 .room.lit { background: color-mix(in srgb, var(--sun) 28%, var(--bg)); box-shadow: 0 0 60px color-mix(in srgb, var(--sun) 40%, transparent); }
-.spot { flex: 1 1 150px; max-width: 250px; min-height: 170px; border-radius: 20px; background: var(--panel); display: flex; flex-direction: column; align-items: center; padding: 10px; box-sizing: border-box; }
+.spot { flex: 1 1 150px; max-width: 250px; min-height: 170px; border-radius: 20px; background: var(--panel); box-shadow: var(--lift); display: flex; flex-direction: column; align-items: center; padding: 10px; box-sizing: border-box; }
 .spot .label { font-size: 58px; border: none; background: none; cursor: pointer; padding: 4px; }
 .spot .in { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; font-size: 42px; }
 .spot.hint-me { animation: glow 1.6s ease-in-out 2; }
@@ -184,15 +228,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 /* 認識東西 */
 #learn { justify-content: flex-start; gap: 18px; padding-top: 76px; box-sizing: border-box; }
 .cats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.cat { min-width: 108px; min-height: 88px; border-radius: 20px; border: 3px solid transparent; background: var(--panel); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 16px; padding: 6px 12px; }
+.cat { min-width: 108px; min-height: 88px; border-radius: 20px; border: 3px solid transparent; background: var(--panel); box-shadow: var(--lift); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 16px; padding: 6px 12px; }
 .cat .pic { font-size: 42px; line-height: 1; }
 .cat.on { border-color: var(--wood); }
 .learn-main { flex: 1; min-height: 0; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 34%); gap: 18px; }
 @media (max-width: 700px) { .learn-main { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); } .learn-main .bigcard { order: -1; } }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px; overflow-y: auto; align-content: start; min-height: 0; padding: 4px; touch-action: pan-y; }
-.lcard { aspect-ratio: 1; max-width: 100%; border-radius: 20px; border: 3px solid transparent; background: var(--panel); font-size: 68px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+.lcard { aspect-ratio: 1; max-width: 100%; border-radius: 20px; border: 3px solid transparent; background: var(--panel); box-shadow: var(--lift); font-size: 68px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
 .lcard.on { border-color: var(--wood); }
-.bigcard { border-radius: 28px; background: var(--panel); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 18px; min-height: 0; text-align: center; }
+.bigcard { border-radius: 28px; background: radial-gradient(80% 60% at 50% 30%, color-mix(in srgb, var(--sun) 16%, var(--panel)), var(--panel)); box-shadow: var(--lift); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 18px; min-height: 0; text-align: center; }
 .bigcard .pic { font-size: clamp(90px, 15vw, 150px); line-height: 1; }
 .bigcard .zh { font-size: 42px; letter-spacing: .06em; }
 .bigcard .en { font-size: 28px; color: var(--soft); }
@@ -210,8 +254,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .sz.cube { background: #E3A8A6; border-radius: 4px; box-shadow: inset 0 -5px 0 rgba(0,0,0,.08); }
 .sz.back, .ppiece.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 .shadows { gap: clamp(10px, 2vw, 22px); }
-.shadow { width: clamp(130px, 21vw, 200px); aspect-ratio: 1; border-radius: 24px; background: var(--panel); display: flex; align-items: center; justify-content: center; font-size: clamp(78px, 13.5vw, 134px); line-height: 1; transition: box-shadow .4s ease; }
-.shadow.done { box-shadow: 0 0 0 5px var(--ok); }
+.shadow { width: clamp(130px, 21vw, 200px); aspect-ratio: 1; border-radius: 24px; background: var(--panel); box-shadow: var(--sink); display: flex; align-items: center; justify-content: center; font-size: clamp(78px, 13.5vw, 134px); line-height: 1; transition: box-shadow .4s ease; }
+.shadow.done { box-shadow: 0 0 0 5px var(--ok), var(--lift); }
 .sil { filter: brightness(0); opacity: .3; }
 :root.night .sil { filter: brightness(0) invert(1); opacity: .25; }
 .item.big { font-size: 94px; width: 122px; height: 122px; }
@@ -221,12 +265,12 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .swatch { display: block; width: 58px; height: 58px; border-radius: 50%; }
 .outl { display: block; width: 60px; height: 60px; color: color-mix(in srgb, var(--ink) 45%, transparent); }
 .steps { gap: clamp(8px, 1.6vw, 16px); }
-.step { width: clamp(70px, 17vw, 152px); aspect-ratio: 1; border-radius: 20px; background: var(--panel); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-size: clamp(46px, 10vw, 90px); line-height: 1; transition: box-shadow .4s ease; }
+.step { width: clamp(70px, 17vw, 152px); aspect-ratio: 1; border-radius: 20px; background: var(--panel); box-shadow: var(--sink); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-size: clamp(46px, 10vw, 90px); line-height: 1; transition: box-shadow .4s ease; }
 .step b { position: absolute; top: 6px; left: 10px; font-size: 18px; font-weight: 400; color: var(--soft); }
-.step.done { box-shadow: 0 0 0 4px var(--ok); }
+.step.done { box-shadow: 0 0 0 4px var(--ok), var(--lift); }
 .scene { position: relative; flex: none; }
 .scene.kid { --w: min(270px, 50vw, 30vh); width: var(--w); height: calc(var(--w) * 1.75); }
-.scene.mat { --w: min(660px, 92vw, 70vh); width: var(--w); height: calc(var(--w) * .6); border-radius: 26px; background: color-mix(in srgb, var(--wood) 30%, var(--bg)); }
+.scene.mat { --w: min(660px, 92vw, 70vh); width: var(--w); height: calc(var(--w) * .6); border-radius: 26px; background: repeating-linear-gradient(0deg, transparent 0 22px, color-mix(in srgb, var(--wood) 14%, transparent) 22px 24px), color-mix(in srgb, var(--wood) 30%, var(--bg)); box-shadow: var(--lift); }
 .scene .face { position: absolute; left: 50%; top: 21%; transform: translate(-50%, -50%); font-size: calc(var(--w) * .36); line-height: 1; }
 .pspot { position: absolute; transform: translate(-50%, -50%); line-height: 1; transition: filter .4s ease; }
 .pspot.done { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ok) 70%, transparent)); }
@@ -259,7 +303,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 @keyframes float { 50% { transform: translateY(-14px); opacity: .5; } }
 .rest-step { font-size: 30px; text-align: center; min-height: 1.4em; }
 .dots { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 420px; }
-.dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--panel); }
+.dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--panel); transition: background 1s ease; }
 .dots i.on { background: var(--wood); }
 
 /* 家長面板 */
@@ -277,13 +321,58 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .answers button { font-size: 28px; padding: 14px; border-radius: 16px; border: none; background: var(--panel); cursor: pointer; font-variant-numeric: tabular-nums; }
 .wrong-note { color: var(--soft); text-align: center; min-height: 1.2em; margin: 0; }
 
+/* 手機橫放（高度很矮）：動物回家改成左右排，其他遊戲縮小一點，整個畫面放得下 */
+@media (max-height: 520px) and (orientation: landscape) {
+  .screen { top: 8px; bottom: 8px; gap: 12px; }
+  .home { width: 52px; height: 52px; font-size: 26px; }
+  .skybox { width: 80px; height: 46px; }
+  #menu { padding-top: 58px; }
+  #game, #play, #learn { padding-top: 58px; gap: 10px; }
+  #game { display: grid; grid-template-columns: minmax(0, 1fr) 170px; grid-template-rows: minmax(0, 1fr) auto; gap: 8px 14px; align-items: stretch; }
+  #game .zones { grid-column: 1; grid-row: 1 / 3; }
+  #game .tray { grid-column: 2; grid-row: 1; height: auto; width: auto; }
+  #game .caption { grid-column: 2; grid-row: 2; flex-direction: column; align-items: center; gap: 0; min-height: 0; }
+  #game .done-row { flex-direction: column; gap: 10px; }
+  #game .round-btn { width: 84px; height: 84px; font-size: 40px; }
+  .caption .zh { font-size: 28px; } .caption .en { font-size: 20px; }
+  .animal { width: 136px; height: 136px; font-size: 104px; }
+  .zone .label { font-size: 42px; } .zone .home-of { font-size: 32px; margin-top: 4px; }
+  .tray2 { min-height: 0; padding: 8px; gap: 10px; }
+  .tray2:empty { display: none; }
+  .round-btn { width: 92px; height: 92px; font-size: 42px; }
+  .item { width: 84px; height: 84px; font-size: 64px; }
+  .item.big { width: 92px; height: 92px; font-size: 70px; }
+  .basket { min-height: 120px; } .basket .num { font-size: 40px; } .basket .in { font-size: 30px; }
+  .room { padding: 8px; gap: 10px; }
+  .spot { min-height: 96px; } .spot .label { font-size: 40px; padding: 0; } .spot .in { font-size: 30px; } .spot .mini { width: 38px; height: 38px; }
+  .hole, .piece { width: min(14vw, 26vh); }
+  .shape-board { padding: 12px 18px; }
+  .shadow { width: min(21vw, 30vh); font-size: min(13.5vw, 20vh); }
+  .step { width: min(17vw, 28vh); font-size: min(10vw, 17vh); }
+  .szslot, .sz { --u: min(14.5vw, 25vh); }
+  .lcard.pick { width: min(25vw, 30vh); font-size: min(15vw, 20vh); }
+  .listen { width: 110px; height: 110px; font-size: 54px; }
+  .dots-wrap { width: min(100%, 64vh); }
+  .puz { width: min(680px, 100%, calc(46vh * var(--c) / var(--r))); }
+  .scene.kid { --w: min(270px, 50vw, 34vh); }
+  .scene.mat { --w: min(660px, 92vw, 62vh); }
+  .cats { flex-wrap: nowrap; overflow-x: auto; width: 100%; justify-content: flex-start; touch-action: pan-x; padding: 4px; box-sizing: border-box; flex: none; }
+  .cat { min-height: 62px; min-width: 84px; flex: none; } .cat .pic { font-size: 30px; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
+  .lcard { font-size: 52px; }
+  .bigcard { gap: 4px; padding: 10px; } .bigcard .pic { font-size: 76px; } .bigcard .zh { font-size: 30px; } .bigcard .en { font-size: 20px; }
+  #rest { gap: 10px; } .moon { width: 80px; height: 80px; box-shadow: -20px 8px 0 0 #E9D9A8; } .sleeper { font-size: 84px; } .rest-step { font-size: 24px; }
+  .scenery .cl { display: none; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
 <div class="app" id="app">
   <!-- 開場 -->
   <section class="screen" id="start">
-    <h1>Winnie Tai 遊戲室</h1>
+    <div class="scenery" aria-hidden="true"><div class="cl c1"></div><div class="cl c2"></div><div class="hill h1"></div><div class="hill h2"></div></div>
+    <h1>Winnie Tai 遊戲室<small>Winnie's Playroom</small></h1>
+    <div class="friends" aria-hidden="true"><span>🐰</span><span>🐻</span><span>🐢</span><span>🐥</span><span>🦒</span></div>
     <button class="big-sun" id="startBtn" aria-label="開始">開始</button>
     <p class="hint">點太陽開始</p>
   </section>
@@ -387,10 +476,14 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   const enRecV = () => settings.enRec === 'off' ? null : clips.enVoices.includes(settings.enRec) ? settings.enRec : clips.enVoices[0] || null;
   const enFile = (en) => en && enRecV() && clips.en[en] ? `en/${enRecV()}/` + clips.en[en] : null;
   // 聲音包：manifest.packs = { 'en/K': { file: 'en-K-pack.mp3', idx: { 'en001.mp3': [起點, 長度] } } }，（一個大 mp3）下載一次後切成小段播放
-  const packData = {};
-  const loadPacks = () => Object.entries(clips.packs || {}).forEach(([k, pk]) => {
-    fetch('voice/' + pk.file).then(r => r.ok ? r.arrayBuffer() : null).then(b => { if (b) packData[k] = { buf: b, urls: {} }; }).catch(() => {});
-  });
+  // 只下載目前選用的聲音包（每包約 8MB），換聲音時再下載新的；還沒下載好之前先播單句檔
+  const packData = {}, packWant = {};
+  const loadPack = (k) => {
+    const pk = clips.packs && clips.packs[k];
+    if (!pk || packWant[k]) return; packWant[k] = true;
+    fetch('voice/' + pk.file).then(r => r.ok ? r.arrayBuffer() : null).then(b => { if (b) packData[k] = { buf: b, urls: {} }; else packWant[k] = false; }).catch(() => { packWant[k] = false; });
+  };
+  const loadPacks = () => { if (recDir()) loadPack(settings.rec); if (enRecV()) loadPack('en/' + enRecV()); };
   const clipSrc = (f) => {
     const cut = f.lastIndexOf('/'), k = f.slice(0, cut), name = f.slice(cut + 1), d = packData[k], at = d && clips.packs[k].idx[name];
     if (!at) return 'voice/' + f;
@@ -485,10 +578,21 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 畫面切換 ----------
   const $ = (id) => document.getElementById(id);
-  let current = 'start';
+  let current = 'start', gen = 0;
+  // 跟著畫面走的計時器：換畫面或開新的一局後就不執行
+  const later = (fn, ms) => { const g = gen; return setTimeout(() => { if (g === gen) fn(); }, ms); };
+  const cheer = () => {
+    const box = document.createElement('div'); box.className = 'cheer'; box.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 9; i++) {
+      const s = document.createElement('i'); s.textContent = ['⭐', '🌟', '✨'][i % 3];
+      s.style.left = (6 + i * 11 + Math.random() * 5) + '%'; s.style.animationDelay = (Math.random() * .7).toFixed(2) + 's';
+      box.appendChild(s);
+    }
+    document.body.appendChild(box); setTimeout(() => box.remove(), 3800);
+  };
   const show = (id) => {
     for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
-    current = id;
+    current = id; gen++;
     const st = document.getElementById('subt'); if (st) st.classList.remove('on');
     try { bgmSync(); } catch {}
   };
@@ -538,19 +642,25 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     { id: 'weather', name: '四季與天氣', pic: '🌦️', ready: true },
   ];
   const tilesBox = $('menuTiles');
-  for (const g of GAMES) {
+  const TINTS = ['#C9DCE6', '#EED6C4', '#DCD3C2', '#F0D8D4', '#E2D6EA', '#D6E4CE', '#E8E0C8', '#D4E2E2'];
+  GAMES.forEach((g, gi) => {
     const b = document.createElement('button');
-    b.className = 'tile' + (g.ready ? '' : ' locked');
+    b.className = 'tile' + (g.ready ? '' : ' locked'); b.style.setProperty('--tint', TINTS[gi % TINTS.length]);
     b.innerHTML = `<span class="pic">${g.pic}</span><span>${g.name}</span>`;
     let armed = false, armTimer;
     b.addEventListener('click', () => {
       if (!g.ready) { say([g.name, '還在準備中喔']); return; }
       // 點一下唸名稱，再點一下進入
-      if (!armed) { armed = true; say(g.name); clearTimeout(armTimer); armTimer = setTimeout(() => armed = false, 4000); return; }
-      armed = false; ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather })[g.id]();
+      if (!armed) {
+        for (const t of tilesBox.querySelectorAll('.armed')) t.dispatchEvent(new Event('disarm'));
+        armed = true; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
+      }
+      disarm(); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather })[g.id]();
     });
+    const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
+    b.addEventListener('disarm', disarm);
     tilesBox.appendChild(b);
-  }
+  });
   const goMenu = (greet) => { show('menu'); if (greet) say('想玩什麼呢？點一下聽聽看'); };
   $('homeBtn').addEventListener('click', () => { roundActive = false; goMenu(false); maybeRest(); });
 
@@ -678,7 +788,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     }
     show('game');
     say('幫動物找到牠的家');
-    setTimeout(nextAnimal, 1400);
+    later(nextAnimal, 1400);
   };
 
   const showCap = (zh, en) => {
@@ -709,19 +819,20 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   const makeDraggable = (el, a) => {
     let sx = 0, sy = 0, moved = false, id = null;
     el.addEventListener('pointerdown', (e) => {
-      id = e.pointerId; el.setPointerCapture(id); el.classList.remove('back');
+      if (id !== null) return;
+      id = e.pointerId; try { el.setPointerCapture(id); } catch {} el.classList.remove('back');
       sx = e.clientX; sy = e.clientY; moved = false;
     });
     el.addEventListener('pointermove', (e) => {
       if (e.pointerId !== id) return;
       const dx = e.clientX - sx, dy = e.clientY - sy;
-      if (Math.hypot(dx, dy) > 8) moved = true;
-      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      if (!moved && Math.hypot(dx, dy) > 8) { moved = true; el.classList.add('lifting'); }
+      if (moved) el.style.transform = `translate(${dx}px, ${dy}px) scale(1.08)`;
       const z = zoneAt(e.clientX, e.clientY);
       for (const q of document.querySelectorAll('.zone')) q.classList.toggle('near', q === z);
     });
     const end = (e) => {
-      if (e.pointerId !== id) return; id = null;
+      if (e.pointerId !== id) return; id = null; el.classList.remove('lifting');
       for (const q of document.querySelectorAll('.zone')) q.classList.remove('near');
       if (!moved) { el.style.transform = ''; say(a.name, a.en); showCap(a.name, a.en); return; }
       const z = zoneAt(e.clientX, e.clientY);
@@ -731,7 +842,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         ding(a.homes.length > 1 ? 988 : 880);
         say([a.name, ZONES[z.dataset.z].phrase], a.en); showCap(a.name, a.en);
         queue.shift(); el.remove();
-        setTimeout(nextAnimal, 1500);
+        later(nextAnimal, 1500);
       } else {
         el.classList.add('back'); el.style.transform = '';
         if (z) { errors++; triesOnThis++; }
@@ -743,6 +854,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
+    el.addEventListener('lostpointercapture', end);
   };
 
   const finishRound = () => {
@@ -750,7 +862,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     if (errors === 0) settings.streak++; else settings.streak = 0;
     if (settings.streak >= 3 && settings.level < 3) { settings.level++; settings.streak = 0; }
     saveSettings();
-    ding(660); setTimeout(() => ding(880), 220);
+    ding(660); setTimeout(() => ding(880), 220); cheer();
     say('你把每一隻動物都送回家了');
     const tray = $('tray');
     tray.innerHTML = `<div class="done-row"><button class="round-btn" id="again" aria-label="再玩一次">🔁</button><button class="round-btn" id="toMenu" aria-label="回選單">🏠</button></div>`;
@@ -765,23 +877,25 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   const dragify = (el, onDrop, onTap) => {
     let sx = 0, sy = 0, moved = false, id = null;
     el.addEventListener('pointerdown', (e) => {
-      id = e.pointerId; el.setPointerCapture(id); el.classList.remove('back');
+      if (id !== null) return;
+      id = e.pointerId; try { el.setPointerCapture(id); } catch {} el.classList.remove('back');
       sx = e.clientX; sy = e.clientY; moved = false;
     });
     el.addEventListener('pointermove', (e) => {
       if (e.pointerId !== id) return;
       const dx = e.clientX - sx, dy = e.clientY - sy;
-      if (Math.hypot(dx, dy) > 8) moved = true;
-      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      if (!moved && Math.hypot(dx, dy) > 8) { moved = true; el.classList.add('lifting'); }
+      if (moved) el.style.transform = `translate(${dx}px, ${dy}px) scale(1.08)`;
     });
     const end = (e) => {
-      if (e.pointerId !== id) return; id = null;
+      if (e.pointerId !== id) return; id = null; el.classList.remove('lifting');
       if (!moved) { el.style.transform = ''; if (onTap) onTap(); return; }
       if (onDrop(e.clientX, e.clientY)) { el.classList.remove('back'); el.style.transform = ''; }
       else { el.classList.add('back'); el.style.transform = ''; }
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
+    el.addEventListener('lostpointercapture', end);
   };
   const hitAt = (els, x, y, margin) => {
     let best = null, bestD = Infinity;
@@ -797,7 +911,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     if (errs === 0) settings[stKey]++; else settings[stKey] = 0;
     if (settings[stKey] >= 3 && settings[lvKey] < 3) { settings[lvKey]++; settings[stKey] = 0; }
     saveSettings();
-    ding(660); setTimeout(() => ding(880), 220);
+    ding(660); setTimeout(() => ding(880), 220); cheer();
     const tray = $('tray2');
     tray.innerHTML = `<div class="done-row"><button class="round-btn" id="again2" aria-label="再玩一次">🔁</button><button class="round-btn" id="toMenu2" aria-label="回選單">🏠</button></div>`;
     $('again2').addEventListener('click', () => { if (!maybeRest()) again(); });
@@ -831,7 +945,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       }
       errs++;
       slots.forEach(sl => { if (!wrong.includes(sl)) sl.classList.add('glow'); });
-      setTimeout(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
+      later(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
     };
     for (const i of shuffle(shades.map((_, i) => i))) {
       const c = document.createElement('div');
@@ -842,7 +956,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (sl) {
           if (sl.firstChild && sl.firstChild !== c) tray.appendChild(sl.firstChild);
           sl.appendChild(c); slots.forEach(q => q.classList.remove('glow'));
-          ding(600 + i * 60); setTimeout(check, 250); return true;
+          ding(600 + i * 60); later(check, 250); return true;
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
         return false;
@@ -890,7 +1004,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (h && h.dataset.n === sh.name) {
           h.dataset.done = '1'; h.innerHTML = p.innerHTML; p.remove();
           ding(880); sayName(sh.name, sh.en);
-          if (--left === 0) setTimeout(() => { say('每個形狀都回到自己的位置了'); finishPlay('lvShapes', 'stShapes', errs, startShapes); }, 900);
+          if (--left === 0) later(() => { say('每個形狀都回到自己的位置了'); finishPlay('lvShapes', 'stShapes', errs, startShapes); }, 900);
           return true;
         }
         if (h) {
@@ -941,9 +1055,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         it.remove(); ding(520 + c * 70); sayName(NUMS[c], NUM_EN[c]);
         if (c === +b.dataset.t) {
           b.classList.add('full');
-          setTimeout(() => say(`${NUMS[c]}個，剛剛好`), 700);
+          later(() => say(`${NUMS[c]}個，剛剛好`), 700);
           if (baskets.every(q => q.classList.contains('full'))) {
-            setTimeout(() => { tray.innerHTML = ''; say('每個籃子都裝好了'); finishPlay('lvCount', 'stCount', errs, startCount); }, 1800);
+            later(() => { tray.innerHTML = ''; say('每個籃子都裝好了'); finishPlay('lvCount', 'stCount', errs, startCount); }, 1800);
           }
         }
         return true;
@@ -995,7 +1109,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (sp && sp.dataset.k === t.to) {
           const s = document.createElement('span'); s.textContent = t.pic; sp.querySelector('.in').appendChild(s);
           it.remove(); ding(880); sayName(t.name, t.en, `${t.name}放在${SPOTS[t.to].name}`);
-          if (--left === 0) setTimeout(() => { board.classList.add('lit'); say('房間整理好了，好舒服'); finishPlay('lvTidy', 'stTidy', errs, startTidy); }, 1300);
+          if (--left === 0) later(() => { board.classList.add('lit'); say('房間整理好了，好舒服'); finishPlay('lvTidy', 'stTidy', errs, startTidy); }, 1300);
           return true;
         }
         if (sp) { errs++; if (++tries >= 2) { const r = spots.find(q => q.dataset.k === t.to); r.classList.remove('hint-me'); void r.offsetWidth; r.classList.add('hint-me'); } }
@@ -1050,9 +1164,9 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       if (next < pts.length) { dots[next].classList.add('next'); return; }
       // 最後一點連回第一點，顯示動物
       line(pts[pts.length - 1], pts[0]); roundActive = false;
-      setTimeout(() => {
+      later(() => {
         svg.querySelector('.fill').classList.add('on'); svg.querySelector('.who').classList.add('on');
-        ding(660); setTimeout(() => ding(880), 220);
+        ding(660); setTimeout(() => ding(880), 220); cheer();
         sayName(o.name, o.en, `是${o.name}`);
         tray.innerHTML = `<div class="done-row"><button class="round-btn" id="again3" aria-label="下一隻">🔁</button><button class="round-btn" id="toMenu3" aria-label="回選單">🏠</button></div>`;
         $('again3').addEventListener('click', () => { if (!maybeRest()) startDots(); });
@@ -1125,7 +1239,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   // ---------- 共用：沒有關卡的結束畫面、提示、拖到對的位置 ----------
   const finishFree = (again) => {
     roundActive = false;
-    ding(660); setTimeout(() => ding(880), 220);
+    ding(660); setTimeout(() => ding(880), 220); cheer();
     const tray = $('tray2');
     tray.innerHTML = `<div class="done-row"><button class="round-btn" id="again2" aria-label="再玩一次">🔁</button><button class="round-btn" id="toMenu2" aria-label="回選單">🏠</button></div>`;
     $('again2').addEventListener('click', () => { if (!maybeRest()) again(); });
@@ -1147,7 +1261,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (g && g.k === t.k) {
           if (g.single) g.done = true;
           put(t, g); it.remove(); ding(880);
-          if (--left === 0) setTimeout(() => onDone(errs), 1300);
+          if (--left === 0) later(() => onDone(errs), 1300);
           return true;
         }
         if (g) { errs++; if (++tries >= 2) { const r = targets.find(q => q.k === t.k && !q.done); if (r) nudge(r.el); } }
@@ -1476,14 +1590,14 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         } else {
           b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop');
           if (++tries >= 2) nudge(right);
-          setTimeout(play, 500);
+          later(play, 500);
         }
       });
       tray.appendChild(b);
     }
     show('play');
-    if (first) { say('聽聽看，是誰的聲音？'); setTimeout(() => { if (tok === sndTok) play(); }, 2200); }
-    else setTimeout(play, 500);
+    if (first) { say('聽聽看，是誰的聲音？'); later(play, 2200); }
+    else later(play, 500);
   };
   $('homeBtn2').addEventListener('click', () => { sndTok++; });
 
@@ -1508,7 +1622,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         return finishFree(startSize);
       }
       slots.forEach(sl => { if (!wrong.includes(sl)) sl.classList.add('glow'); });
-      setTimeout(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
+      later(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
     };
     for (const i of shuffle(SIZE_K.map((_, i) => i))) {
       const c = document.createElement('div'); c.className = 'sz' + (set.pic ? '' : ' cube'); c.dataset.i = i;
@@ -1519,7 +1633,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
         if (sl) {
           if (sl.firstChild && sl.firstChild !== c) tray.appendChild(sl.firstChild);
           sl.appendChild(c); slots.forEach(q => q.classList.remove('glow'));
-          ding(950 - i * 90); setTimeout(check, 250); return true;
+          ding(950 - i * 90); later(check, 250); return true;
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
         return false;
@@ -1865,10 +1979,10 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     sheet.hidden = false;
     $('pTry').addEventListener('click', () => { unlockAudio(); say('你好，我們一起幫兔子找家吧', 'Rabbit'); });
     sheet.querySelectorAll('.pill[data-enrec]').forEach(p => p.addEventListener('click', () => {
-      settings.enRec = p.dataset.enrec; saveSettings(); unlockAudio(); say('兔子', 'Rabbit'); openPanel();
+      settings.enRec = p.dataset.enrec; saveSettings(); loadPacks(); unlockAudio(); say('兔子', 'Rabbit'); openPanel();
     }));
     sheet.querySelectorAll('.pill[data-rec]').forEach(p => p.addEventListener('click', () => {
-      settings.rec = p.dataset.rec; saveSettings(); unlockAudio(); say('你好，我們一起幫兔子找家吧'); openPanel();
+      settings.rec = p.dataset.rec; saveSettings(); loadPacks(); unlockAudio(); say('你好，我們一起幫兔子找家吧'); openPanel();
     }));
     sheet.querySelectorAll('.pill[data-vn]').forEach(p => p.addEventListener('click', () => {
       settings.voiceName = p.dataset.vn; saveSettings(); pickVoice(); unlockAudio(); say('你好，我是這個聲音'); openPanel();
