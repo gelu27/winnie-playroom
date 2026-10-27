@@ -146,7 +146,12 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   flex: 1; border-radius: 26px; position: relative; display: flex; flex-direction: column; align-items: center;
   padding: 14px; box-sizing: border-box; min-width: 0; transition: transform .3s ease, box-shadow .3s ease;
 }
-.zone { box-shadow: var(--sink); }
+.zone { box-shadow: var(--sink); --roof: clamp(34px, 7vh, 64px); margin-top: var(--roof); border-radius: 0 0 22px 22px; }
+/* 家做成小房子：上面加屋頂 */
+.zone::before { content: ""; position: absolute; left: -10px; right: -10px; bottom: 100%; height: var(--roof); background: var(--roofc); clip-path: polygon(50% 0, 100% 100%, 0 100%); pointer-events: none; }
+.zone[data-z="water"] { --roofc: color-mix(in srgb, var(--water) 55%, var(--wood)); }
+.zone[data-z="land"] { --roofc: color-mix(in srgb, var(--land) 45%, var(--wood)); }
+.zone[data-z="sky"] { --roofc: color-mix(in srgb, var(--sky) 55%, var(--wood)); }
 .zone[data-z="water"] { background: radial-gradient(60% 30% at 30% 100%, color-mix(in srgb, var(--water) 70%, var(--ink)) -60%, transparent 70%), linear-gradient(color-mix(in srgb, var(--water) 70%, var(--bg)), var(--water)); }
 .zone[data-z="land"] { background: radial-gradient(80% 26% at 50% 104%, color-mix(in srgb, var(--ok) 70%, var(--land)), transparent 72%), linear-gradient(color-mix(in srgb, var(--land) 70%, var(--bg)), var(--land)); }
 .zone[data-z="sky"] { background: radial-gradient(30% 14% at 72% 22%, var(--cloud), transparent 70%), radial-gradient(24% 11% at 26% 52%, var(--cloud), transparent 70%), linear-gradient(color-mix(in srgb, var(--sky) 60%, var(--bg)), var(--sky)); }
@@ -181,6 +186,26 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .tray2:empty { visibility: hidden; }
 .chip { width: clamp(66px, 11.5vw, 120px); aspect-ratio: 1; border-radius: 14px; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; }
 .chip.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
+/* 顏色排排站：可愛的形狀 */
+.chip svg, .ghost-shape { width: 100%; height: 100%; display: block; overflow: visible; }
+.board.colors .slot { position: relative; border: none; }
+.board.colors .chip { width: clamp(66px, 11.5vw, 120px); height: auto; border-radius: 0; background: none; filter: drop-shadow(0 3px 3px color-mix(in srgb, var(--ink) 16%, transparent)); }
+.ghost-shape { position: absolute; inset: 0; fill: color-mix(in srgb, var(--ink) 5%, transparent); stroke: color-mix(in srgb, var(--ink) 28%, transparent); stroke-width: 2.5; stroke-dasharray: 6 5; }
+.slot .chip { position: relative; }
+.slot.glow { box-shadow: none; }
+.slot.glow .ghost-shape { stroke: var(--ok); stroke-dasharray: none; stroke-width: 4; }
+.board.th-bug { gap: 0; align-items: center; }
+.board.th-bug .slot { margin-left: calc(clamp(72px, 12.5vw, 130px) * -.12); }
+.bug-head { width: clamp(80px, 14vw, 146px); aspect-ratio: 1; position: relative; z-index: 2; }
+.bug-head svg { width: 100%; height: 100%; display: block; }
+.board.alive .bug-head { animation: wave 1.1s ease-in-out 3; }
+.board.alive.th-bug .chip { animation: wave 1.1s ease-in-out 3; }
+.board.alive.th-pencil .chip { animation: hop .7s ease 3; }
+.board.alive.th-balloon .chip { animation: sway 2.2s ease-in-out 2; }
+.board.alive.th-fish .chip { animation: swim 1.4s ease-in-out 3; }
+@keyframes wave { 50% { transform: translateY(-14px); } }
+@keyframes sway { 30% { transform: translateY(-16px) rotate(-5deg); } 70% { transform: translateY(-8px) rotate(5deg); } }
+@keyframes swim { 50% { transform: translateX(-10px) rotate(-6deg); } }
 .hop { animation: hop .6s ease; }
 @keyframes hop { 40% { transform: translateY(-18px); } }
 .shape-board { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 48px); width: min(900px, 100%); padding: 32px 22px; box-sizing: border-box; border-radius: 28px; background: color-mix(in srgb, var(--wood) 55%, var(--bg)); box-shadow: var(--lift), inset 0 2px 0 color-mix(in srgb, #fff 18%, transparent); }
@@ -261,6 +286,8 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .item.big { font-size: 94px; width: 122px; height: 122px; }
 .item.sortit { padding: 10px; box-sizing: border-box; }
 .item svg, .spot .mini svg, .outl svg { width: 100%; height: 100%; display: block; }
+.item svg.ic { width: 80%; height: 80%; }
+svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.2em; }
 .spot .mini { display: inline-flex; width: 50px; height: 50px; align-items: center; justify-content: center; }
 .swatch { display: block; width: 58px; height: 58px; border-radius: 50%; }
 .outl { display: block; width: 60px; height: 60px; color: color-mix(in srgb, var(--ink) 45%, transparent); }
@@ -321,6 +348,13 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .answers button { font-size: 28px; padding: 14px; border-radius: 16px; border: none; background: var(--panel); cursor: pointer; font-variant-numeric: tabular-nums; }
 .wrong-note { color: var(--soft); text-align: center; min-height: 1.2em; margin: 0; }
 
+/* 直立：家矮一點、動物大一點 */
+@media (orientation: portrait) {
+  #game { justify-content: center; }
+  .zones { flex: none; height: min(36vh, 420px); }
+  .tray { height: auto; min-height: min(270px, 60vw); }
+  .animal { width: min(250px, 58vw); height: min(250px, 58vw); font-size: min(196px, 45vw); }
+}
 /* 手機橫放（高度很矮）：動物回家改成左右排，其他遊戲縮小一點，整個畫面放得下 */
 @media (max-height: 520px) and (orientation: landscape) {
   .screen { top: 8px; bottom: 8px; gap: 12px; }
@@ -440,6 +474,22 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
 <script>
 (() => {
+  // 沒有合適 emoji 的東西，自己畫（風車、牙膏、跳繩……）
+  const ICON = {
+    windmill: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M40 46h20l8 48H32z" fill="#C9A27A"/><path d="M45 74h10v20H45z" fill="#8E6A4A"/><g fill="#E9CF96" stroke="#8E6A4A" stroke-width="2.5"><path d="M50 42 50 4 64 4 64 34z" transform="rotate(0 50 42)"/><path d="M50 42 50 4 64 4 64 34z" transform="rotate(90 50 42)"/><path d="M50 42 50 4 64 4 64 34z" transform="rotate(180 50 42)"/><path d="M50 42 50 4 64 4 64 34z" transform="rotate(270 50 42)"/></g><circle cx="50" cy="42" r="6" fill="#8E6A4A"/></svg>',
+    toothpaste: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><g transform="rotate(-30 50 50)"><path d="M18 36h52l10 6v16l-10 6H18l-4-14z" fill="#F2F0EC" stroke="#9AB4C6" stroke-width="3"/><path d="M30 44h34v12H30z" fill="#8FB2CF"/><rect x="80" y="44" width="12" height="12" rx="2" fill="#6F97B8"/></g></svg>',
+    waterglass: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M26 14h48l-7 76H33z" fill="#EAF2F6" stroke="#9FB7C4" stroke-width="3"/><path d="M29 40h42l-4 47H33z" fill="#A9CBDD"/><path d="M36 48c2 10 2 22 0 32" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/></svg>',
+    jumprope: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M22 30C10 70 40 92 50 92S90 70 78 30" fill="none" stroke="#C98B7A" stroke-width="5" stroke-linecap="round"/><rect x="14" y="8" width="16" height="28" rx="7" fill="#8FA9C0"/><rect x="70" y="8" width="16" height="28" rx="7" fill="#8FA9C0"/></svg>',
+    beachball: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="#F4EFE6"/><path d="M50 10a40 40 0 0 1 34.6 20L50 50z" fill="#D9776B"/><path d="M84.6 70A40 40 0 0 1 50 90V50z" fill="#E8C35E"/><path d="M15.4 70 50 50 15.4 30a40 40 0 0 0 0 40z" fill="#7FA6C6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#B8AE9C" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#fff" stroke="#B8AE9C" stroke-width="2"/></svg>',
+    blocks: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><rect x="10" y="52" width="38" height="38" rx="4" fill="#D98E7A"/><rect x="52" y="52" width="38" height="38" rx="4" fill="#8FB0CF"/><rect x="31" y="12" width="38" height="38" rx="4" fill="#E2C267"/><g fill="#fff" font-family="sans-serif" font-size="24" font-weight="700" text-anchor="middle"><text x="29" y="80">A</text><text x="71" y="80">B</text><text x="50" y="40">C</text></g></svg>',
+    shiitake: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M42 50h16l4 38H38z" fill="#DCC9A6" stroke="#B59C74" stroke-width="2"/><path d="M8 52C8 26 28 12 50 12s42 14 42 40c0 6-6 8-14 6-9-2-19-3-28-3s-19 1-28 3c-8 2-14 0-14-6z" fill="#9A6A45"/><g fill="#C49A72"><circle cx="34" cy="30" r="4"/><circle cx="60" cy="24" r="3"/><circle cx="68" cy="40" r="4"/><circle cx="44" cy="44" r="3"/></g></svg>',
+    sweater: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M36 12h28l26 14-8 24-10-4v42H28V46l-10 4-8-24z" fill="#C9857A"/><path d="M38 12c4 8 20 8 24 0" fill="none" stroke="#A86A60" stroke-width="4"/><path d="M28 80h44M28 86h44" stroke="#A86A60" stroke-width="3"/><path d="M36 40l6 6 8-8 8 8 6-6" fill="none" stroke="#F1E3D2" stroke-width="3"/></svg>',
+    towel: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><rect x="14" y="20" width="72" height="62" rx="8" fill="#9DBBD0"/><rect x="14" y="20" width="72" height="22" rx="8" fill="#B6CDDC"/><path d="M14 64h72M14 72h72" stroke="#F1F4F6" stroke-width="4"/></svg>',
+    rainboots: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M26 10h30v50l26 8c8 3 10 10 10 16v6H18V18c0-5 3-8 8-8z" fill="#E2BC52"/><path d="M18 84h74v6H18z" fill="#A98A3C"/><rect x="22" y="10" width="38" height="8" rx="3" fill="#C9A23E"/></svg>',
+    wardrobe: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><rect x="16" y="8" width="68" height="80" rx="5" fill="#B08A5A"/><rect x="21" y="14" width="27" height="68" rx="3" fill="#C8A577"/><rect x="52" y="14" width="27" height="68" rx="3" fill="#C8A577"/><circle cx="44" cy="50" r="3" fill="#6E5338"/><circle cx="56" cy="50" r="3" fill="#6E5338"/><rect x="20" y="88" width="8" height="6" fill="#8E6A4A"/><rect x="72" y="88" width="8" height="6" fill="#8E6A4A"/></svg>',
+    shoerack: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><rect x="10" y="20" width="6" height="72" fill="#8E6A4A"/><rect x="84" y="20" width="6" height="72" fill="#8E6A4A"/><rect x="10" y="46" width="80" height="6" fill="#B08A5A"/><rect x="10" y="84" width="80" height="6" fill="#B08A5A"/><path d="M20 46v-12h12l12 6c3 2 4 4 4 6z" fill="#8FA9C0"/><path d="M54 46v-12h12l12 6c3 2 4 4 4 6z" fill="#D9776B"/><path d="M20 84v-12h12l12 6c3 2 4 4 4 6z" fill="#E2BC52"/><path d="M54 84v-12h12l12 6c3 2 4 4 4 6z" fill="#8FAE8B"/></svg>',
+    toybox: '<svg class="ic" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><circle cx="36" cy="30" r="14" fill="#D9776B"/><path d="M58 34l8-22 8 22z" fill="#8FA9C0"/><rect x="10" y="40" width="80" height="50" rx="6" fill="#B08A5A"/><rect x="6" y="36" width="88" height="12" rx="4" fill="#C8A577"/><path d="M50 56l4 9 10 1-8 6 3 10-9-6-9 6 3-10-8-6 10-1z" fill="#E2C267"/></svg>',
+  };
   // ---------- 儲存 ----------
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
@@ -799,6 +849,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     const tray = $('tray'); tray.innerHTML = '';
     if (!queue.length) return finishRound();
     const a = queue[0]; triesOnThis = 0;
+    $('cap').innerHTML = ''; // 換下一隻時清掉上一隻的名字，避免字卡和動物對不上
     const el = document.createElement('div');
     el.className = 'animal'; el.innerHTML = a.pic; el.setAttribute('role', 'img'); el.setAttribute('aria-label', a.name);
     tray.appendChild(el);
@@ -926,36 +977,62 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     { name: '綠色', en: 'Green', h: 125, s: 34 }, { name: '橘色', en: 'Orange', h: 26, s: 66 }, { name: '紫色', en: 'Purple', h: 278, s: 34 }, { name: '咖啡色', en: 'Brown', h: 28, s: 36 },
     { name: '粉紅色', en: 'Pink', h: 340, s: 50 }, { name: '天藍色', en: 'Sky blue', h: 196, s: 52 }, { name: '灰色', en: 'Gray', h: 30, s: 5 },
   ];
+  // 每一局換一種可愛的東西：毛毛蟲的身體、彩色鉛筆、氣球、小魚；一樣是由深排到淺
+  const COLOR_THEMES = [
+    { k: 'bug', shape: (c) => `<circle cx="50" cy="46" r="38" fill="${c}"/><path d="M36 84v10M64 84v10" stroke="#6E5A44" stroke-width="5" stroke-linecap="round"/><ellipse cx="38" cy="30" rx="10" ry="6" fill="#fff" opacity=".28"/>`,
+      ghost: '<circle cx="50" cy="46" r="38"/>' },
+    { k: 'pencil', shape: (c) => `<rect x="32" y="16" width="36" height="58" fill="${c}"/><rect x="32" y="4" width="36" height="12" rx="3" fill="#E3B8B0"/><path d="M32 74h36L50 98z" fill="#EAD5AE"/><path d="M44 90h12L50 98z" fill="${c}"/><rect x="38" y="16" width="6" height="58" fill="#fff" opacity=".22"/>`,
+      ghost: '<path d="M32 4h36v70L50 98 32 74z"/>' },
+    { k: 'balloon', shape: (c) => `<path d="M50 78q-6 8 2 12t-4 10" stroke="#9C8A70" stroke-width="2" fill="none"/><ellipse cx="50" cy="40" rx="30" ry="36" fill="${c}"/><path d="M45 79h10l-5-5z" fill="${c}"/><ellipse cx="39" cy="26" rx="7" ry="11" fill="#fff" opacity=".3"/>`,
+      ghost: '<ellipse cx="50" cy="40" rx="30" ry="36"/>' },
+    { k: 'fish', shape: (c) => `<path d="M68 50 94 30v40z" fill="${c}"/><ellipse cx="44" cy="50" rx="34" ry="24" fill="${c}"/><circle cx="26" cy="45" r="4.5" fill="#3E342A"/><path d="M48 36q8 14 0 28" stroke="#fff" stroke-width="3" fill="none" opacity=".35"/>`,
+      ghost: '<path d="M10 50c0-14 15-24 34-24 14 0 24 6 30 14l20-10v40L74 60c-6 8-16 14-30 14-19 0-34-10-34-24z"/>' },
+  ];
+  const BUG_HEAD = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M38 20 30 4M62 20l8-16" stroke="#6E5A44" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="4" r="5" fill="#6E5A44"/><circle cx="70" cy="4" r="5" fill="#6E5A44"/><circle cx="50" cy="52" r="40" fill="#E9DDB8"/><circle cx="36" cy="46" r="6" fill="#3E342A"/><circle cx="64" cy="46" r="6" fill="#3E342A"/><circle cx="28" cy="62" r="6" fill="#E8A79A" opacity=".6"/><circle cx="72" cy="62" r="6" fill="#E8A79A" opacity=".6"/><path d="M40 66q10 9 20 0" stroke="#3E342A" stroke-width="4" fill="none" stroke-linecap="round"/></svg>';
+  let colorTheme = -1;
   const startColors = () => {
     const lv = settings.lvColors, n = [3, 5, 7][lv - 1];
     const hue = HUES[Math.floor(Math.random() * [4, 7, HUES.length][lv - 1])];
+    const th = COLOR_THEMES[colorTheme = (colorTheme + 1) % COLOR_THEMES.length];
     // 由深到淺：亮度 28% → 86%
     const shades = Array.from({ length: n }, (_, i) => `hsl(${hue.h} ${hue.s}% ${Math.round(28 + (58 * i) / (n - 1))}%)`);
     let errs = 0; roundActive = true;
     const board = $('board'), tray = $('tray2');
-    board.className = 'board'; board.innerHTML = ''; tray.innerHTML = '';
-    const slots = shades.map(() => { const d = document.createElement('div'); d.className = 'slot'; board.appendChild(d); return d; });
+    board.className = 'board colors th-' + th.k; board.innerHTML = ''; tray.innerHTML = '';
+    if (th.k === 'bug') board.insertAdjacentHTML('beforeend', `<div class="bug-head">${BUG_HEAD}</div>`);
+    const slots = shades.map(() => {
+      const d = document.createElement('div'); d.className = 'slot';
+      d.innerHTML = `<svg class="ghost-shape" viewBox="0 0 100 100" aria-hidden="true">${th.ghost}</svg>`;
+      board.appendChild(d); return d;
+    });
+    const chipIn = (sl) => sl.querySelector('.chip');
     const check = () => {
-      if (slots.some(sl => !sl.firstChild)) return;
-      const wrong = slots.filter((sl, i) => +sl.firstChild.dataset.i !== i);
+      if (slots.some(sl => !chipIn(sl))) return;
+      const wrong = slots.filter((sl, i) => +chipIn(sl).dataset.i !== i);
       if (!wrong.length) {
         slots.forEach((sl, i) => setTimeout(() => sl.classList.add('glow'), i * 120));
+        // 排好了：毛毛蟲扭一扭、鉛筆跳一跳、氣球飄一飄、小魚游一游
+        board.classList.add('alive');
+        slots.forEach((sl, i) => chipIn(sl).style.animationDelay = (i * .13).toFixed(2) + 's');
         sayName(hue.name, hue.en, `你把${hue.name}從深排到淺了`);
         return finishPlay('lvColors', 'stColors', errs, startColors);
       }
       errs++;
       slots.forEach(sl => { if (!wrong.includes(sl)) sl.classList.add('glow'); });
-      later(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
+      later(() => wrong.forEach(sl => { const c = chipIn(sl); tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
     };
     for (const i of shuffle(shades.map((_, i) => i))) {
       const c = document.createElement('div');
-      c.className = 'chip'; c.style.background = shades[i]; c.dataset.i = i;
+      c.className = 'chip'; c.dataset.i = i;
+      c.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true">${th.shape(shades[i])}</svg>`;
       tray.appendChild(c);
       dragify(c, (x, y) => {
         const sl = hitAt(slots, x, y, 30);
         if (sl) {
-          if (sl.firstChild && sl.firstChild !== c) tray.appendChild(sl.firstChild);
+          const old = chipIn(sl);
+          if (old && old !== c) tray.appendChild(old);
           sl.appendChild(c); slots.forEach(q => q.classList.remove('glow'));
+          c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
           ding(600 + i * 60); later(check, 250); return true;
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
@@ -1069,15 +1146,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 整理房間 ----------
   const SPOTS = {
-    toy: { icon: '🎁', name: '玩具箱', en: 'Toy box' }, book: { icon: '📚', name: '書架', en: 'Bookshelf' }, cloth: { icon: '👔', name: '衣櫃', en: 'Closet' },
-    wash: { icon: '🧺', name: '洗衣籃', en: 'Laundry basket' }, shoe: { icon: '👢', name: '鞋架', en: 'Shoe rack' },
+    toy: { icon: ICON.toybox, name: '玩具箱', en: 'Toy box' }, book: { icon: '📚', name: '書架', en: 'Bookshelf' }, cloth: { icon: ICON.wardrobe, name: '衣櫃', en: 'Closet' },
+    wash: { icon: '🧺', name: '洗衣籃', en: 'Laundry basket' }, shoe: { icon: ICON.shoerack, name: '鞋架', en: 'Shoe rack' },
   };
   const THINGS = [
-    ['泰迪熊', '🧸', 'toy', 'Teddy bear'], ['小汽車', '🚗', 'toy', 'Toy car'], ['球', '⚽', 'toy', 'Ball'], ['積木', '🧩', 'toy', 'Blocks'],
+    ['泰迪熊', '🧸', 'toy', 'Teddy bear'], ['小汽車', '🚗', 'toy', 'Toy car'], ['球', '⚽', 'toy', 'Ball'], ['積木', ICON.blocks, 'toy', 'Blocks'],
     ['故事書', '📕', 'book', 'Storybook'], ['繪本', '📗', 'book', 'Picture book'], ['書', '📘', 'book', 'Book'],
     ['衣服', '👕', 'cloth', 'Clothes'], ['裙子', '👗', 'cloth', 'Dress'], ['褲子', '👖', 'cloth', 'Pants'],
-    ['襪子', '🧦', 'wash', 'Socks'], ['毛巾', '🧣', 'wash', 'Towel'],
-    ['布鞋', '👟', 'shoe', 'Sneakers'], ['雨鞋', '🥾', 'shoe', 'Rain boots'],
+    ['襪子', '🧦', 'wash', 'Socks'], ['毛巾', ICON.towel, 'wash', 'Towel'],
+    ['布鞋', '👟', 'shoe', 'Sneakers'], ['雨鞋', ICON.rainboots, 'shoe', 'Rain boots'],
     ['溜溜球', '🪀', 'toy', 'Yo-yo'], ['風箏', '🪁', 'toy', 'Kite'], ['娃娃', '🪆', 'toy', 'Doll'], ['玩具火車', '🚂', 'toy', 'Toy train'],
     ['筆記本', '📒', 'book', 'Notebook'], ['圖畫書', '📙', 'book', 'Drawing book'],
     ['外套', '🧥', 'cloth', 'Coat'], ['上衣', '👚', 'cloth', 'Blouse'], ['短褲', '🩳', 'cloth', 'Shorts'],
@@ -1101,13 +1178,13 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
       board.appendChild(d); return d;
     });
     for (const t of shuffle(things)) {
-      const it = document.createElement('div'); it.className = 'item'; it.textContent = t.pic;
+      const it = document.createElement('div'); it.className = 'item'; it.innerHTML = t.pic;
       it.setAttribute('role', 'img'); it.setAttribute('aria-label', t.name); tray.appendChild(it);
       let tries = 0;
       dragify(it, (x, y) => {
         const sp = hitAt(spots, x, y, 50);
         if (sp && sp.dataset.k === t.to) {
-          const s = document.createElement('span'); s.textContent = t.pic; sp.querySelector('.in').appendChild(s);
+          const s = document.createElement('span'); s.innerHTML = t.pic; sp.querySelector('.in').appendChild(s);
           it.remove(); ding(880); sayName(t.name, t.en, `${t.name}放在${SPOTS[t.to].name}`);
           if (--left === 0) later(() => { board.classList.add('lit'); say('房間整理好了，好舒服'); finishPlay('lvTidy', 'stTidy', errs, startTidy); }, 1300);
           return true;
@@ -1196,7 +1273,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     { id: 'sky', en: 'Sky animals', name: '天空動物', pic: '🦋', items: null },
     { id: 'land', en: 'Land animals', name: '陸地動物', pic: '🐰', items: null },
     { id: 'fruit', en: 'Fruit', name: '水果', pic: '🍎', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['西瓜','🍉','Watermelon'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['桃子','🍑','Peach'],['櫻桃','🍒','Cherry'],['檸檬','🍋','Lemon'],['奇異果','🥝','Kiwi'],['芒果','🥭','Mango'],['梨子','🍐','Pear'],['藍莓','🫐','Blueberry'],['椰子','🥥','Coconut'],['哈密瓜','🍈','Melon'],['青蘋果','🍏','Green apple'],['酪梨','🥑','Avocado']] },
-    { id: 'veg', en: 'Vegetables', name: '蔬菜', pic: '🥕', items: [['紅蘿蔔','🥕','Carrot'],['玉米','🌽','Corn'],['番茄','🍅','Tomato'],['花椰菜','🥦','Broccoli'],['茄子','🍆','Eggplant'],['馬鈴薯','🥔','Potato'],['小黃瓜','🥒','Cucumber'],['洋蔥','🧅','Onion'],['甜椒','🫑','Bell pepper'],['大蒜','🧄','Garlic'],['青菜','🥬','Leafy greens'],['地瓜','🍠','Sweet potato'],['豌豆','🫛','Peas'],['花生','🥜','Peanut'],['辣椒','🌶️','Chili pepper'],['香菇','🍄','Mushroom'],['薑','🫚','Ginger']] },
+    { id: 'veg', en: 'Vegetables', name: '蔬菜', pic: '🥕', items: [['紅蘿蔔','🥕','Carrot'],['玉米','🌽','Corn'],['番茄','🍅','Tomato'],['花椰菜','🥦','Broccoli'],['茄子','🍆','Eggplant'],['馬鈴薯','🥔','Potato'],['小黃瓜','🥒','Cucumber'],['洋蔥','🧅','Onion'],['甜椒','🫑','Bell pepper'],['大蒜','🧄','Garlic'],['青菜','🥬','Leafy greens'],['地瓜','🍠','Sweet potato'],['豌豆','🫛','Peas'],['花生','🥜','Peanut'],['辣椒','🌶️','Chili pepper'],['香菇',ICON.shiitake,'Mushroom'],['薑','🫚','Ginger']] },
     { id: 'car', en: 'Vehicles', name: '交通工具', pic: '🚗', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['計程車','🚕','Taxi'],['消防車','🚒','Fire truck'],['救護車','🚑','Ambulance'],['警車','🚓','Police car'],['卡車','🚚','Truck'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['直升機','🚁','Helicopter'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['機車','🛵','Scooter'],['火箭','🚀','Rocket'],['廂型車','🚐','Van'],['拖拉機','🚜','Tractor'],['重型機車','🏍️','Motorcycle'],['滑板車','🛴','Kick scooter'],['蒸汽火車','🚂','Steam train'],['高鐵','🚄','High-speed train'],['捷運','🚇','Subway'],['纜車','🚠','Cable car'],['帆船','⛵','Sailboat'],['快艇','🚤','Speedboat'],['獨木舟','🛶','Canoe'],['賽車','🏎️','Race car']] },
     { id: 'home', en: 'Appliances', name: '家電', pic: '📺', items: [['電視','📺','TV'],['電話','☎️','Telephone'],['手機','📱','Phone'],['電腦','💻','Computer'],['電燈','💡','Light bulb'],['收音機','📻','Radio'],['鬧鐘','⏰','Alarm clock'],['相機','📷','Camera'],['電池','🔋','Battery'],['插頭','🔌','Plug'],['印表機','🖨️','Printer'],['鍵盤','⌨️','Keyboard'],['滑鼠','🖱️','Computer mouse'],['耳機','🎧','Headphones'],['手電筒','🔦','Flashlight'],['麥克風','🎤','Microphone'],['手錶','⌚','Watch'],['攝影機','🎥','Video camera'],['喇叭','🔊','Speaker'],['遊戲機','🎮','Game controller']] },
     { id: 'daily', en: 'Daily items', name: '生活用品', pic: '🪥', items: [['牙刷','🪥','Toothbrush'],['肥皂','🧼','Soap'],['乳液','🧴','Lotion'],['衛生紙','🧻','Toilet paper'],['海綿','🧽','Sponge'],['水桶','🪣','Bucket'],['掃把','🧹','Broom'],['籃子','🧺','Basket'],['椅子','🪑','Chair'],['床','🛏️','Bed'],['浴缸','🛁','Bathtub'],['馬桶','🚽','Toilet'],['門','🚪','Door'],['窗戶','🪟','Window'],['鏡子','🪞','Mirror'],['雨傘','☂️','Umbrella'],['書包','🎒','Backpack'],['眼鏡','👓','Glasses'],['鑰匙','🔑','Key'],['剪刀','✂️','Scissors'],['鉛筆','✏️','Pencil'],['蠟筆','🖍️','Crayon'],['尺','📏','Ruler'],['泰迪熊','🧸','Teddy bear']] },
@@ -1205,7 +1282,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     { id: 'body', en: 'Body', name: '身體', pic: '👂', items: [['眼睛','👀','Eyes'],['耳朵','👂','Ear'],['鼻子','👃','Nose'],['嘴巴','👄','Mouth'],['牙齒','🦷','Tooth'],['舌頭','👅','Tongue'],['手','✋','Hand'],['腳','🦶','Foot'],['手臂','💪','Arm'],['腿','🦵','Leg']] },
     { id: 'nature', en: 'Nature', name: '大自然', pic: '🌈', items: [['太陽','☀️','Sun'],['月亮','🌙','Moon'],['星星','⭐','Star'],['雲','☁️','Cloud'],['彩虹','🌈','Rainbow'],['閃電','⚡','Lightning'],['雪花','❄️','Snowflake'],['下雨','🌧️','Rain'],['海浪','🌊','Wave'],['山','⛰️','Mountain'],['火山','🌋','Volcano'],['樹','🌳','Tree'],['花','🌸','Flower'],['仙人掌','🌵','Cactus'],['楓葉','🍁','Maple leaf'],['地球','🌏','Earth']] },
     { id: 'music', en: 'Instruments', name: '樂器', pic: '🎹', items: [['鋼琴','🎹','Piano'],['鼓','🥁','Drum'],['吉他','🎸','Guitar'],['小提琴','🎻','Violin'],['小喇叭','🎺','Trumpet'],['薩克斯風','🎷','Saxophone'],['手風琴','🪗','Accordion'],['鈴鐺','🔔','Bell'],['沙鈴','🪇','Maracas'],['笛子','🪈','Flute'],['長鼓','🪘','Long drum']] },
-    { id: 'toys', en: 'Toys', name: '玩具', pic: '🧸', items: [['泰迪熊','🧸','Teddy bear'],['球','⚽','Ball'],['氣球','🎈','Balloon'],['風箏','🪁','Kite'],['溜溜球','🪀','Yo-yo'],['積木','🧱','Blocks'],['拼圖','🧩','Puzzle'],['娃娃','🪆','Doll'],['機器人','🤖','Robot'],['玩具車','🚙','Toy car'],['沙灘球','🏐','Beach ball'],['跳繩','🪢','Jump rope'],['溜滑梯','🛝','Slide']] },
+    { id: 'toys', en: 'Toys', name: '玩具', pic: '🧸', items: [['泰迪熊','🧸','Teddy bear'],['球','⚽','Ball'],['氣球','🎈','Balloon'],['風箏','🪁','Kite'],['溜溜球','🪀','Yo-yo'],['積木',ICON.blocks,'Blocks'],['拼圖','🧩','Puzzle'],['娃娃','🪆','Doll'],['機器人','🤖','Robot'],['玩具車','🚙','Toy car'],['沙灘球',ICON.beachball,'Beach ball'],['跳繩',ICON.jumprope,'Jump rope'],['溜滑梯','🛝','Slide']] },
   ];
   ['water', 'sky', 'land'].forEach((z, i) => { CATS[i].items = [...ANIMALS, ...BOTH].filter(a => a.homes[0] === z).map(a => [a.name, a.pic, a.en]); });
   let learnCat = 0;
@@ -1644,7 +1721,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   };
 
   // ---------- 影子配對 ----------
-  const SHADOW_SET = [['大象','🐘','Elephant'],['長頸鹿','🦒','Giraffe'],['兔子','🐇','Rabbit'],['小貓','🐈','Kitten'],['小狗','🐕','Puppy'],['蝴蝶','🦋','Butterfly'],['蝸牛','🐌','Snail'],['螃蟹','🦀','Crab'],['章魚','🐙','Octopus'],['恐龍','🦕','Dinosaur'],['公雞','🐓','Rooster'],['駱駝','🐪','Camel'],['松鼠','🐿️','Squirrel'],['海豚','🐬','Dolphin'],['剪刀','✂️','Scissors'],['鑰匙','🔑','Key'],['雨傘','☂️','Umbrella'],['吉他','🎸','Guitar'],['腳踏車','🚲','Bicycle'],['飛機','✈️','Airplane'],['香蕉','🍌','Banana'],['梨子','🍐','Pear'],['紅鶴','🦩','Flamingo'],['袋鼠','🦘','Kangaroo'],['刺蝟','🦔','Hedgehog'],['鸚鵡','🦜','Parrot'],['鱷魚','🐊','Crocodile'],['小鹿','🦌','Deer'],['直升機','🚁','Helicopter'],['帆船','⛵','Sailboat'],['火箭','🚀','Rocket'],['氣球','🎈','Balloon'],['蘋果','🍎','Apple'],['鳳梨','🍍','Pineapple'],['紅蘿蔔','🥕','Carrot'],['仙人掌','🌵','Cactus'],['香菇','🍄','Mushroom'],['鬧鐘','⏰','Alarm clock'],['泰迪熊','🧸','Teddy bear'],['茶壺','🫖','Teapot']];
+  const SHADOW_SET = [['大象','🐘','Elephant'],['長頸鹿','🦒','Giraffe'],['兔子','🐇','Rabbit'],['小貓','🐈','Kitten'],['小狗','🐕','Puppy'],['蝴蝶','🦋','Butterfly'],['蝸牛','🐌','Snail'],['螃蟹','🦀','Crab'],['章魚','🐙','Octopus'],['恐龍','🦕','Dinosaur'],['公雞','🐓','Rooster'],['駱駝','🐪','Camel'],['松鼠','🐿️','Squirrel'],['海豚','🐬','Dolphin'],['剪刀','✂️','Scissors'],['鑰匙','🔑','Key'],['雨傘','☂️','Umbrella'],['吉他','🎸','Guitar'],['腳踏車','🚲','Bicycle'],['飛機','✈️','Airplane'],['香蕉','🍌','Banana'],['梨子','🍐','Pear'],['紅鶴','🦩','Flamingo'],['袋鼠','🦘','Kangaroo'],['刺蝟','🦔','Hedgehog'],['鸚鵡','🦜','Parrot'],['鱷魚','🐊','Crocodile'],['小鹿','🦌','Deer'],['直升機','🚁','Helicopter'],['帆船','⛵','Sailboat'],['火箭','🚀','Rocket'],['氣球','🎈','Balloon'],['蘋果','🍎','Apple'],['鳳梨','🍍','Pineapple'],['紅蘿蔔','🥕','Carrot'],['仙人掌','🌵','Cactus'],['香菇',ICON.shiitake,'Mushroom'],['鬧鐘','⏰','Alarm clock'],['泰迪熊','🧸','Teddy bear'],['茶壺','🫖','Teapot']];
   let shadowBag = [];
   const startShadow = () => {
     if (shadowBag.length < 4) shadowBag = shuffle(SHADOW_SET);
@@ -1672,7 +1749,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     { k: 'fruit', name: '水果', en: 'Fruit', icon: '🍉', items: [['蘋果','🍎','Apple'],['香蕉','🍌','Banana'],['葡萄','🍇','Grapes'],['草莓','🍓','Strawberry'],['橘子','🍊','Orange'],['鳳梨','🍍','Pineapple'],['櫻桃','🍒','Cherry']] },
     { k: 'car', name: '交通工具', en: 'Vehicles', icon: '🚦', items: [['汽車','🚗','Car'],['公車','🚌','Bus'],['火車','🚆','Train'],['飛機','✈️','Airplane'],['船','🚢','Ship'],['腳踏車','🚲','Bicycle'],['消防車','🚒','Fire truck']] },
     { k: 'cloth', name: '衣服', en: 'Clothes', icon: '👔', items: [['衣服','👕','Shirt'],['褲子','👖','Pants'],['裙子','👗','Dress'],['襪子','🧦','Socks'],['外套','🧥','Coat'],['帽子','🧢','Cap']] },
-    { k: 'toy', name: '玩具', en: 'Toys', icon: '🧸', items: [['球','⚽','Ball'],['氣球','🎈','Balloon'],['風箏','🪁','Kite'],['積木','🧱','Blocks'],['機器人','🤖','Robot'],['溜溜球','🪀','Yo-yo']] },
+    { k: 'toy', name: '玩具', en: 'Toys', icon: '🧸', items: [['球','⚽','Ball'],['氣球','🎈','Balloon'],['風箏','🪁','Kite'],['積木',ICON.blocks,'Blocks'],['機器人','🤖','Robot'],['溜溜球','🪀','Yo-yo']] },
   ];
   let sortMode = -1;
   const startSort = () => {
@@ -1704,7 +1781,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 
   // ---------- 生活小幫手（洗手、穿衣服、擺餐具，輪流出現） ----------
   const WASH = [['打開水龍頭', '🚰', 'Turn on the tap'], ['抹肥皂', '🧼', 'Soap'], ['搓搓手', '👐', 'Rub your hands'], ['用水沖乾淨', '💦', 'Rinse'], ['擦乾手', '🧻', 'Dry your hands']];
-  const BRUSH = [['拿牙刷', '🪥', 'Toothbrush'], ['擠牙膏', '🧴', 'Toothpaste'], ['刷刷牙', '😁', 'Brush your teeth'], ['漱漱口', '🥛', 'Rinse your mouth']];
+  const BRUSH = [['拿牙刷', '🪥', 'Toothbrush'], ['擠牙膏', ICON.toothpaste, 'Toothpaste'], ['刷刷牙', '😁', 'Brush your teeth'], ['漱漱口', ICON.waterglass, 'Rinse your mouth']];
   const BED = [['洗澡', '🛁', 'Take a bath'], ['穿睡衣', '👕', 'Pajamas'], ['刷牙', '🪥', 'Brush your teeth'], ['聽故事', '📖', 'Story time'], ['睡覺', '🛌', 'Sleep']];
   let helpMode = -1;
   const startHelp = () => { helpMode = (helpMode + 1) % 7; [helpWash, helpDress, helpTable, helpBrush, helpWinter, helpBed, helpTable2][helpMode](); };
@@ -1718,7 +1795,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     });
     dragMatch(targets, steps.map(([name, pic, en], i) => ({ k: i, name, pic, en })), {
       margin: 30,
-      put: (t, g) => { g.el.querySelector('.in').textContent = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
+      put: (t, g) => { g.el.querySelector('.in').innerHTML = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
       onDone: () => { say(outro); finishFree(startHelp); },
     });
     show('play');
@@ -1761,7 +1838,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
     });
     dragMatch(targets, WASH.map(([name, pic, en], i) => ({ k: i, name, pic, en })), {
       margin: 30,
-      put: (t, g) => { g.el.querySelector('.in').textContent = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
+      put: (t, g) => { g.el.querySelector('.in').innerHTML = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
       onDone: () => { say('手洗得好乾淨'); finishFree(startHelp); },
     });
     show('play');
@@ -1844,15 +1921,15 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   // ---------- 四季與天氣（天氣配衣服、季節配東西，輪流出現） ----------
   const WEATHER = [
     { k: 'sun', en: 'Sunny', name: '大太陽', icon: '☀️', items: [['短褲', '🩳', 'Shorts'], ['草帽', '👒', 'Sun hat'], ['太陽眼鏡', '🕶️', 'Sunglasses'], ['拖鞋', '🩴', 'Flip-flops'], ['泳衣', '🩱', 'Swimsuit'], ['防曬乳', '🧴', 'Sunscreen'], ['扇子', '🪭', 'Fan']] },
-    { k: 'rain', en: 'Rainy', name: '下雨天', icon: '🌧️', items: [['雨傘', '☂️', 'Umbrella'], ['雨鞋', '🥾', 'Rain boots'], ['摺疊傘', '🌂', 'Folding umbrella']] },
-    { k: 'wind', en: 'Windy', name: '風很大', icon: '🌬️', items: [['風箏', '🪁', 'Kite'], ['風車', '🎡', 'Windmill'], ['風鈴', '🎐', 'Wind chime']] },
+    { k: 'rain', en: 'Rainy', name: '下雨天', icon: '🌧️', items: [['雨傘', '☂️', 'Umbrella'], ['雨鞋', ICON.rainboots, 'Rain boots'], ['摺疊傘', '🌂', 'Folding umbrella']] },
+    { k: 'wind', en: 'Windy', name: '風很大', icon: '🌬️', items: [['風箏', '🪁', 'Kite'], ['風車', ICON.windmill, 'Windmill'], ['風鈴', '🎐', 'Wind chime']] },
     { k: 'cold', en: 'Cold', name: '冷冷的天氣', icon: '❄️', items: [['外套', '🧥', 'Coat'], ['圍巾', '🧣', 'Scarf'], ['手套', '🧤', 'Gloves'], ['襪子', '🧦', 'Socks'], ['熱可可', '☕', 'Hot cocoa']] },
   ];
   const SEASONS = [
     { k: 'spring', en: 'Spring', name: '春天', icon: '🌸', items: [['花開了', '🌷', 'Flowers'], ['蝴蝶', '🦋', 'Butterfly'], ['小雞', '🐣', 'Chick'], ['發芽', '🌱', 'Sprout'], ['蜜蜂', '🐝', 'Bee']] },
     { k: 'summer', en: 'Summer', name: '夏天', icon: '🌞', items: [['西瓜', '🍉', 'Watermelon'], ['冰淇淋', '🍦', 'Ice cream'], ['海灘', '🏖️', 'Beach'], ['向日葵', '🌻', 'Sunflower'], ['游泳', '🏊', 'Swimming']] },
     { k: 'autumn', en: 'Autumn', name: '秋天', icon: '🍁', items: [['落葉', '🍂', 'Fallen leaves'], ['月餅', '🥮', 'Mooncake'], ['月亮', '🌕', 'Full moon'], ['稻穗', '🌾', 'Rice'], ['烤地瓜', '🍠', 'Roasted sweet potato']] },
-    { k: 'winter', en: 'Winter', name: '冬天', icon: '⛄', items: [['雪花', '❄️', 'Snowflake'], ['火鍋', '🍲', 'Hot pot'], ['毛衣', '🧶', 'Sweater'], ['紅包', '🧧', 'Red envelope'], ['雪人', '☃️', 'Snowman']] },
+    { k: 'winter', en: 'Winter', name: '冬天', icon: '⛄', items: [['雪花', '❄️', 'Snowflake'], ['火鍋', '🍲', 'Hot pot'], ['毛衣', ICON.sweater, 'Sweater'], ['紅包', '🧧', 'Red envelope'], ['雪人', '☃️', 'Snowman']] },
   ];
   const DAYNIGHT = [
     { k: 'day', en: 'Day', name: '白天', icon: '🌞', items: [['溜滑梯', '🛝', 'Slide'], ['公雞', '🐓', 'Rooster'], ['彩虹', '🌈', 'Rainbow'], ['上學', '🏫', 'School']] },
