@@ -208,11 +208,16 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 @keyframes swim { 50% { transform: translateX(-10px) rotate(-6deg); } }
 .hop { animation: hop .6s ease; }
 @keyframes hop { 40% { transform: translateY(-18px); } }
-.shape-board { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 48px); width: min(900px, 100%); padding: 32px 22px; box-sizing: border-box; border-radius: 28px; background: color-mix(in srgb, var(--wood) 55%, var(--bg)); box-shadow: var(--lift), inset 0 2px 0 color-mix(in srgb, #fff 18%, transparent); }
-.hole { width: clamp(92px, 14vw, 142px); aspect-ratio: 1; max-width: 100%; display: flex; align-items: center; justify-content: center; }
-.hole svg, .piece svg { width: 100%; height: 100%; display: block; }
-.hole .h { fill: color-mix(in srgb, var(--ink) 38%, var(--wood)); }
-.piece { width: clamp(92px, 14vw, 142px); aspect-ratio: 1; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; }
+.shape-board { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 48px); width: min(900px, 100%); padding: 32px 26px; box-sizing: border-box; border-radius: 30px;
+  background: repeating-linear-gradient(94deg, transparent 0 34px, color-mix(in srgb, var(--ink) 4%, transparent) 34px 36px, transparent 36px 61px, color-mix(in srgb, #fff 6%, transparent) 61px 64px), linear-gradient(180deg, color-mix(in srgb, var(--wood) 42%, var(--bg)), color-mix(in srgb, var(--wood) 60%, var(--bg)));
+  border: 7px solid color-mix(in srgb, var(--wood) 78%, var(--ink)); box-shadow: var(--lift), inset 0 3px 0 color-mix(in srgb, #fff 22%, transparent), inset 0 -4px 10px color-mix(in srgb, var(--ink) 12%, transparent); }
+.hole { width: clamp(92px, 14vw, 142px); aspect-ratio: 1; max-width: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+.hole svg, .piece svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.hole > svg + svg { position: absolute; inset: 0; animation: settle .45s ease; }
+.hole .h { fill: color-mix(in srgb, var(--ink) 30%, var(--wood)); }
+.hole .rim { stroke: color-mix(in srgb, #fff 30%, var(--wood)); }
+.hole.in > svg:first-child { visibility: hidden; }
+.piece { width: clamp(92px, 14vw, 142px); aspect-ratio: 1; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; filter: drop-shadow(0 4px 4px color-mix(in srgb, var(--ink) 22%, transparent)); }
 .piece.back { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 
 /* 數一數、整理房間 */
@@ -299,6 +304,17 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .scene.kid { --w: min(270px, 50vw, 30vh); width: var(--w); height: calc(var(--w) * 1.75); }
 .scene.mat { --w: min(660px, 92vw, 70vh); width: var(--w); height: calc(var(--w) * .6); border-radius: 26px; background: repeating-linear-gradient(0deg, transparent 0 22px, color-mix(in srgb, var(--wood) 14%, transparent) 22px 24px), color-mix(in srgb, var(--wood) 30%, var(--bg)); box-shadow: var(--lift); }
 .scene .face { position: absolute; left: 50%; top: 21%; transform: translate(-50%, -50%); font-size: calc(var(--w) * .36); line-height: 1; }
+.scene.dress { --w: min(290px, 46vw, 34vh); width: var(--w); height: calc(var(--w) * 1.7); }
+.scene.dress .friend { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 6px 8px color-mix(in srgb, var(--ink) 14%, transparent)); }
+.scene.dress::before { content: ""; position: absolute; left: 12%; right: 12%; bottom: -2%; height: 6%; border-radius: 50%; background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.dspot { position: absolute; transform-origin: 50% 50%; }
+.dspot svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.dspot .sil { display: block; width: 100%; height: 100%; opacity: .22; }
+.dspot .pop { display: block; width: 100%; height: 100%; }
+.dspot.hint-me { animation: tug 1.2s ease-in-out 2; }
+@keyframes tug { 25% { transform: scale(1.06); } 50% { transform: scale(1); } 75% { transform: scale(1.06); } }
+.scene.dress.happy { animation: hop .8s ease 3; }
+.item.cloth { width: 132px; height: 112px; border-radius: 22px; background: color-mix(in srgb, #fff 45%, var(--panel)); box-shadow: var(--lift); padding: 8px; box-sizing: border-box; }
 .pspot { position: absolute; transform: translate(-50%, -50%); line-height: 1; transition: filter .4s ease; }
 .pspot.done { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ok) 70%, transparent)); }
 .puz { width: min(680px, 100%, calc(48vh * var(--c) / var(--r))); display: grid; grid-template-columns: repeat(var(--c), 1fr); border-radius: 18px; overflow: hidden; position: relative; background: color-mix(in srgb, var(--panel) 70%, var(--bg)); transition: box-shadow .5s ease; }
@@ -390,6 +406,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   .puz { width: min(680px, 100%, calc(46vh * var(--c) / var(--r))); }
   .scene.kid { --w: min(270px, 50vw, 34vh); }
   .scene.mat { --w: min(660px, 92vw, 62vh); }
+  .scene.dress { --w: min(230px, 40vw, 33vh); }
+  .item.cloth { width: 104px; height: 88px; padding: 6px; }
   .cats { flex-wrap: nowrap; overflow-x: auto; width: 100%; justify-content: flex-start; touch-action: pan-x; padding: 4px; box-sizing: border-box; flex: none; }
   .cat { min-height: 62px; min-width: 84px; flex: none; } .cat .pic { font-size: 30px; }
   .cards { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
@@ -499,6 +517,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   let session = load('wt_session', null); // { end, warned, restEnd }
   const saveSettings = () => save('wt_settings', settings);
   if (!settings.v3) { settings.voice = 'sister'; settings.v3 = true; saveSettings(); } // 第三版改用輕柔姐姐聲
+  // 家長設定不再提供「用裝置語音」，之前選了的改回錄好的聲音（沒有錄音的句子程式仍會自動用裝置語音補）
+  if (settings.rec === 'off' || settings.enRec === 'off') { if (settings.rec === 'off') settings.rec = 'A'; if (settings.enRec === 'off') settings.enRec = 'K'; saveSettings(); }
   const saveSession = () => save('wt_session', session);
   const applyNight = () => document.documentElement.classList.toggle('night', !!settings.night);
   applyNight();
@@ -1045,20 +1065,40 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 
   // ---------- 形狀嵌板 ----------
   const SHAPES = [
-    { name: '圓形', en: 'Circle', svg: '<circle cx="50" cy="50" r="42"/>' },
-    { name: '三角形', en: 'Triangle', svg: '<polygon points="50,8 93,88 7,88"/>' },
-    { name: '正方形', en: 'Square', svg: '<rect x="12" y="12" width="76" height="76" rx="4"/>' },
-    { name: '長方形', en: 'Rectangle', svg: '<rect x="4" y="26" width="92" height="48" rx="4"/>' },
-    { name: '星形', en: 'Star', svg: '<polygon points="50,5 61,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 39,38"/>' },
-    { name: '心形', en: 'Heart', svg: '<path d="M50 88 C20 66 6 50 6 32 C6 18 17 8 30 8 C40 8 46 14 50 22 C54 14 60 8 70 8 C83 8 94 18 94 32 C94 50 80 66 50 88 Z"/>' },
-    { name: '橢圓形', en: 'Oval', svg: '<ellipse cx="50" cy="50" rx="46" ry="30"/>' },
-    { name: '菱形', en: 'Diamond', svg: '<polygon points="50,4 90,50 50,96 10,50"/>' },
-    { name: '半圓形', en: 'Semicircle', svg: '<path d="M6 70 A44 44 0 0 1 94 70 Z"/>' },
-    { name: '五邊形', en: 'Pentagon', svg: '<polygon points="50,6 94,38 77,92 23,92 6,38"/>' },
-    { name: '六邊形', en: 'Hexagon', svg: '<polygon points="27,10 73,10 96,50 73,90 27,90 4,50"/>' },
-    { name: '十字形', en: 'Cross', svg: '<polygon points="36,6 64,6 64,36 94,36 94,64 64,64 64,94 36,94 36,64 6,64 6,36 36,36"/>' },
+    { name: '圓形', face: [50,52,1], en: 'Circle', svg: '<circle cx="50" cy="50" r="42"/>' },
+    { name: '三角形', face: [50,64,.8], en: 'Triangle', svg: '<polygon points="50,8 93,88 7,88"/>' },
+    { name: '正方形', face: [50,52,1], en: 'Square', svg: '<rect x="12" y="12" width="76" height="76" rx="4"/>' },
+    { name: '長方形', face: [50,52,.9], en: 'Rectangle', svg: '<rect x="4" y="26" width="92" height="48" rx="4"/>' },
+    { name: '星形', face: [50,54,.62], en: 'Star', svg: '<polygon points="50,5 61,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 39,38"/>' },
+    { name: '心形', face: [50,42,.95], en: 'Heart', svg: '<path d="M50 88 C20 66 6 50 6 32 C6 18 17 8 30 8 C40 8 46 14 50 22 C54 14 60 8 70 8 C83 8 94 18 94 32 C94 50 80 66 50 88 Z"/>' },
+    { name: '橢圓形', face: [50,52,.9], en: 'Oval', svg: '<ellipse cx="50" cy="50" rx="46" ry="30"/>' },
+    { name: '菱形', face: [50,52,.8], en: 'Diamond', svg: '<polygon points="50,4 90,50 50,96 10,50"/>' },
+    { name: '半圓形', face: [50,52,.8], en: 'Semicircle', svg: '<path d="M6 70 A44 44 0 0 1 94 70 Z"/>' },
+    { name: '五邊形', face: [50,56,.9], en: 'Pentagon', svg: '<polygon points="50,6 94,38 77,92 23,92 6,38"/>' },
+    { name: '六邊形', face: [50,52,1], en: 'Hexagon', svg: '<polygon points="27,10 73,10 96,50 73,90 27,90 4,50"/>' },
+    { name: '十字形', face: [50,50,.7], en: 'Cross', svg: '<polygon points="36,6 64,6 64,36 94,36 94,64 64,64 64,94 36,94 36,64 6,64 6,36 36,36"/>' },
   ];
   const PIECE_COLORS = ['#C98B7A', '#8FA9C0', '#D8B866', '#8FAE8B', '#D59A6A', '#A897BC', '#B08A5A', '#C78FA8', '#7FAFB0', '#B7A36B', '#9C8FC0', '#C9A07A'];
+  // 顏色調亮／調暗（做木頭上漆的光澤）
+  const tone = (hex, k) => '#' + [1, 3, 5].map(i => { const v = parseInt(hex.slice(i, i + 2), 16), t = k > 0 ? v + (255 - v) * k : v * (1 + k); return Math.round(t).toString(16).padStart(2, '0'); }).join('');
+  let svgUid = 0;
+  const shapeFace = ([x, y, k]) => `<g transform="translate(${x} ${y}) scale(${k})"><circle cx="-11" cy="-4" r="4.6" fill="#3E342A"/><circle cx="11" cy="-4" r="4.6" fill="#3E342A"/><circle cx="-9.6" cy="-5.6" r="1.6" fill="#fff"/><circle cx="12.4" cy="-5.6" r="1.6" fill="#fff"/><ellipse cx="-19" cy="5" rx="5.5" ry="3.4" fill="#E8A3A0" opacity=".65"/><ellipse cx="19" cy="5" rx="5.5" ry="3.4" fill="#E8A3A0" opacity=".65"/><path d="M-6 5q6 6 12 0" stroke="#3E342A" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>`;
+  // 上了漆的木頭形狀：漸層、深一點的邊、上面一道亮光、可愛的臉
+  const pieceSVG = (sh) => {
+    const c = PIECE_COLORS[SHAPES.indexOf(sh)], u = ++svgUid;
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="pg${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${tone(c, .28)}"/><stop offset="1" stop-color="${tone(c, -.06)}"/></linearGradient><clipPath id="pc${u}">${sh.svg}</clipPath></defs>
+      <g fill="url(#pg${u})" stroke="${tone(c, -.3)}" stroke-width="3" stroke-linejoin="round">${sh.svg}</g>
+      <g clip-path="url(#pc${u})" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="7" transform="translate(0 4)">${sh.svg}</g>
+      ${shapeFace(sh.face)}</svg>`;
+  };
+  // 挖下去的洞：深色＋上緣陰影，看起來有深度
+  const holeSVG = (sh) => {
+    const u = ++svgUid;
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="hc${u}">${sh.svg}</clipPath></defs>
+      <g class="h">${sh.svg}</g>
+      <g clip-path="url(#hc${u})" fill="none" stroke="#2E2418" stroke-opacity=".32" stroke-width="12" transform="translate(0 5)">${sh.svg}</g>
+      <g class="rim" fill="none" stroke-width="2.5" stroke-linejoin="round">${sh.svg}</g></svg>`;
+  };
   const startShapes = () => {
     const lv = settings.lvShapes, n = [3, 5, 7][lv - 1];
     // 1 級從比較簡單的前 5 種挑；2、3 級從全部挑
@@ -1068,18 +1108,18 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     board.className = 'shape-board'; board.innerHTML = ''; tray.innerHTML = '';
     const holes = shuffle(set).map(sh => {
       const h = document.createElement('div'); h.className = 'hole'; h.dataset.n = sh.name;
-      h.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><g class="h">${sh.svg}</g></svg>`;
+      h.innerHTML = holeSVG(sh);
       board.appendChild(h); return h;
     });
     shuffle(set).forEach(sh => {
       const p = document.createElement('div'); p.className = 'piece'; p.setAttribute('role', 'img'); p.setAttribute('aria-label', sh.name);
-      p.innerHTML = `<svg viewBox="0 0 100 100"><g fill="${PIECE_COLORS[SHAPES.indexOf(sh)]}">${sh.svg}</g></svg>`;
+      p.innerHTML = pieceSVG(sh);
       tray.appendChild(p);
       let tries = 0;
       dragify(p, (x, y) => {
         const h = hitAt(holes.filter(q => !q.dataset.done), x, y, 50);
         if (h && h.dataset.n === sh.name) {
-          h.dataset.done = '1'; h.innerHTML = p.innerHTML; p.remove();
+          h.dataset.done = '1'; h.innerHTML = holeSVG(sh) + pieceSVG(sh); h.classList.add('in'); p.remove();
           ding(880); sayName(sh.name, sh.en);
           if (--left === 0) later(() => { say('每個形狀都回到自己的位置了'); finishPlay('lvShapes', 'stShapes', errs, startShapes); }, 900);
           return true;
@@ -1325,7 +1365,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   };
   const nudge = (el) => { el.classList.remove('hint-me'); void el.offsetWidth; el.classList.add('hint-me'); };
   // targets: [{ el, k, single }]；items: [{ k, name, en, pic, cls, style }]，k 一樣才放得進去
-  const dragMatch = (targets, items, { margin = 50, put, onDone }) => {
+  const dragMatch = (targets, items, { margin = 50, own = false, put, onDone }) => {
     const tray = $('tray2'); let left = items.length, errs = 0;
     for (const t of shuffle(items)) {
       const it = document.createElement('div'); it.className = t.cls || 'item'; it.innerHTML = t.pic;
@@ -1334,7 +1374,9 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       let tries = 0;
       dragify(it, (x, y) => {
         const open = targets.filter(g => !g.done);
-        const hit = hitAt(open.map(g => g.el), x, y, margin), g = hit && open.find(q => q.el === hit);
+        // own：自己的位置就在附近時優先放進去（穿衣服時衣服的範圍會重疊）
+        const mine = own && hitAt(open.filter(q => q.k === t.k).map(q => q.el), x, y, margin);
+        const hit = mine || hitAt(open.map(g => g.el), x, y, margin), g = hit && open.find(q => q.el === hit);
         if (g && g.k === t.k) {
           if (g.single) g.done = true;
           put(t, g); it.remove(); ding(880);
@@ -1815,13 +1857,81 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     show('play');
     say(intro);
   };
-  const helpWinter = () => helpPlace('kid', '<span class="face">😊</span>', [
-    { k: 'scarf', name: '圍巾', pic: '🧣', en: 'Scarf', x: 50, y: 33, s: .3 },
-    { k: 'coat', name: '外套', pic: '🧥', en: 'Coat', x: 50, y: 51, s: .5 },
-    { k: 'pants', name: '褲子', pic: '👖', en: 'Pants', x: 50, y: 75, s: .42 },
-    { k: 'boots', name: '靴子', pic: '🥾', en: 'Boots', x: 50, y: 93, s: .28 },
-    { k: 'gloves', name: '手套', pic: '🧤', en: 'Gloves', x: 12, y: 54, s: .22 },
-  ], '天氣冷了，幫小朋友穿暖暖', '穿得暖暖的，不怕冷了');
+  // ---------- 穿衣服：擬人化的小水豚、小兔子（全部用 SVG 畫，座標 200×340） ----------
+  const OL = '#6E5A44';
+  // 粗線條加外框（手臂、袖子用）
+  const limb = (x1, y1, x2, y2, w, c) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${OL}" stroke-width="${w + 5}" stroke-linecap="round"/><path d="M${x1} ${y1}L${x2} ${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+  const FRIENDS = {
+    capy: (() => {
+      const fur = '#C49A6C', dk = '#A57B52';
+      return `${limb(66, 166, 44, 214, 18, fur)}${limb(134, 166, 156, 214, 18, fur)}
+        <circle cx="41" cy="224" r="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/><circle cx="159" cy="224" r="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <rect x="70" y="226" width="26" height="72" rx="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/><rect x="104" y="226" width="26" height="72" rx="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <ellipse cx="80" cy="302" rx="18" ry="10" fill="${dk}" stroke="${OL}" stroke-width="2.5"/><ellipse cx="120" cy="302" rx="18" ry="10" fill="${dk}" stroke="${OL}" stroke-width="2.5"/>
+        <rect x="58" y="144" width="84" height="98" rx="38" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <ellipse cx="100" cy="196" rx="26" ry="30" fill="#D8B88E"/>
+        <path d="M64 222h72v14q-10 14-24 12l-12-6-12 6q-14 2-24-12z" fill="#FBF6EC" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="80" cy="230" r="2.5" fill="#E8A9A0"/><circle cx="100" cy="228" r="2.5" fill="#E8A9A0"/><circle cx="120" cy="230" r="2.5" fill="#E8A9A0"/>
+        <circle cx="52" cy="64" r="11" fill="${dk}" stroke="${OL}" stroke-width="2.5"/><circle cx="148" cy="64" r="11" fill="${dk}" stroke="${OL}" stroke-width="2.5"/>
+        <rect x="46" y="38" width="108" height="114" rx="48" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <ellipse cx="100" cy="120" rx="38" ry="27" fill="${dk}"/>
+        <ellipse cx="88" cy="112" rx="4" ry="6" fill="${OL}"/><ellipse cx="112" cy="112" rx="4" ry="6" fill="${OL}"/>
+        <path d="M90 132q10 8 20 0" stroke="${OL}" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="74" cy="86" r="6" fill="${OL}"/><circle cx="126" cy="86" r="6" fill="${OL}"/><circle cx="76" cy="84" r="2" fill="#fff"/><circle cx="128" cy="84" r="2" fill="#fff"/>
+        <ellipse cx="62" cy="104" rx="9" ry="6" fill="#E8A9A0" opacity=".7"/><ellipse cx="138" cy="104" rx="9" ry="6" fill="#E8A9A0" opacity=".7"/>`;
+    })(),
+    bunny: (() => {
+      const fur = '#F6EFE4', pk = '#EBB7B0';
+      return `${limb(66, 166, 44, 214, 18, fur)}${limb(134, 166, 156, 214, 18, fur)}
+        <circle cx="41" cy="224" r="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/><circle cx="159" cy="224" r="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <rect x="70" y="226" width="26" height="72" rx="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/><rect x="104" y="226" width="26" height="72" rx="12" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <ellipse cx="80" cy="302" rx="18" ry="10" fill="${fur}" stroke="${OL}" stroke-width="2.5"/><ellipse cx="120" cy="302" rx="18" ry="10" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <rect x="58" y="144" width="84" height="98" rx="38" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <path d="M64 222h72v14q-10 14-24 12l-12-6-12 6q-14 2-24-12z" fill="#D9E6EE" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/>
+        <ellipse cx="78" cy="38" rx="15" ry="38" fill="${fur}" stroke="${OL}" stroke-width="2.5" transform="rotate(-10 78 38)"/><ellipse cx="78" cy="40" rx="7" ry="28" fill="${pk}" transform="rotate(-10 78 40)"/>
+        <ellipse cx="122" cy="38" rx="15" ry="38" fill="${fur}" stroke="${OL}" stroke-width="2.5" transform="rotate(10 122 38)"/><ellipse cx="122" cy="40" rx="7" ry="28" fill="${pk}" transform="rotate(10 122 40)"/>
+        <ellipse cx="100" cy="106" rx="56" ry="50" fill="${fur}" stroke="${OL}" stroke-width="2.5"/>
+        <circle cx="78" cy="100" r="6.5" fill="${OL}"/><circle cx="122" cy="100" r="6.5" fill="${OL}"/><circle cx="80" cy="98" r="2.2" fill="#fff"/><circle cx="124" cy="98" r="2.2" fill="#fff"/>
+        <path d="M95 114h10l-5 6z" fill="${pk}" stroke="${pk}" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M100 120q-4 8-10 6M100 120q4 8 10 6" stroke="${OL}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="64" cy="118" rx="10" ry="6" fill="${pk}" opacity=".75"/><ellipse cx="136" cy="118" rx="10" ry="6" fill="${pk}" opacity=".75"/>`;
+    })(),
+  };
+  // 衣服：box＝在角色身上的範圍 [x, y, 寬, 高]；陣列順序就是疊上去的順序
+  const CLOTHES = {
+    pants: { name: '褲子', en: 'Pants', box: [56, 214, 88, 82], art: `<path d="M62 220h76l2 72h-34l-6-46-6 46H60z" fill="#8FA9C0" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M62 230h76" stroke="${OL}" stroke-width="2" opacity=".5"/><circle cx="100" cy="225" r="3" fill="#F2E3B8"/>` },
+    shirt: { name: '衣服', en: 'Shirt', box: [26, 138, 148, 104], art: `${limb(70, 160, 52, 190, 30, '#E7A79A')}${limb(130, 160, 148, 190, 30, '#E7A79A')}<path d="M64 148q36 14 72 0l6 10v76q-42 8-84 0v-76z" fill="#E7A79A" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M100 178l5 10 11 1-8 8 2 11-10-5-10 5 2-11-8-8 11-1z" fill="#F7E3A8"/>` },
+    shoes: { name: '鞋子', en: 'Shoes', box: [52, 282, 96, 36], art: `<path d="M60 296q0-10 12-10h16q10 0 10 10v8q0 8-8 8H66q-8 0-8-8z" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5"/><path d="M102 296q0-10 10-10h16q12 0 12 10v8q0 8-8 8h-22q-8 0-8-8z" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5"/><path d="M60 306h38M102 306h38" stroke="#FBF6EC" stroke-width="4"/><path d="M72 294h14M114 294h14" stroke="#FBF6EC" stroke-width="2.5" stroke-linecap="round"/>` },
+    cap: { name: '帽子', en: 'Cap', box: [40, 8, 144, 70], art: `<path d="M118 62q44-6 60 8-28 8-62 4z" fill="#D8B866" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M46 70q0-56 54-56t54 56z" fill="#E8C877" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M100 14v56" stroke="${OL}" stroke-width="2" opacity=".35"/><circle cx="100" cy="15" r="5" fill="#D8B866" stroke="${OL}" stroke-width="2"/>` },
+    wpants: { name: '褲子', en: 'Pants', box: [56, 214, 88, 82], art: `<path d="M62 220h76l2 72h-34l-6-46-6 46H60z" fill="#8C8FB8" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M62 230h76" stroke="${OL}" stroke-width="2" opacity=".5"/>` },
+    boots: { name: '靴子', en: 'Boots', box: [52, 258, 96, 60], art: `<path d="M64 270h32v28q2 14-10 14H68q-10 0-10-8 0-6 6-8z" fill="#B08A5A" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M104 270h32v26q6 2 6 8 0 8-10 8h-18q-12 0-10-14z" fill="#B08A5A" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><rect x="60" y="262" width="40" height="13" rx="6.5" fill="#FBF6EC" stroke="${OL}" stroke-width="2"/><rect x="100" y="262" width="40" height="13" rx="6.5" fill="#FBF6EC" stroke="${OL}" stroke-width="2"/>` },
+    coat: { name: '外套', en: 'Coat', box: [22, 136, 156, 128], art: `${limb(68, 160, 45, 210, 26, '#C9A0B8')}${limb(132, 160, 155, 210, 26, '#C9A0B8')}<path d="M62 146q38 16 76 0l8 12 2 92q-48 10-96 0l2-92z" fill="#C9A0B8" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M100 158v94" stroke="${OL}" stroke-width="2" opacity=".5"/><circle cx="110" cy="180" r="4" fill="#F7E3A8" stroke="${OL}" stroke-width="1.5"/><circle cx="110" cy="204" r="4" fill="#F7E3A8" stroke="${OL}" stroke-width="1.5"/><circle cx="110" cy="228" r="4" fill="#F7E3A8" stroke="${OL}" stroke-width="1.5"/><path d="M68 236h20M112 236h20" stroke="${OL}" stroke-width="2" opacity=".45"/>` },
+    scarf: { name: '圍巾', en: 'Scarf', box: [52, 140, 96, 72], art: `<path d="M112 160h18l4 42h-18z" fill="#E3A35C" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M116 176h16M117 190h16" stroke="#F4D6A6" stroke-width="5"/><path d="M58 150q42 20 84 0l2 14q-44 22-88 0z" fill="#E3A35C" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/><path d="M80 158l-1 13M100 161v13M120 158l1 13" stroke="#F4D6A6" stroke-width="5"/><path d="M118 204v6M124 204v6M130 204v6" stroke="${OL}" stroke-width="2.5" stroke-linecap="round"/>` },
+    gloves: { name: '手套', en: 'Gloves', box: [20, 204, 160, 42], art: `<ellipse cx="41" cy="226" rx="15" ry="17" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5"/><ellipse cx="55" cy="222" rx="6" ry="9" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5" transform="rotate(-25 55 222)"/><ellipse cx="159" cy="226" rx="15" ry="17" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5"/><ellipse cx="145" cy="222" rx="6" ry="9" fill="#8FAE8B" stroke="${OL}" stroke-width="2.5" transform="rotate(25 145 222)"/><path d="M30 236h22M148 236h22" stroke="#FBF6EC" stroke-width="4"/>` },
+  };
+  // 手套在角色身上分得很開，放在托盤裡時把右手那隻挪近，看起來才夠大
+  CLOTHES.gloves.tray = { box: [22, 200, 88, 46], art: CLOTHES.gloves.art.replace(/(<ellipse cx="159"[^>]*\/><ellipse cx="145"[^>]*\/>)/, '<g transform="translate(-72 0)">$1</g>').replace('M148 236h22', 'M76 236h22') };
+  const clothSVG = (c, inTray) => { const v = inTray && c.tray || c; return `<svg viewBox="${v.box.join(' ')}" aria-hidden="true">${v.art}</svg>`; };
+  const dressUp = (friend, keys, intro, outro) => {
+    roundActive = true;
+    const board = $('board'); board.className = 'board'; $('tray2').innerHTML = '';
+    board.innerHTML = `<div class="scene dress"><svg class="friend" viewBox="0 0 200 340" aria-hidden="true">${FRIENDS[friend]}</svg></div>`;
+    const sc = board.firstChild;
+    const targets = keys.map(k => {
+      const c = CLOTHES[k], [x, y, w, h] = c.box, el = document.createElement('div');
+      el.className = 'dspot'; el.dataset.n = c.name; el.style.cssText = `left:${x / 2}%;top:${y / 3.4}%;width:${w / 2}%;height:${h / 3.4}%`;
+      el.innerHTML = `<span class="sil">${clothSVG(c)}</span>`; sc.appendChild(el);
+      return { el, k, single: true };
+    });
+    dragMatch(targets, keys.map(k => ({ k, name: CLOTHES[k].name, en: CLOTHES[k].en, pic: clothSVG(CLOTHES[k], true), cls: 'item cloth' })), {
+      margin: 40, own: true,
+      put: (t, g) => { unshadow(g); sayName(t.name, t.en); },
+      onDone: () => { sc.classList.add('happy'); say(outro); finishFree(startHelp); },
+    });
+    show('play');
+    say(intro);
+  };
+  const helpWinter = () => dressUp('bunny', ['wpants', 'boots', 'coat', 'scarf', 'gloves'], '天氣冷了，幫小朋友穿暖暖', '穿得暖暖的，不怕冷了');
   const helpTable2 = () => helpPlace('mat', '', [
     { k: 'pancake', name: '鬆餅', pic: '🥞', en: 'Pancakes', x: 50, y: 58, s: .26 },
     { k: 'fork', name: '刀叉', pic: '🍴', en: 'Fork and knife', x: 18, y: 58, s: .17 },
@@ -1844,23 +1954,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     show('play');
     say('洗手要先做什麼呢？照順序排好');
   };
-  const helpDress = () => {
-    roundActive = true;
-    const spots = [
-      { k: 'shirt', name: '衣服', pic: '👕', en: 'Shirt', x: 50, y: 45, s: .5 },
-      { k: 'pants', name: '褲子', pic: '👖', en: 'Pants', x: 50, y: 71, s: .46 },
-      { k: 'shoes', name: '鞋子', pic: '👟', en: 'Shoes', x: 50, y: 91, s: .3 },
-      { k: 'hat', name: '帽子', pic: '🧢', en: 'Cap', x: 50, y: 9, s: .34 },
-    ];
-    const targets = placeScene('kid', '<span class="face">😊</span>', spots);
-    dragMatch(targets, spots.map(s => ({ k: s.k, name: s.name, en: s.en, pic: s.pic })), {
-      margin: 30,
-      put: (t, g) => { unshadow(g); sayName(t.name, t.en); },
-      onDone: () => { say('穿好了，可以出門玩了'); finishFree(startHelp); },
-    });
-    show('play');
-    say('幫小朋友穿衣服，放到一樣的形狀上');
-  };
+  const helpDress = () => dressUp('capy', ['pants', 'shirt', 'shoes', 'cap'], '幫小朋友穿衣服，放到一樣的形狀上', '穿好了，可以出門玩了');
   const helpTable = () => {
     roundActive = true;
     const spots = [
@@ -2045,24 +2139,17 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       <div class="row"><span>形狀難度</span>${pills('lvShapes', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>整理難度</span>${pills('lvTidy', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>夜間模式</span><button class="pill${settings.night ? ' on' : ''}" data-k="night" data-v="1">開</button><button class="pill${!settings.night ? ' on' : ''}" data-k="night" data-v="0">關</button></div>
-      <div class="row"><span>錄好的聲音</span>${clips.voices.map(v => `<button class="pill${settings.rec === v ? ' on' : ''}" data-rec="${v}">姐姐 ${v}</button>`).join('')}<button class="pill${recDir() ? '' : ' on'}" data-rec="off">用裝置語音</button></div>
-      <div class="row"><span>英文聲音</span>${clips.enVoices.map(v => `<button class="pill${enRecV() === v ? ' on' : ''}" data-enrec="${v}">${EN_LABEL[v] || v}</button>`).join('')}<button class="pill${enRecV() ? '' : ' on'}" data-enrec="off">用裝置語音</button></div>
-      <div class="row"><span>裝置語音</span><button class="pill${settings.voice === 'sister' ? ' on' : ''}" data-k="voice" data-v="sister">輕柔姐姐</button><button class="pill${settings.voice === 'girl' ? ' on' : ''}" data-k="voice" data-v="girl">小女孩</button><button class="pill" id="pTry">試聽</button></div>
-      <div class="row"><span>台灣語音</span>${zhVoices.length ? zhVoices.map(v => `<button class="pill${voice && v.name === voice.name ? ' on' : ''}" data-vn="${v.name}">${v.name}</button>`).join('') : '<span style="min-width:0">這台裝置找不到台灣中文語音</span>'}</div>
-      <p class="hint" style="text-align:left;font-size:15px">想要更自然的台灣口音：到 iPad「設定 › 輔助使用 › 朗讀內容 › 聲音 › 中文（台灣）」下載「美佳（加強版）」，回來重新整理就會自動使用。</p>
+      <div class="row"><span>錄好的聲音</span>${clips.voices.map(v => `<button class="pill${settings.rec === v ? ' on' : ''}" data-rec="${v}">姐姐 ${v}</button>`).join('')}</div>
+      <div class="row"><span>英文聲音</span>${clips.enVoices.map(v => `<button class="pill${enRecV() === v ? ' on' : ''}" data-enrec="${v}">${EN_LABEL[v] || v}</button>`).join('')}</div>
       <div class="row"><span>聲音</span><button class="pill${settings.sound ? ' on' : ''}" data-k="sound" data-v="1">開</button><button class="pill${!settings.sound ? ' on' : ''}" data-k="sound" data-v="0">關</button></div>
       <div class="row"><button class="act" id="pNew">重新開始計時</button><button class="act plain" id="pRest">現在休息</button><button class="act plain" id="pClose">關閉</button></div>
       <p class="hint" style="text-align:left;font-size:15px">提示：搭配 iPad 的「引導使用模式」可把小孩鎖在這個畫面。</p></div>`;
     sheet.hidden = false;
-    $('pTry').addEventListener('click', () => { unlockAudio(); say('你好，我們一起幫兔子找家吧', 'Rabbit'); });
     sheet.querySelectorAll('.pill[data-enrec]').forEach(p => p.addEventListener('click', () => {
       settings.enRec = p.dataset.enrec; saveSettings(); loadPacks(); unlockAudio(); say('兔子', 'Rabbit'); openPanel();
     }));
     sheet.querySelectorAll('.pill[data-rec]').forEach(p => p.addEventListener('click', () => {
       settings.rec = p.dataset.rec; saveSettings(); loadPacks(); unlockAudio(); say('你好，我們一起幫兔子找家吧'); openPanel();
-    }));
-    sheet.querySelectorAll('.pill[data-vn]').forEach(p => p.addEventListener('click', () => {
-      settings.voiceName = p.dataset.vn; saveSettings(); pickVoice(); unlockAudio(); say('你好，我是這個聲音'); openPanel();
     }));
     sheet.querySelectorAll('.pill[data-music]').forEach(p => p.addEventListener('click', () => {
       settings.music = p.dataset.music; saveSettings(); unlockAudio(); bgmSync(); openPanel();
