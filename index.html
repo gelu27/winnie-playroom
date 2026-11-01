@@ -549,6 +549,50 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   .qopt { width: min(27vw, 22vh, 190px); }
   .halfbox, .netbox, .clockbox { width: min(66vw, 34vh); }
 }
+/* ===== 打字練習 ===== */
+.kbwrap { position: relative; flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.kbshow { position: relative; flex: 1; min-height: 0; width: 100%; padding-top: 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.kbswap { position: absolute; top: 0; right: 0; z-index: 2; border: none; border-radius: 18px; background: var(--panel); box-shadow: var(--lift); padding: 6px 14px; font-size: 15px; color: var(--soft); cursor: pointer; min-height: 40px; }
+.kbtrail { min-height: 1.3em; font-size: clamp(24px, 4vh, 34px); letter-spacing: .18em; color: var(--soft); }
+.kbhello { font-size: clamp(30px, 6vh, 46px); text-align: center; line-height: 1.4; }
+.kbhello small { font-size: .45em; color: var(--soft); }
+.kbcard { background: var(--panel); border-radius: 30px; padding: 16px 30px; box-shadow: var(--lift); }
+.kbfloat { position: absolute; bottom: 0; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #4A4237; opacity: 0; pointer-events: none; animation: kbfloat 2.6s ease-out forwards; }
+@keyframes kbfloat { 12% { opacity: .9; } 100% { opacity: 0; transform: translateY(-46vh) scale(.8); } }
+.kb { --k: min(calc((100vw - 64px) / 11), 12vh, 104px); display: flex; flex-direction: column; align-items: center; gap: calc(var(--k) * .1); }
+.kbrow { display: flex; gap: calc(var(--k) * .1); }
+.key { width: var(--k); height: var(--k); border: none; border-radius: calc(var(--k) * .24); padding: 0; cursor: pointer; background: var(--bg); color: var(--ink); font-size: calc(var(--k) * .5); line-height: 1; box-shadow: 0 calc(var(--k) * .06) 0 color-mix(in srgb, var(--ink) 16%, transparent); touch-action: manipulation; }
+.key:active { transform: none; }
+.key.down { animation: keydown .3s ease; }
+@keyframes keydown { 35% { transform: translateY(4px) scale(.93); background: color-mix(in srgb, var(--ok) 45%, var(--bg)); } }
+.key.nope { animation: nope .45s ease; }
+.key.hint { background: color-mix(in srgb, var(--sun) 30%, var(--bg)); animation: keyglow 1.4s ease-in-out infinite; }
+@keyframes keyglow { 50% { box-shadow: 0 0 0 calc(var(--k) * .08) var(--sun); } }
+.kbballoon { position: relative; width: clamp(110px, 21vh, 180px); aspect-ratio: .86; border: none; border-radius: 50% 50% 47% 47%; cursor: pointer; margin-bottom: 36px;
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.55) 0 10%, transparent 11%), var(--bc); color: #4A4237; box-shadow: var(--lift);
+  display: flex; align-items: center; justify-content: center; font-size: clamp(60px, 12vh, 104px); animation: bob 3s ease-in-out infinite; }
+.kbballoon small { font-size: .5em; opacity: .7; margin-left: 4px; }
+.kbballoon::after { content: ''; position: absolute; top: 100%; left: 50%; width: 2px; height: 36px; background: var(--soft); }
+.kbballoon.popped { animation: kbpop .4s ease forwards; }
+@keyframes kbpop { 50% { transform: scale(1.2); } 100% { transform: scale(1.5) translateY(-40px); opacity: 0; } }
+.kbspark { position: absolute; left: 50%; top: 50%; font-style: normal; font-size: 30px; pointer-events: none; animation: kbspark .9s ease-out forwards; }
+@keyframes kbspark { from { transform: translate(-50%, -50%) scale(.4); opacity: 1; } to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1); opacity: 0; } }
+.kbword { display: flex; align-items: center; gap: clamp(16px, 4vw, 40px); flex-wrap: wrap; justify-content: center; }
+.kbpic { font-size: clamp(64px, 15vh, 130px); line-height: 1; cursor: pointer; }
+.kbpic.hop { animation: hop .6s ease 3; }
+.slots { display: flex; gap: clamp(6px, 1.2vw, 12px); }
+.sl { width: clamp(48px, 10vh, 86px); height: clamp(58px, 12vh, 100px); border-radius: 18px; background: var(--panel); box-shadow: var(--sink); display: flex; align-items: center; justify-content: center; font-size: clamp(36px, 8vh, 70px); color: color-mix(in srgb, var(--ink) 22%, transparent); transition: background .3s ease; }
+.sl.cur { outline: 4px solid var(--sun); color: color-mix(in srgb, var(--ink) 45%, transparent); animation: bob 1.6s ease-in-out infinite; }
+.sl.done { background: color-mix(in srgb, var(--ok) 38%, var(--panel)); color: var(--ink); box-shadow: var(--lift); animation: settle .3s ease; }
+#play .tray2:has(.kb) { min-height: 0; padding: 10px; }
+@media (max-height: 520px) and (orientation: landscape) {
+  .kbcard { padding: 8px 18px; } .kbswap { font-size: 13px; min-height: 32px; padding: 4px 10px; }
+  .kb { --k: min(calc((100vw - 64px) / 11), 10.5vh, 104px); }
+  .kbshow { padding-top: 4px; } .kbtrail { font-size: 20px; }
+  .kbballoon { width: 76px; font-size: 40px; margin-bottom: 0; animation: none; } .kbballoon::after { display: none; }
+  .kbpic { font-size: 50px; } .sl { width: 38px; height: 46px; font-size: 32px; border-radius: 12px; } .sl.cur { outline-width: 3px; animation: none; }
+  .kbhello { font-size: 24px; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
@@ -853,6 +897,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     { id: 'add', name: '看圖加法', pic: '➕', ready: true },
     { id: 'princess', name: '兔兔公主', pic: '👑', ready: true },
     { id: 'fruit', name: '切水果', pic: '🍉', ready: true },
+    { id: 'keys', name: '打字練習', pic: '⌨️', ready: true },
   ];
   const tilesBox = $('menuTiles');
   const TINTS = ['#C9DCE6', '#EED6C4', '#DCD3C2', '#F0D8D4', '#E2D6EA', '#D6E4CE', '#E8E0C8', '#D4E2E2'];
@@ -868,7 +913,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         for (const t of tilesBox.querySelectorAll('.armed')) t.dispatchEvent(new Event('disarm'));
         armed = true; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
       }
-      disarm(); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit })[g.id]();
+      disarm(); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys })[g.id]();
     });
     const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
     b.addEventListener('disarm', disarm);
@@ -2676,6 +2721,148 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     };
     requestAnimationFrame(frame);
   };
+
+  // ---------- 12. 打字練習（螢幕大鍵盤＋外接鍵盤） ----------
+  const KB_ROWS = { qwerty: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], abc: ['ABCDEFGHI', 'JKLMNOPQR', 'STUVWXYZ'] };
+  const KB_WORDS = 'CAT,🐈,貓;DOG,🐕,狗;SUN,☀️,太陽;PIG,🐷,小豬;BUS,🚌,公車;CAR,🚗,車子;BEE,🐝,蜜蜂;COW,🐄,牛;EGG,🥚,蛋;HAT,🎩,帽子;FOX,🦊,狐狸;BED,🛏️,床;CUP,🥤,杯子;KEY,🔑,鑰匙;BAT,🦇,蝙蝠;ANT,🐜,螞蟻'
+    .split(';').map(s => { const [w, pic, zh] = s.split(','); return { w, pic, zh, en: w.toLowerCase() }; });
+  const KB_NAME = { w: 'WINNIE', pic: '👧', zh: '', en: 'Winnie', me: true };
+  const KB_NOTES = [523, 587, 659, 784, 880, 1047, 1175];
+  const KB_TINTS = ['#E9B4AC', '#AFCAD6', '#D6CB9C', '#C7B6DA', '#A9C9A4', '#EBCB8E'];
+  const kbItem = (L) => ABC_ITEMS[L.charCodeAt(0) - 65];
+  const kbSay = (L) => abcName(kbItem(L));
+  // 外接鍵盤：只交給目前畫面上的鍵盤
+  let kbPress = null, kbGen = -1;
+  document.addEventListener('keydown', (e) => {
+    if (!kbPress || kbGen !== gen || current !== 'play' || e.metaKey || e.ctrlKey || e.altKey) return;
+    // 用實體按鍵位置判斷，開著注音輸入法也認得
+    const m = /^Key([A-Z])$/.exec(e.code || ''), L = m ? m[1] : (e.key || '').toUpperCase();
+    if (!/^[A-Z]$/.test(L)) return;
+    e.preventDefault(); if (e.repeat) return;
+    unlockAudio(); kbPress(L);
+  });
+  // 在 tray 畫出大鍵盤；onKey(L) 回傳 false 代表按錯
+  const kbBuild = (tray, onKey) => {
+    const lay = settings.kbLayout === 'abc' ? 'abc' : 'qwerty';
+    tray.innerHTML = `<div class="kb ${lay}">${KB_ROWS[lay].map(r => `<div class="kbrow">${[...r].map(L => `<button class="key" data-k="${L}" aria-label="${L}">${L}</button>`).join('')}</div>`).join('')}</div>`;
+    const keyEl = (L) => tray.querySelector(`.key[data-k="${L}"]`);
+    const anim = (el, c) => { if (!el) return; el.classList.remove(c); void el.offsetWidth; el.classList.add(c); };
+    const press = (L) => {
+      const el = keyEl(L), r = onKey(L);
+      anim(el, r === false ? 'nope' : 'down');
+    };
+    tray.querySelectorAll('.key').forEach(b => b.addEventListener('pointerdown', (e) => { e.preventDefault(); press(b.dataset.k); }));
+    kbPress = press; kbGen = gen;
+    return {
+      glow: (L) => { tray.querySelectorAll('.key.hint').forEach(k => k.classList.remove('hint')); if (L) { const el = keyEl(L); if (el) el.classList.add('hint'); } },
+    };
+  };
+  // 共用外框：上面顯示區、右上角切換鍵盤排列
+  const kbFrame = (stage, again, top = '') => {
+    stage.innerHTML = `<div class="kbwrap">${top}<div class="kbshow"></div><button class="kbswap" aria-label="切換鍵盤排列">⌨️ ${settings.kbLayout === 'abc' ? 'ABC' : 'QWERTY'}</button></div>`;
+    stage.querySelector('.kbswap').addEventListener('click', () => {
+      settings.kbLayout = settings.kbLayout === 'abc' ? 'qwerty' : 'abc'; saveSettings(); again();
+    });
+    return stage.querySelector('.kbshow');
+  };
+  const kbSpark = (box) => {
+    for (let k = 0; k < 8; k++) {
+      const s = document.createElement('i'); s.className = 'kbspark'; s.textContent = k % 2 ? '✨' : '⭐';
+      const a = k / 8 * Math.PI * 2; s.style.setProperty('--dx', Math.cos(a) * 130 + 'px'); s.style.setProperty('--dy', Math.sin(a) * 110 + 'px');
+      box.appendChild(s); setTimeout(() => s.remove(), 1000);
+    }
+  };
+  const KEYS = { modes: [['free', '🎹 自由按'], ['find', '🎈 找字母'], ['word', '🔤 打單字']], run: {
+    // 自由按：按哪個字母就出現哪個字母、圖片和聲音
+    free: (stage, tray, again) => {
+      roundActive = false;
+      const show = kbFrame(stage, again, '<div class="kbtrail" aria-live="polite"></div>'), trail = stage.querySelector('.kbtrail');
+      show.innerHTML = '<div class="kbhello">👆 按按看<br><small>螢幕上的鍵盤，或是接上的鍵盤都可以</small></div>';
+      let n = 0;
+      kbBuild(tray, (L) => {
+        const it = kbItem(L), k = L.charCodeAt(0) - 65;
+        ding(KB_NOTES[k % KB_NOTES.length]);
+        show.innerHTML = `<div class="gcard kbcard pop">${gCard(it)}</div>`;
+        const f = document.createElement('span'); f.className = 'kbfloat'; f.textContent = L;
+        f.style.left = (8 + Math.random() * 80) + '%'; f.style.background = KB_TINTS[n++ % KB_TINTS.length];
+        show.appendChild(f); setTimeout(() => f.remove(), 2600);
+        trail.textContent = (trail.textContent + L).slice(-14);
+        sayLang([[kbSay(L), 'en-US'], [it.word, 'en-US'], [it.zh, 'zh-TW']]);
+      });
+      say('按按看鍵盤，會出現什麼字母呢');
+    },
+    // 找字母：氣球上的字母在鍵盤哪裡？按對氣球就飛走
+    find: (stage, tray, again) => {
+      const N = 5, show = kbFrame(stage, again, `<div class="prog" aria-hidden="true">${'<i></i>'.repeat(N)}</div>`);
+      const bag = shuffle(ABC_ITEMS).slice(0, N);
+      let i = 0, it = null, busy = true, wrong = 0, hintT = null;
+      const kb = kbBuild(tray, (L) => {
+        if (busy || !it) return;
+        if (L !== it.L) {
+          wrong++; ding(300);
+          sayLang([['這是', 'zh-TW'], [kbSay(L), 'en-US'], ['，我們要找', 'zh-TW'], [kbSay(it.L), 'en-US']]);
+          if (wrong >= 2) kb.glow(it.L);
+          return false;
+        }
+        busy = true; clearTimeout(hintT); kb.glow(null); ding(880); setTimeout(() => ding(1175), 160);
+        const b = show.querySelector('.kbballoon'); b.classList.add('popped'); kbSpark(show);
+        stage.querySelectorAll('.prog i')[i].classList.add('on');
+        const cur = it;
+        later(() => { show.innerHTML = `<div class="gcard kbcard pop">${gCard(cur)}</div>`; sayLang([[kbSay(cur.L), 'en-US'], [`${kbSay(cur.L)}, ${cur.word}`, 'en-US'], [cur.zh, 'zh-TW']]); }, 450);
+        later(() => {
+          if (++i < N) next();
+          else { kbPress = null; tray.innerHTML = ''; say('氣球都飛走了，好厲害'); finishFree(again); }
+        }, 3400);
+      });
+      const ask = () => sayLang([['找找看，', 'zh-TW'], [kbSay(it.L), 'en-US'], ['在哪裡', 'zh-TW']]);
+      const next = () => {
+        it = bag[i]; wrong = 0; busy = false;
+        show.innerHTML = `<button class="kbballoon" style="--bc:${KB_TINTS[i % KB_TINTS.length]}" aria-label="再聽一次">${it.L}<small>${it.l}</small></button>`;
+        show.querySelector('.kbballoon').addEventListener('click', ask);
+        ask(); clearTimeout(hintT); hintT = later(() => { if (!busy) kb.glow(it.L); }, 9000);
+      };
+      next();
+    },
+    // 打單字：照著亮亮的鍵一個一個打
+    word: (stage, tray, again) => {
+      const N = 3, show = kbFrame(stage, again, `<div class="prog" aria-hidden="true">${'<i></i>'.repeat(N)}</div>`);
+      const words = shuffle(KB_WORDS).slice(0, N);
+      if (Math.random() < .5) words[N - 1] = KB_NAME;
+      let i = 0, w = null, p = 0, busy = true, wrong = 0;
+      const paint = () => {
+        show.querySelectorAll('.sl').forEach((s, k) => { s.className = 'sl' + (k < p ? ' done' : k === p ? ' cur' : ''); });
+        kb.glow(p < w.w.length ? w.w[p] : null);
+      };
+      const kb = kbBuild(tray, (L) => {
+        if (busy || !w) return;
+        if (L !== w.w[p]) {
+          ding(300);
+          if (++wrong >= 2) { wrong = 0; sayLang([['找亮亮的', 'zh-TW'], [kbSay(w.w[p]), 'en-US']]); }
+          return false;
+        }
+        wrong = 0; p++; ding(KB_NOTES[Math.min(p, KB_NOTES.length - 1)]); paint();
+        if (p < w.w.length) { sayLang([[kbSay(L), 'en-US']]); return; }
+        busy = true; ding(1047); kbSpark(show);
+        const pic = show.querySelector('.kbpic'); pic.classList.add('hop');
+        stage.querySelectorAll('.prog i')[i].classList.add('on');
+        const spell = [...w.w].map(kbSay).join(', ');
+        sayLang(w.me ? [[spell, 'en-US'], ['Winnie!', 'en-US'], ['這是妳的名字喔', 'zh-TW']] : [[spell, 'en-US'], [w.en, 'en-US'], [w.zh, 'zh-TW']]);
+        later(() => {
+          if (++i < N) next();
+          else { kbPress = null; tray.innerHTML = ''; say('單字都打好了，好厲害'); finishFree(again); }
+        }, w.w.length * 700 + 3200);
+      });
+      const next = () => {
+        w = words[i]; p = 0; wrong = 0; busy = false;
+        show.innerHTML = `<div class="kbword pop"><span class="kbpic">${w.pic}</span><div class="slots">${[...w.w].map(L => `<span class="sl">${L}</span>`).join('')}</div></div>`;
+        show.querySelector('.kbpic').addEventListener('click', () => sayLang(w.me ? [['Winnie', 'en-US']] : [[w.en, 'en-US'], [w.zh, 'zh-TW']]));
+        paint();
+        sayLang(w.me ? [['我們來打', 'zh-TW'], ['Winnie', 'en-US'], ['的名字', 'zh-TW']] : [['我們來打', 'zh-TW'], [w.en, 'en-US'], [w.zh, 'zh-TW'], ['，按亮亮的鍵', 'zh-TW']]);
+      };
+      next();
+    },
+  } };
+  const startKeys = () => modeGame(KEYS);
 
   const inRest = () => !!(session && session.restEnd && session.restEnd > Date.now());
   let graceUntil = null;
