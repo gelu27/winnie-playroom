@@ -180,6 +180,21 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 .cheer { position: fixed; inset: 0; pointer-events: none; z-index: 25; overflow: hidden; }
 .cheer i { position: absolute; bottom: -40px; font-style: normal; font-size: 34px; opacity: 0; animation: rise 2.8s ease-out forwards; }
 @keyframes rise { 15% { opacity: .85; } 100% { opacity: 0; transform: translateY(-62vh) rotate(25deg); } }
+/* 慶祝的小水豚、小兔子 */
+.buddy { position: fixed; right: 3vw; bottom: -10px; width: clamp(90px, 13vw, 150px); z-index: 26; pointer-events: none; animation: buddyIn 3.4s ease-in-out forwards; }
+.buddy.left { right: auto; left: 3vw; }
+.buddy svg { width: 100%; display: block; transform-origin: 50% 90%; }
+.buddy .bub { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--panel); color: var(--ink); font-size: clamp(18px, 2.4vw, 26px); padding: 6px 14px; border-radius: 18px; box-shadow: var(--lift); opacity: 0; animation: bubIn 3.4s ease forwards; }
+.buddy.jump svg { animation: bJump .5s ease-in-out .5s 4 alternate; }
+.buddy.spin svg { animation: bSpin 1.2s ease-in-out .5s 2; }
+.buddy.wave svg { animation: bWave .4s ease-in-out .5s 6 alternate; }
+.buddy.wiggle svg { animation: bWig .25s ease-in-out .5s 10 alternate; }
+@keyframes buddyIn { 0% { transform: translateY(110%); } 14%, 84% { transform: translateY(0); } 100% { transform: translateY(110%); } }
+@keyframes bubIn { 0%, 14% { opacity: 0; } 22%, 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes bJump { to { transform: translateY(-22%); } }
+@keyframes bSpin { 50% { transform: rotate(-12deg) scale(1.06); } 100% { transform: rotate(0); } }
+@keyframes bWave { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+@keyframes bWig { from { transform: scaleX(.94) scaleY(1.04); } to { transform: scaleX(1.05) scaleY(.96); } }
 
 /* 顏色、形狀共用 */
 #play { gap: 30px; padding-top: 76px; box-sizing: border-box; }
@@ -552,7 +567,18 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .fhalf.R { clip-path: inset(-10% -10% -10% 50%); }
 .juice { position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
 .fcount { display: flex; align-items: center; gap: 14px; font-size: 30px; width: 100%; justify-content: center; flex-wrap: wrap; }
-.fc-list { font-size: 34px; letter-spacing: 2px; }
+.fc-list { font-size: 34px; letter-spacing: 2px; display: inline-flex; gap: 2px; }
+.fc-list span { display: inline-flex; }
+.fc-list svg, .fsalad svg { display: block; }
+.jar { position: relative; width: 46px; height: 64px; border: 4px solid color-mix(in srgb, var(--ink) 35%, transparent); border-top-width: 2px; border-radius: 6px 6px 16px 16px; overflow: hidden; background: color-mix(in srgb, #fff 40%, var(--panel)); flex: none; }
+.jfill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; display: flex; flex-direction: column-reverse; transition: height .5s ease; }
+.jfill i { flex: 1; opacity: .85; }
+.jstraw { position: absolute; right: 8px; top: -6px; width: 6px; height: 44px; background: #E8A3A0; border-radius: 3px; transform: rotate(12deg); }
+.fsalad { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+.fbowl { display: flex; flex-wrap: wrap; justify-content: center; width: min(420px, 70vw); font-size: clamp(40px, 6vw, 64px); margin-bottom: -40px; position: relative; z-index: 1; }
+.fbowl span { animation: dropIn .6s cubic-bezier(.3,1.4,.5,1) both; display: inline-flex; }
+.fbase { font-size: clamp(120px, 18vw, 200px); line-height: 1; }
+@keyframes dropIn { from { transform: translateY(-60vh); opacity: 0; } to { transform: none; opacity: 1; } }
 .tile .txtpic { font-size: .82em; color: var(--wood); }
 @media (max-height: 520px) and (orientation: landscape) {
   .seg button { min-height: 52px; min-width: 52px; padding: 6px 14px; font-size: 18px; }
@@ -861,7 +887,27 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   const logStart = (id) => { logStop(); curGame = id; curStart = Date.now(); const r = logRec(id); r.p++; r.last = Date.now(); save('wt_log', gameLog); };
   const logStop = () => { if (!curGame) return; logRec(curGame).ms += Math.min(Date.now() - curStart, 30 * 60000); curGame = null; save('wt_log', gameLog); };
   const logDone = () => { if (curGame) { logRec(curGame).d++; save('wt_log', gameLog); } };
-  const logErr = () => { if (curGame) { logRec(curGame).e++; save('wt_log', gameLog); } };
+  const logErr = () => { if (curGame) { logRec(curGame).e++; save('wt_log', gameLog); } lvStep(-1); };
+  // ---------- 自動難度（看不見的分級：沒有關卡、沒有分數） ----------
+  // 每款遊戲 1–3 級。一次就做對 +1、做錯 −1（連續的才算）；連續做對 5 次悄悄升一級，連續錯 3 次悄悄退一級
+  // 家長設定可以固定某一級，或設定「最高到第幾級」
+  settings.lv = settings.lv || {}; settings.lvFix = settings.lvFix || {}; settings.lvMax = settings.lvMax || {};
+  if (!settings.lvMig) {
+    Object.assign(settings.lv, { animals: settings.level || 1, colors: settings.lvColors || 1, shapes: settings.lvShapes || 1, tidy: settings.lvTidy || 1, clock: settings.clockHalf ? 2 : 1 });
+    settings.lvMig = 1; save('wt_settings', settings);
+  }
+  const lvStreak = {};
+  const lvOf = (id) => settings.lvFix[id] || Math.min(settings.lv[id] || 1, settings.lvMax[id] || 3);
+  const lvStep = (d) => {
+    const id = curGame; if (!id || settings.lvFix[id]) return;
+    let st = lvStreak[id] || 0; st = d > 0 ? Math.max(st, 0) + 1 : Math.min(st, 0) - 1;
+    const cur = lvOf(id), max = settings.lvMax[id] || 3;
+    if (st >= 5 && cur < max) { settings.lv[id] = cur + 1; st = 0; save('wt_settings', settings); }
+    else if (st <= -3 && cur > 1) { settings.lv[id] = cur - 1; st = 0; save('wt_settings', settings); }
+    lvStreak[id] = st;
+  };
+  const lvOk = () => lvStep(1);
+  const lv = (id) => lvOf(id || curGame);
   // 放錯、答錯：一聲低低輕輕的聲音＋（隔一段時間才）溫和地說「嗯，再看看」，不責備
   let oopsAt = 0;
   const oops = (line) => {
@@ -878,6 +924,18 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       box.appendChild(s);
     }
     document.body.appendChild(box); setTimeout(() => box.remove(), 3800);
+    buddyPop();
+  };
+  // 好朋友小水豚、小兔子從角落跳出來慶祝（每次動作不一樣）
+  let buddyN = 0;
+  const buddyPop = () => {
+    if (settings.calm) return;
+    const old = document.querySelector('.buddy'); if (old) old.remove();
+    const who = buddyN % 2 ? 'bunny' : 'capy', moves = ['jump', 'spin', 'wave', 'wiggle'], mv = moves[Math.floor(buddyN / 2) % moves.length]; buddyN++;
+    const b = document.createElement('div'); b.className = 'buddy ' + mv + (buddyN % 4 < 2 ? ' left' : '');
+    b.setAttribute('aria-hidden', 'true');
+    b.innerHTML = `<svg viewBox="0 0 200 340">${FRIENDS[who]}</svg><span class="bub">${['好棒！', '耶！', '太厲害了', '做到了！'][buddyN % 4]}</span>`;
+    document.body.appendChild(b); setTimeout(() => b.remove(), 3400);
   };
   const show = (id) => {
     for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
@@ -1669,6 +1727,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         const hit = mine || hitAt(open.map(g => g.el), x, y, margin), g = hit && open.find(q => q.el === hit);
         if (g && g.k === t.k) {
           if (g.single) g.done = true;
+          if (!tries) lvOk();
           put(t, g); it.remove(); ding(880);
           if (--left === 0) later(() => onDone(errs), 1300);
           return true;
@@ -2392,7 +2451,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       stage.innerHTML = `<div class="qmain">${q.html}</div><div class="prog" aria-hidden="true">${Array.from({ length: n }, (_, k) => `<i${k < i ? ' class="on"' : ''}></i>`).join('')}</div>`;
       tray.innerHTML = '';
       const win = (b) => {
-        if (done) return; done = true; if (b) b.classList.add('right');
+        if (done) return; done = true; if (b) b.classList.add('right'); if (!wrong) lvOk();
         ding(880); stage.querySelectorAll('.prog i')[i].classList.add('on');
         q.right(stage);
         later(() => { if (++i < n) next(); else { tray.innerHTML = ''; finishFree(again); } }, q.wait || 2800);
@@ -2771,45 +2830,74 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   const startSafe = () => modeGame(SAFE);
 
   // ---------- 11. 切水果 ----------
-  const CUT_FRUITS = [['西瓜','🍉','Watermelon','#E8737E'],['蘋果','🍎','Apple','#F2E3B5'],['橘子','🍊','Orange','#F2A65A'],['檸檬','🍋','Lemon','#F3E08A'],['桃子','🍑','Peach','#F4B79A'],['鳳梨','🍍','Pineapple','#F3D36B'],['香蕉','🍌','Banana','#F5E7A8'],['奇異果','🥝','Kiwi','#9CC46A'],['草莓','🍓','Strawberry','#E8737E'],['葡萄','🍇','Grapes','#A98BC9'],['芒果','🥭','Mango','#F2B54A'],['梨子','🍐','Pear','#D8E3A0']];
-  const CUT_GOAL = 10;
+  // 台灣常見、但沒有 emoji 的水果自己畫
+  const fsv = (inner) => `<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true">${inner}</svg>`;
+  const TW_FRUIT = {
+    dragon: fsv('<ellipse cx="50" cy="56" rx="34" ry="38" fill="#D9558A"/><path d="M28 34l-14-10 20 2zM72 34l14-10-20 2zM22 60l-16 0 16-8zM78 60l16 0-16-8zM40 22l-4-16 12 12zM60 22l4-16-12 12zM34 86l-10 10 16-4zM66 86l10 10-16-4z" fill="#8DBB5A"/><ellipse cx="40" cy="44" rx="7" ry="11" fill="#fff" opacity=".25"/>'),
+    guava: fsv('<path d="M50 14q2-8 8-10" stroke="#6E8A44" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="50" cy="56" rx="38" ry="36" fill="#B9D58A"/><circle cx="36" cy="44" r="3" fill="#9DBB6E"/><circle cx="62" cy="64" r="3" fill="#9DBB6E"/><circle cx="56" cy="38" r="2.5" fill="#9DBB6E"/><ellipse cx="36" cy="42" rx="8" ry="11" fill="#fff" opacity=".25"/>'),
+    star: fsv('<path d="M50 6 61 38 94 38 67 58 78 92 50 72 22 92 33 58 6 38 39 38z" fill="#EBCB4E" stroke="#C9A43A" stroke-width="3" stroke-linejoin="round"/><circle cx="50" cy="52" r="6" fill="#F6E49A"/>'),
+    lychee: fsv('<path d="M50 14q0-8 6-10" stroke="#6E8A44" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="50" cy="56" r="36" fill="#C9485A"/>' + Array.from({ length: 14 }, (_, k) => { const a = k * 2.4, r = 10 + (k % 4) * 6; return `<circle cx="${(50 + r * Math.cos(a)).toFixed(0)}" cy="${(56 + r * Math.sin(a)).toFixed(0)}" r="3" fill="#A83446"/>`; }).join('') + '<ellipse cx="38" cy="42" rx="7" ry="10" fill="#fff" opacity=".22"/>'),
+    persimmon: fsv('<ellipse cx="50" cy="58" rx="40" ry="32" fill="#EE8A3C"/><path d="M50 30l-18-8 10 12-16 4 18 2-6 10 12-8 12 8-6-10 18-2-16-4 10-12z" fill="#7FA45A"/><ellipse cx="34" cy="52" rx="8" ry="10" fill="#fff" opacity=".22"/>'),
+    passion: fsv('<path d="M50 16q2-8 8-10" stroke="#6E8A44" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="50" cy="56" r="36" fill="#7A4F8C"/><circle cx="36" cy="44" r="2" fill="#A981B8"/><circle cx="62" cy="62" r="2" fill="#A981B8"/><circle cx="58" cy="40" r="2" fill="#A981B8"/><ellipse cx="38" cy="42" rx="8" ry="11" fill="#fff" opacity=".22"/>'),
+  };
+  const CUT_FRUITS = [['西瓜','🍉','Watermelon','#E8737E'],['蘋果','🍎','Apple','#F2E3B5'],['橘子','🍊','Orange','#F2A65A'],['檸檬','🍋','Lemon','#F3E08A'],['桃子','🍑','Peach','#F4B79A'],['鳳梨','🍍','Pineapple','#F3D36B'],['香蕉','🍌','Banana','#F5E7A8'],['奇異果','🥝','Kiwi','#9CC46A'],['草莓','🍓','Strawberry','#E8737E'],['葡萄','🍇','Grapes','#A98BC9'],['芒果','🥭','Mango','#F2B54A'],['梨子','🍐','Pear','#D8E3A0'],
+    ['櫻桃','🍒','Cherry','#D9556A'],['藍莓','🫐','Blueberry','#6F7FC0'],['椰子','🥥','Coconut','#F4F0E6'],['哈密瓜','🍈','Melon','#C9E09A'],['青蘋果','🍏','Green apple','#DDEAA8'],['酪梨','🥑','Avocado','#C7D98A'],['番茄','🍅','Tomato','#E86A5A'],
+    ['火龍果',TW_FRUIT.dragon,'Dragon fruit','#F2F0EE'],['芭樂',TW_FRUIT.guava,'Guava','#F4E6E0'],['楊桃',TW_FRUIT.star,'Star fruit','#F6E49A'],['荔枝',TW_FRUIT.lychee,'Lychee','#F6F1EC'],['柿子',TW_FRUIT.persimmon,'Persimmon','#F2A65A'],['百香果',TW_FRUIT.passion,'Passion fruit','#F2C94C']];
+  const CUT_GOAL = 20;
   window.__NEW = { ABC_ITEMS, HALF_ITEMS, SOLIDS, ZHUYIN_ITEMS, PLATE, ADD_THINGS, P_ITEMS, P_TABS, SAFE_STEPS, CUT_FRUITS, OUTLINES, HR, LI, D9, chant: (a, b) => chant(a, b), cnNum: (n) => cnNum(n) };
+  let fruitBag = [];
   const startFruit = () => {
     roundActive = true;
+    // 難度：同時飛幾個、多久飛一個、飛多快
+    const L = lv('fruit'), MAXLIVE = [2, 3, 3][L - 1], GAP = [1900, 1450, 1100][L - 1], AIR = [2.6, 2.3, 2.0][L - 1];
     const board = $('board'), tray = $('tray2');
     board.className = 'board qz';
     board.innerHTML = '<div class="slice"><svg class="trail"><polyline points=""/></svg></div>';
-    tray.innerHTML = `<div class="fcount"><span class="fc-n">0 / ${CUT_GOAL}</span><span class="fc-list"></span></div>`;
+    tray.innerHTML = `<div class="fcount"><div class="jar" aria-hidden="true"><div class="jfill"></div><span class="jstraw"></span></div><span class="fc-n">0 / ${CUT_GOAL}</span><span class="fc-list"></span></div>`;
     show('play'); say('水果飛上來了，用手指切切看');
-    const area = board.firstChild, trail = area.querySelector('polyline'), g = gen;
-    let live = [], bits = [], cut = 0, spawned = 0, lastSpawn = 0, lastT = 0, pts = [], down = false, prev = null, ended = false;
+    const area = board.firstChild, trail = area.querySelector('polyline'), g = gen, jfill = tray.querySelector('.jfill');
+    let live = [], bits = [], cut = 0, lastSpawn = 0, lastT = 0, pts = [], down = false, prev = null, ended = false, swipeCut = 0, comboAt = 0;
+    const cutList = [];
     const spawn = (now) => {
-      const w = area.clientWidth, h = area.clientHeight, [name, pic, en, c] = CUT_FRUITS[rnd(CUT_FRUITS.length)];
+      if (fruitBag.length < 1) fruitBag = shuffle(CUT_FRUITS);
+      const w = area.clientWidth, h = area.clientHeight, [name, pic, en, c] = fruitBag.pop();
       const size = Math.min(w * .17, h * .24, 130), el = document.createElement('div');
-      el.className = 'fruit'; el.textContent = pic; el.style.fontSize = size + 'px'; area.appendChild(el);
-      const x = w * (.18 + Math.random() * .64), peak = h * (.12 + Math.random() * .22), T = 2.5 + Math.random() * .5, G = 2 * (h + size / 2 - peak) / (T * T);
-      live.push({ el, name, en, pic, c, x, y: h + size / 2, vx: (w / 2 - x) * (.1 + Math.random() * .2), vy: -G * T, G, r: size * .5, size, rot: 0, vr: (Math.random() - .5) * 30 });
-      spawned++; lastSpawn = now;
+      el.className = 'fruit'; el.innerHTML = pic; el.style.fontSize = size + 'px'; area.appendChild(el);
+      const x = w * (.18 + Math.random() * .64), peak = h * (.1 + Math.random() * .22), T = AIR + Math.random() * .5, G = 2 * (h + size / 2 - peak) / (T * T);
+      live.push({ el, name, en, pic, c, x, y: h + size / 2, vx: (w / 2 - x) * (.1 + Math.random() * .2), vy: -G * T, G, r: size * .55, size, rot: 0, vr: (Math.random() - .5) * 30 });
+      lastSpawn = now;
     };
     const place = (o) => { o.el.style.transform = `translate(${o.x - o.size / 2}px, ${o.y - o.size / 2}px) rotate(${o.rot}deg)`; };
     const slice = (o) => {
-      live = live.filter(q => q !== o); o.el.remove(); cut++;
+      live = live.filter(q => q !== o); o.el.remove(); cut++; swipeCut++; cutList.push(o);
       for (const side of [-1, 1]) {
-        const el = document.createElement('div'); el.className = 'fruit fhalf ' + (side < 0 ? 'L' : 'R'); el.textContent = o.pic; el.style.fontSize = o.size + 'px'; area.appendChild(el);
+        const el = document.createElement('div'); el.className = 'fruit fhalf ' + (side < 0 ? 'L' : 'R'); el.innerHTML = o.pic; el.style.fontSize = o.size + 'px'; area.appendChild(el);
         bits.push({ el, x: o.x + side * 6, y: o.y, vx: side * 90, vy: -120, G: o.G, size: o.size, rot: o.rot, vr: side * 90 });
       }
-      // 不再噴果汁（降低刺激）
-      for (let k = 0; k < 0; k++) {
-        const el = document.createElement('div'); el.className = 'juice'; el.style.background = o.c; area.appendChild(el);
-        const a = Math.random() * Math.PI * 2, v = 120 + Math.random() * 160;
-        bits.push({ el, x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 80, G: o.G * .8, size: 14, rot: 0, vr: 0, fade: 1 });
+      // 切開的地方冒出幾顆小星星（不閃爍、很快就消失）
+      if (!settings.calm) for (let k = 0; k < 3; k++) {
+        const el = document.createElement('div'); el.className = 'fruit fspark'; el.textContent = '✨'; el.style.fontSize = '26px'; area.appendChild(el);
+        const a = Math.random() * Math.PI * 2, v = 80 + Math.random() * 80;
+        bits.push({ el, x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 60, G: 200, size: 26, rot: 0, vr: 0, fade: 1 });
       }
-      ding(600 + cut * 30); sayName(o.name, o.en);
+      ding(600 + Math.min(cut, 20) * 25); lvOk();
+      // 一刀切到兩個以上：特別誇獎
+      if (swipeCut >= 2 && performance.now() - comboAt > 1500) { comboAt = performance.now(); setTimeout(() => ding(1320), 120); say(swipeCut >= 3 ? '哇，一次切三個' : '一次切兩個，好厲害'); }
+      else sayName(o.name, o.en);
       tray.querySelector('.fc-n').textContent = `${cut} / ${CUT_GOAL}`;
-      const m = document.createElement('span'); m.textContent = o.pic; m.className = 'pop'; tray.querySelector('.fc-list').appendChild(m);
+      jfill.style.height = Math.min(100, cut / CUT_GOAL * 100) + '%';
+      jfill.insertAdjacentHTML('beforeend', `<i style="background:${o.c}"></i>`);
+      const m = document.createElement('span'); m.innerHTML = o.pic; m.className = 'pop'; const fl = tray.querySelector('.fc-list'); fl.appendChild(m);
+      while (fl.children.length > 6) fl.firstChild.remove();
+      if (cut === CUT_GOAL - 5) later(() => say('再切五個就好了'), 900);
       if (cut >= CUT_GOAL && !ended) {
         ended = true;
-        later(() => { say(`切了${cnNum(CUT_GOAL)}個水果，好厲害`); tray.innerHTML = ''; finishFree(startFruit); }, 1600);
+        later(() => {
+          // 最後做成一大碗水果沙拉
+          const seen = []; for (const f of cutList) if (!seen.includes(f.pic)) seen.push(f.pic);
+          area.insertAdjacentHTML('beforeend', `<div class="fsalad"><div class="fbowl">${seen.slice(0, 12).map((p, k) => `<span style="animation-delay:${(k * .12).toFixed(2)}s">${p}</span>`).join('')}</div><div class="fbase">🥣</div></div>`);
+          say(`切了${cnNum(CUT_GOAL)}個水果，做成一大碗水果沙拉`); tray.innerHTML = ''; finishFree(startFruit);
+        }, 1400);
       }
     };
     const segHit = (a, b, o) => {
@@ -2818,18 +2906,18 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       return Math.hypot(a[0] + t * dx - o.x, a[1] + t * dy - o.y) < o.r;
     };
     const loc = (e) => { const r = area.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-    area.addEventListener('pointerdown', (e) => { down = true; try { area.setPointerCapture(e.pointerId); } catch {} prev = loc(e); pts = [[...prev, performance.now()]]; for (const o of [...live]) if (segHit(prev, prev, o)) slice(o); });
+    area.addEventListener('pointerdown', (e) => { down = true; swipeCut = 0; try { area.setPointerCapture(e.pointerId); } catch {} prev = loc(e); pts = [[...prev, performance.now()]]; for (const o of [...live]) if (segHit(prev, prev, o)) slice(o); });
     area.addEventListener('pointermove', (e) => {
       if (!down) return; const p = loc(e);
       for (const o of [...live]) if (segHit(prev, p, o)) slice(o);
       prev = p; pts.push([...p, performance.now()]);
     });
-    const up = () => { down = false; };
+    const up = () => { down = false; swipeCut = 0; };
     area.addEventListener('pointerup', up); area.addEventListener('pointercancel', up);
     const frame = (now) => {
       if (g !== gen || !area.isConnected) return;
       const dt = Math.min(.05, lastT ? (now - lastT) / 1000 : 0); lastT = now;
-      if (!ended && live.length < 2 && now - lastSpawn > 1900) spawn(now);
+      if (!ended && live.length < MAXLIVE && now - lastSpawn > GAP) spawn(now);
       const h = area.clientHeight;
       for (const o of [...live, ...bits]) {
         o.vy += o.G * dt; o.x += o.vx * dt; o.y += o.vy * dt; o.rot += o.vr * dt;
