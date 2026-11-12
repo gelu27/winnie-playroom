@@ -677,6 +677,154 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .item.baby { font-size: 52px; width: 86px; height: 86px; }
 .mama .spot .in { font-size: 44px; align-items: center; }
 .mama .spot .heart { font-size: 26px; animation: settle .5s ease; }
+
+/* 環遊世界 */
+.world { position: relative; width: 100%; height: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.wbox { width: min(100%, calc((100dvh - 300px) * 2)); aspect-ratio: 2 / 1; }
+.wmap { width: 100%; height: 100%; display: block; border-radius: 24px; box-shadow: var(--sink); }
+.wmap .land[data-k="an"] path { stroke: #B9B2A6; stroke-width: 1.5; }
+.wmap .land path { stroke: rgba(90,70,50,.28); stroke-width: 1; stroke-linejoin: round; cursor: pointer; }
+.wmap .land:active path { filter: brightness(1.08); }
+.wmap .land.hint-me path, .wmap .ohit.hint-me { animation: landPulse .9s ease-in-out 6 alternate; }
+.wmap .ohit.hint-me { fill: rgba(255,255,255,.35); }
+@keyframes landPulse { to { filter: brightness(1.18) drop-shadow(0 0 6px #fff); } }
+.wmap .ocean { font-size: 17px; fill: #7E9DB0; text-anchor: middle; font-family: var(--font); letter-spacing: 2px; pointer-events: none; }
+.wmap .twstar { font-size: 20px; pointer-events: none; }
+.wmap .ftrail { stroke: #fff; stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; opacity: .9; }
+.wmap .ohit { cursor: pointer; }
+.wscene { position: absolute; inset: 3% 4%; border-radius: 28px; background: color-mix(in srgb, var(--c) 32%, var(--panel)); box-shadow: var(--lift); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; box-sizing: border-box; animation: settle .5s ease; z-index: 3; }
+.wtitle { font-size: clamp(30px, 5vw, 48px); display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.wtitle small { font-size: .45em; color: var(--soft); }
+.wcards { display: flex; gap: clamp(10px, 2.5vw, 26px); flex-wrap: wrap; justify-content: center; }
+.wcard { width: clamp(120px, 17vw, 170px); aspect-ratio: .9; border: none; border-radius: 24px; background: var(--panel); box-shadow: var(--lift); font-size: clamp(64px, 9vw, 96px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; animation: dropIn .6s cubic-bezier(.3,1.4,.5,1) both; font-family: var(--font); color: var(--ink); line-height: 1; }
+.wcard span { font-size: clamp(17px, 2.2vw, 24px); }
+.wcard.seen { box-shadow: 0 0 0 5px var(--ok), var(--lift); }
+.wcard.focus { box-shadow: 0 0 0 5px var(--sun), var(--lift); }
+.wask { position: absolute; left: 8px; top: 8px; z-index: 2; border: none; border-radius: 22px; background: var(--panel); box-shadow: var(--lift); font-size: 54px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: var(--font); color: var(--ink); animation: settle .5s ease; }
+.wask span { font-size: 24px; }
+.stamps { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.stamp { width: 56px; height: 56px; border-radius: 50%; border: 3px dashed color-mix(in srgb, var(--ink) 22%, transparent); display: flex; align-items: center; justify-content: center; font-size: 32px; box-sizing: border-box; }
+.stamp.on { border: 3px solid color-mix(in srgb, var(--c) 70%, #6E5A44); background: color-mix(in srgb, var(--c) 55%, var(--panel)); animation: settle .5s ease; }
+.stamp svg { width: 34px; height: 34px; }
+/* 潛水艇 */
+.dive { position: relative; width: 100%; height: 100%; min-height: 0; overflow: hidden; border-radius: 28px; box-shadow: var(--sink); }
+.dsea { position: absolute; left: 0; right: 0; top: 0; transition: transform 2.6s ease-in-out; }
+.dlayer { position: relative; overflow: hidden; }
+.dsky { position: absolute; left: 0; right: 0; top: 0; height: 16%; background: #EDF3F2; }
+.dwave { position: absolute; left: 0; right: 0; top: 13%; height: 7%; background: radial-gradient(circle at 20px -8px, transparent 18px, #CFE6EE 19px) 0 0 / 40px 100%; }
+.dfloor { position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: #6C6A62; border-radius: 50% 50% 0 0 / 30% 30% 0 0; }
+.dfish { position: absolute; border: none; background: none; font-size: clamp(64px, 9vw, 104px); line-height: 1; padding: 6px; cursor: pointer; animation: swim ease-in-out infinite alternate; }
+.dfish.glow { filter: drop-shadow(0 0 12px rgba(246,228,154,.85)); }
+.dfish.seen { filter: drop-shadow(0 0 0 transparent) drop-shadow(0 0 8px rgba(255,255,255,.8)); }
+.dfish svg { display: block; }
+@keyframes swim { from { transform: translateX(-26px) translateY(4px); } to { transform: translateX(26px) translateY(-4px); } }
+.dsub { position: absolute; left: 50%; top: 4%; width: clamp(130px, 17vw, 190px); transform: translateX(-50%); z-index: 2; animation: subBob 3s ease-in-out infinite; pointer-events: none; }
+.dsub svg { width: 100%; display: block; }
+.dsub.bub { animation: subDown 2.6s ease-in-out; }
+@keyframes subDown { 50% { transform: translateX(-50%) translateY(30%) rotate(8deg); } }
+@keyframes subBob { 50% { transform: translateX(-50%) translateY(-6px); } }
+.ddepth { position: absolute; right: 12px; top: 12px; background: var(--panel); border-radius: 18px; padding: 8px 14px; display: flex; flex-direction: column; align-items: center; font-size: 22px; box-shadow: var(--lift); z-index: 2; }
+.ddepth small { font-size: 14px; color: var(--soft); }
+.dmission { position: absolute; left: 12px; top: 12px; z-index: 2; border: none; border-radius: 20px; background: var(--panel); box-shadow: var(--lift); font-size: 48px; padding: 6px 14px; display: flex; align-items: center; gap: 8px; font-family: var(--font); color: var(--ink); animation: settle .5s ease; }
+.dmission span { font-size: 22px; }
+.dmission svg { width: 1em; height: 1em; }
+/* ===== 第三批新遊戲 A–J ===== */
+.board.steps.alive .step .in { animation: hop .7s ease 3; }
+.step .in svg { width: 1em; height: 1em; }
+/* A 砂紙描字 */
+.sandwrap { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; flex: 1; min-height: 0; }
+.sandboard { flex: 1; min-height: 0; width: min(80vw, 62vh, 460px); aspect-ratio: 1; height: auto; background: #4E7A63; border-radius: 28px; box-shadow: var(--lift); touch-action: none; }
+.sandboard.pink { background: #C98A93; }
+.sandboard .sand { fill: none; stroke: url(#sand); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+.sandboard .ink { fill: none; stroke: #F6E49A; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+.sandboard .tip { fill: #F6E49A; stroke: #fff; stroke-width: 1.4; animation: breatheS 1.4s ease-in-out infinite; pointer-events: none; }
+.sandboard .snum { font-size: 9px; fill: #fff; opacity: .85; }
+.sandboard.done { animation: settle .5s ease; box-shadow: 0 0 0 6px var(--ok), var(--lift); }
+.sandboard.done .ink { stroke: #FFF6CC; }
+/* B 紡錘棒箱 */
+.spbox { display: flex; gap: clamp(4px, 1vw, 10px); background: #C9A27A; padding: 10px; border-radius: 18px; box-shadow: var(--lift); max-width: 100%; }
+.spcell { width: clamp(52px, 13vw, 120px); height: min(40vh, 300px); background: #E8D3B4; border-radius: 10px; box-shadow: var(--sink); display: flex; flex-direction: column; align-items: center; padding-top: 4px; position: relative; transition: box-shadow .3s ease; }
+.spcell b { font-size: clamp(26px, 5vw, 44px); font-weight: 400; color: #6E5A44; }
+.spcell .spin { flex: 1; display: flex; flex-wrap: nowrap; align-items: flex-end; justify-content: center; gap: 0; padding: 6px 2px; width: 100%; box-sizing: border-box; }
+.spcell .spin span { display: block; flex: 0 1 10.5%; max-width: 17px; height: min(24vh, 180px); }
+.spcell .spin svg, .spitem svg, .sphint svg { width: 100%; height: 100%; display: block; }
+.spcell.now { box-shadow: 0 0 0 5px var(--sun); }
+.spcell.full { box-shadow: 0 0 0 4px var(--ok); }
+.spbox.alive .spcell { animation: hop .6s ease 2; }
+.sppile { position: relative; display: flex; align-items: flex-end; gap: 4px; padding: 6px 12px; background: var(--panel); border-radius: 18px; box-shadow: var(--sink); height: min(20vh, 150px); }
+.sphint { display: flex; gap: 3px; opacity: .45; height: 100%; } .sphint svg { width: 18px; }
+.spitem { position: absolute; left: 50%; bottom: 6px; margin-left: -22px; width: 44px; height: calc(100% - 12px); touch-action: none; cursor: grab; z-index: 10; padding: 0 8px; box-sizing: border-box; }
+/* D 翻牌記憶 */
+.memgrid { display: grid; grid-template-columns: repeat(var(--c), 1fr); gap: clamp(8px, 2vw, 16px); }
+.mcard { width: min(20vw, 17vh, 140px); aspect-ratio: 1; border: none; border-radius: 22px; background: #A9C3D6; box-shadow: var(--lift); position: relative; padding: 0; cursor: pointer; transition: transform .35s ease; transform-style: preserve-3d; font-size: min(12vw, 10vh, 84px); }
+.mcard span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; backface-visibility: hidden; border-radius: 22px; line-height: 1; }
+.mcard .back { color: #F6EFE4; font-size: .6em; }
+.mcard .face { background: var(--bg); transform: rotateY(180deg); }
+.mcard.open { transform: rotateY(180deg); }
+.mcard.got { animation: hop .6s ease 2; } .mcard.got .face { box-shadow: 0 0 0 5px var(--ok); }
+/* E 規律 */
+.patrow { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(4px, 1.4vw, 12px); padding: 14px; background: var(--panel); border-radius: 24px; box-shadow: var(--sink); max-width: 96%; }
+.pt { font-size: min(9vw, 9vh, 70px); line-height: 1; animation: settle .5s ease both; }
+.pt.q { width: 1.1em; height: 1.1em; display: flex; align-items: center; justify-content: center; border-radius: 16px; border: 3px dashed var(--soft); color: var(--soft); font-size: min(7vw, 7vh, 54px); }
+.patrow.alive .pt { animation: hop .6s ease 2; }
+/* F 心情 */
+.story { display: flex; align-items: center; gap: clamp(10px, 3vw, 30px); position: relative; }
+.story .sp { font-size: min(18vw, 18vh, 140px); line-height: 1; }
+.story .sbun { width: min(30vw, 30vh, 220px); display: block; }
+.story .sbun svg, .moodf svg { width: 100%; height: 100%; display: block; }
+.story .cope { display: flex; flex-direction: column; align-items: center; font-size: min(14vw, 14vh, 100px); line-height: 1.1; }
+.story .cope small { font-size: 22px; color: var(--soft); }
+.moodf { width: 100%; height: 100%; display: block; }
+/* G 迷宮 */
+.mazewrap { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.maze { width: min(94vw, 125vh); max-height: 100%; height: auto; touch-action: none; }
+.maze .mfloor { fill: #E8DFC9; }
+.maze .mwall path, .maze .mwall rect { stroke: #8E6A4A; stroke-width: 12; stroke-linecap: round; fill: none; }
+.maze .mpath { fill: none; stroke: #F2C36B; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; opacity: .75; }
+.maze text { font-size: 62px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.maze .mgoal { animation: breatheS 2s ease-in-out infinite; }
+.maze.won .mwho { animation: hop .6s ease 3; transform-box: fill-box; transform-origin: center; }
+.maze.won .mfloor { fill: #F3E6B8; }
+/* H 地圖拼圖 */
+.mappuz { position: relative; height: min(60vh, 500px); aspect-ratio: 104 / 158; max-width: 92vw; }
+.mappuz.w { height: auto; width: min(92vw, 120vh); aspect-ratio: 2; }
+.mappuz .mapbase { width: 100%; height: 100%; display: block; }
+.mapbase .msil { fill: color-mix(in srgb, var(--soft) 22%, #CFE2EA); stroke: #8E7A64; stroke-width: 1; stroke-dasharray: 3 2; transition: fill .4s ease; }
+.mappuz.w .mapbase .msil { stroke-width: 4; stroke-dasharray: 10 6; }
+.mapbase .msil.in { stroke-dasharray: none; stroke: #6E5A44; }
+.mspot { position: absolute; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.micon { font-size: clamp(22px, 4vh, 40px); line-height: 1; }
+.mappuz.lit { animation: settle .6s ease; }
+.item.mpiece { border-radius: 12px; width: 96px; height: 96px; }
+.item.mpiece svg { width: 100%; height: 100%; }
+.item.mpiece.wide { width: 220px; height: 60px; }
+/* I 上下裡外 */
+.plscene { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; flex: 1; min-height: 0; padding-top: 60px; box-sizing: border-box; }
+.plobj { width: min(46vw, 34vh, 300px); }
+.plobj svg { width: 100%; height: auto; display: block; }
+.plput { position: absolute; font-size: min(14vw, 12vh, 90px); line-height: 1; transform: translate(-50%, -50%); pointer-events: none; }
+/* J 音感鐘 */
+.bells { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(6px, 1.4vw, 14px); }
+.bell { width: clamp(64px, 10.5vw, 104px); border: none; background: none; padding: 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; font: inherit; color: var(--ink); font-size: 20px; touch-action: none; }
+.bell svg { width: 100%; height: auto; display: block; transform-origin: 50% 5%; }
+.bell.ring svg { animation: ring .8s ease; }
+@keyframes ring { 20% { transform: rotate(9deg); } 45% { transform: rotate(-7deg); } 70% { transform: rotate(4deg); } }
+.bell.big { width: clamp(110px, 20vw, 170px); font-size: 34px; }
+.bell.right svg { filter: drop-shadow(0 0 10px var(--ok)); }
+.bell.drag { cursor: grab; position: relative; z-index: 10; }
+.bellq { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.bells.slots { align-items: flex-end; }
+.bslot { width: clamp(70px, 12vw, 116px); min-height: clamp(96px, 16vw, 150px); border-radius: 18px; background: var(--panel); box-shadow: var(--sink); display: flex; align-items: flex-end; justify-content: center; position: relative; padding: 6px; box-sizing: border-box; }
+.bslot b { position: absolute; top: 4px; left: 8px; font-weight: 400; color: var(--soft); font-size: 18px; }
+.bslot .bell { width: 100%; }
+.bslot:nth-child(2) { min-height: clamp(110px, 18vw, 168px); } .bslot:nth-child(3) { min-height: clamp(124px, 20vw, 186px); } .bslot:nth-child(4) { min-height: clamp(138px, 22vw, 204px); } .bslot:nth-child(5) { min-height: clamp(152px, 24vw, 222px); }
+.bslot.glow { box-shadow: 0 0 0 5px var(--sun); }
+.sandboard .tip.hey { animation: tipHey .6s ease 2; }
+@keyframes tipHey { 50% { r: 7; } }
+.maze .mwho.bump { animation: nope .4s ease; transform-box: fill-box; transform-origin: center; }
+.mappuz .mapbase .msil.in { stroke-dasharray: none; }
+.spbox:has(.spcell:nth-child(10)) .spcell { width: clamp(48px, 8.4vw, 96px); }
+@media (prefers-reduced-motion: reduce) { .mcard { transition: none; } }
 </style>
 
 <div class="app" id="app">
@@ -1058,6 +1206,17 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     { id: 'fruit', name: '切水果', pic: '🍉', ready: true },
     { id: 'keys', name: '打字練習', pic: '⌨️', ready: true },
     { id: 'safe', name: '身體小祕密', pic: '🛡️', ready: true },
+    { id: 'world', name: '環遊世界', pic: '✈️', ready: true },
+    { id: 'sandp', name: '砂紙描字', pic: '✍️', ready: true },
+    { id: 'spindle', name: '紡錘棒箱', pic: '🥢', ready: true },
+    { id: 'grow', name: '長大的順序', pic: '🌱', ready: true },
+    { id: 'memory', name: '翻牌記憶', pic: '🃏', ready: true },
+    { id: 'pattern', name: '接下來是什麼', pic: '🔁', ready: true },
+    { id: 'feel', name: '心情小動物', pic: '🐰', ready: true },
+    { id: 'maze', name: '走迷宮', pic: '🧭', ready: true },
+    { id: 'map', name: '地圖拼圖', pic: '🗺️', ready: true },
+    { id: 'place', name: '上下裡外', pic: '📦', ready: true },
+    { id: 'bells', name: '音感鐘', pic: '🔔', ready: true },
   ];
   // 選單預設只放 10 格（蒙特梭利：環境裡的教具少量、定期輪替）；家長設定可以打開其他的
   const DEFAULT_TILES = ['animals', 'colors', 'shapes', 'count', 'tidy', 'dots', 'learn', 'sound', 'shadow', 'help'];
@@ -1083,7 +1242,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           armed = true; armedAt = now; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
         }
         if (now - armedAt < 450 || menuTaps.length > 3) return;
-        disarm(); logStart(g.id); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys, safe: startSafe })[g.id]();
+        disarm(); logStart(g.id); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys, safe: startSafe, world: startWorld, sandp: startSandp, spindle: startSpindle, grow: startGrow, memory: startMemory, pattern: startPattern, feel: startFeel, maze: startMaze, map: startMap, place: startPlace, bells: startBells })[g.id]();
       });
       const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
       b.addEventListener('disarm', disarm);
@@ -3273,6 +3432,677 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     };
     requestAnimationFrame(frame);
   };
+
+  // ---------- 13. 環遊世界：開飛機認識世界、坐潛水艇看海底 ----------
+  // 地圖是自己畫的簡化世界地圖（經緯度 → 1000×500），大洲用蒙特梭利的大洲顏色
+  const MX = (lon) => +((lon + 180) / 360 * 1000).toFixed(1), MY = (lat) => +((84 - lat) / 164 * 500).toFixed(1);
+  const poly = (pts) => 'M' + pts.map(([lo, la]) => `${MX(lo)} ${MY(la)}`).join('L') + 'Z';
+  const LAND = {
+    na: [[[-168, 66], [-140, 70], [-115, 72], [-95, 72], [-80, 70], [-64, 60], [-56, 51], [-66, 44], [-71, 41], [-76, 35], [-81, 31], [-80, 25], [-83, 29], [-90, 29], [-97, 27], [-97, 21], [-91, 18], [-88, 15], [-83, 10], [-79, 8], [-81, 7], [-86, 11], [-92, 14], [-105, 20], [-110, 24], [-114, 30], [-117, 33], [-122, 37], [-124, 42], [-124, 48], [-130, 55], [-137, 59], [-147, 61], [-155, 58], [-165, 60]],
+      [[-55, 82], [-22, 82], [-20, 72], [-32, 68], [-44, 60], [-52, 64], [-58, 74]]],
+    sa: [[[-79, 9], [-72, 12], [-62, 10], [-52, 4], [-50, 0], [-38, -4], [-35, -8], [-39, -15], [-41, -22], [-48, -26], [-53, -33], [-58, -38], [-63, -40], [-66, -46], [-68, -53], [-72, -54], [-75, -48], [-73, -38], [-71, -28], [-71, -18], [-76, -14], [-81, -5], [-80, 0], [-78, 4]]],
+    eu: [[[-9, 37], [-9, 43], [-2, 44], [-4, 48], [1, 50], [5, 53], [8, 55], [6, 58], [10, 60], [5, 62], [12, 66], [18, 70], [28, 71], [40, 68], [48, 66], [56, 60], [58, 52], [50, 46], [40, 46], [36, 46], [30, 46], [29, 41], [24, 38], [22, 40], [20, 42], [16, 38], [15, 41], [12, 44], [8, 44], [3, 43], [0, 39], [-5, 36]],
+      [[-6, 50], [1, 51], [0, 54], [-3, 58], [-6, 57], [-5, 54]]],
+    af: [[[-17, 21], [-13, 28], [-9, 32], [-6, 36], [3, 37], [10, 37], [11, 33], [20, 31], [25, 32], [32, 31], [34, 28], [38, 20], [43, 12], [51, 12], [48, 5], [42, -2], [40, -10], [40, -16], [35, -24], [32, -29], [26, -34], [19, -35], [17, -29], [12, -18], [13, -10], [9, -2], [9, 4], [5, 6], [-2, 5], [-8, 4], [-13, 8], [-17, 14]],
+      [[44, -13], [50, -15], [48, -24], [44, -24], [43, -18]]],
+    as: [[[48, 66], [60, 70], [70, 73], [80, 75], [100, 78], [115, 74], [130, 72], [145, 72], [160, 70], [178, 68], [175, 64], [163, 60], [160, 54], [155, 58], [142, 54], [140, 48], [135, 44], [130, 42], [129, 36], [126, 35], [126, 38], [122, 40], [121, 37], [120, 32], [122, 29], [119, 25], [114, 22], [109, 21], [108, 16], [109, 12], [106, 9], [104, 10], [101, 13], [99, 9], [101, 5], [104, 2], [100, 3], [98, 8], [97, 16], [94, 19], [91, 22], [87, 21], [82, 16], [80, 13], [78, 8], [76, 11], [73, 19], [70, 22], [66, 25], [58, 25], [56, 27], [51, 25], [56, 21], [55, 17], [45, 13], [42, 16], [38, 22], [34, 28], [35, 33], [36, 36], [30, 37], [27, 40], [29, 41], [30, 46], [40, 46], [50, 46], [58, 52], [56, 60]],
+      [[130, 31], [133, 34], [137, 35], [141, 38], [142, 42], [145, 44], [142, 45], [140, 41], [139, 37], [136, 36], [132, 35]],
+      [[95, 5], [103, -3], [106, -6], [114, -8], [120, -9], [126, -8], [130, -4], [126, -2], [118, 0], [117, 6], [112, 2], [108, 1], [104, 1], [100, 3]],
+      [[120, 18], [123, 18], [126, 7], [124, 6], [121, 12]]],
+    oc: [[[114, -22], [116, -20], [122, -17], [126, -14], [130, -12], [133, -12], [136, -12], [137, -16], [140, -17], [142, -11], [145, -15], [146, -19], [150, -23], [153, -26], [153, -31], [151, -34], [149, -37], [146, -39], [141, -38], [138, -35], [136, -35], [134, -32], [129, -31], [124, -34], [118, -35], [115, -34], [114, -28]],
+      [[172, -35], [178, -38], [176, -41], [171, -44], [167, -46], [170, -42]], [[142, -3], [150, -6], [147, -10], [141, -9]]],
+    an: [[[-180, -70], [-150, -76], [-120, -73], [-90, -72], [-70, -65], [-60, -64], [-58, -68], [-30, -76], [0, -70], [30, -69], [60, -67], [90, -66], [120, -66], [150, -68], [180, -70], [180, -80], [-180, -80]]],
+  };
+  const CONT = {
+    tw: { name: '台灣', en: 'Taiwan', c: '#7FB37A', at: [121, 23.7], say: '我們住的台灣' },
+    as: { name: '亞洲', en: 'Asia', c: '#E9CF6E', at: [95, 45] },
+    af: { name: '非洲', en: 'Africa', c: '#8DBA7C', at: [20, 5] },
+    eu: { name: '歐洲', en: 'Europe', c: '#D9867A', at: [18, 52] },
+    na: { name: '北美洲', en: 'North America', c: '#E8A766', at: [-100, 45] },
+    sa: { name: '南美洲', en: 'South America', c: '#E7A9BE', at: [-60, -15] },
+    oc: { name: '大洋洲', en: 'Oceania', c: '#B08A64', at: [134, -25] },
+    an: { name: '南極洲', en: 'Antarctica', c: '#FBFAF7', at: [20, -74] },
+  };
+  const OCEANS = [
+    { k: 'pac', name: '太平洋', en: 'Pacific Ocean', at: [-150, 10], fact: '太平洋是世界上最大的海洋' },
+    { k: 'atl', name: '大西洋', en: 'Atlantic Ocean', at: [-35, 25], fact: '大西洋在美洲和歐洲、非洲的中間' },
+    { k: 'ind', name: '印度洋', en: 'Indian Ocean', at: [75, -20], fact: '印度洋在非洲、亞洲和澳洲的中間' },
+    { k: 'arc', name: '北極海', en: 'Arctic Ocean', at: [0, 80], fact: '北極海冷冷的，有北極熊' },
+  ];
+  // 每個地方會遇到的動物和有名的地方：[中文, 圖, 英文, 一句介紹, 種類 a=動物 p=地方]
+  const TW_BIRD = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M52 60 96 86 92 92 46 66z" fill="#2F5E9E"/><path d="M60 64 98 74 96 80 56 70z" fill="#F2F0EC"/><ellipse cx="44" cy="52" rx="26" ry="16" fill="#3B6DB0"/><circle cx="24" cy="38" r="14" fill="#2B2B33"/><path d="M10 38 0 42 10 44z" fill="#D9453A"/><circle cx="20" cy="35" r="3" fill="#F3DC8C"/><path d="M30 60l-4 16M40 62l2 16" stroke="#D9453A" stroke-width="3" stroke-linecap="round"/></svg>';
+  const BLACKBEAR = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><circle cx="24" cy="22" r="12" fill="#2E2A28"/><circle cx="76" cy="22" r="12" fill="#2E2A28"/><circle cx="50" cy="50" r="38" fill="#3A3532"/><ellipse cx="50" cy="62" rx="16" ry="12" fill="#B79A78"/><ellipse cx="50" cy="56" rx="6" ry="4" fill="#2E2A28"/><circle cx="36" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="64" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="36" cy="40" r="2.5" fill="#2E2A28"/><circle cx="64" cy="40" r="2.5" fill="#2E2A28"/><path d="M30 86l20 10 20-10" stroke="#F4EFE6" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const PYRAMID = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 14 92 86H8z" fill="#E2C27A"/><path d="M50 14 92 86H58z" fill="#C9A45E"/><path d="M4 86h92" stroke="#C9A45E" stroke-width="4"/></svg>';
+  const PLACES = {
+    tw: [['台灣黑熊', BLACKBEAR, 'Formosan black bear', '台灣黑熊胸前有白色的 V 字', 'a'], ['台灣藍鵲', TW_BIRD, 'Taiwan blue magpie', '台灣藍鵲有長長的藍色尾巴', 'a'], ['梅花鹿', '🦌', 'Sika deer', '梅花鹿身上有白色的小點點', 'a'],
+      ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['石虎', '🐈', 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
+    as: [['貓熊', '🐼', 'Panda', '貓熊最喜歡吃竹子', 'a'], ['老虎', '🐯', 'Tiger', '老虎身上有黑色的條紋', 'a'], ['亞洲象', '🐘', 'Asian elephant', '大象用長長的鼻子喝水', 'a'], ['紅毛猩猩', '🦧', 'Orangutan', '紅毛猩猩住在樹上', 'a'],
+      ['富士山', '🗻', 'Mount Fuji', '富士山在日本，山頂有白白的雪', 'p'], ['聖母峰', '🏔️', 'Mount Everest', '聖母峰是世界上最高的山', 'p'], ['萬里長城', '🧱', 'Great Wall', '萬里長城是很長很長的城牆', 'p']],
+    af: [['獅子', '🦁', 'Lion', '公獅子有大大的鬃毛', 'a'], ['長頸鹿', '🦒', 'Giraffe', '長頸鹿的脖子最長了', 'a'], ['斑馬', '🦓', 'Zebra', '斑馬身上是黑白條紋', 'a'], ['河馬', '🦛', 'Hippo', '河馬喜歡泡在水裡', 'a'],
+      ['金字塔', PYRAMID, 'Pyramids', '金字塔在埃及，是三角形的大石頭房子', 'p'], ['尼羅河', '🏞️', 'Nile River', '尼羅河是世界上很長很長的河', 'p'], ['沙漠', '🏜️', 'Desert', '撒哈拉沙漠有好多好多沙子', 'p']],
+    eu: [['刺蝟', '🦔', 'Hedgehog', '刺蝟身上有很多小刺', 'a'], ['狐狸', '🦊', 'Fox', '狐狸有毛茸茸的大尾巴', 'a'], ['天鵝', '🦢', 'Swan', '白天鵝在湖上游泳', 'a'],
+      ['艾菲爾鐵塔', '🗼', 'Eiffel Tower', '艾菲爾鐵塔在法國', 'p'], ['風車', ICON.windmill, 'Windmill', '荷蘭有很多風車', 'p'], ['城堡', '🏰', 'Castle', '歐洲有很多古老的城堡', 'p']],
+    na: [['白頭海鵰', '🦅', 'Bald eagle', '白頭海鵰的頭是白色的', 'a'], ['野牛', '🦬', 'Bison', '野牛又大又壯', 'a'], ['浣熊', '🦝', 'Raccoon', '浣熊的眼睛像戴了面具', 'a'], ['北極熊', '🐻‍❄️', 'Polar bear', '北極熊住在很冷的北邊', 'a'],
+      ['自由女神像', '🗽', 'Statue of Liberty', '自由女神像在美國', 'p'], ['大峽谷', '🏜️', 'Grand Canyon', '大峽谷是又大又深的山谷', 'p']],
+    sa: [['樹懶', '🦥', 'Sloth', '樹懶動作好慢好慢', 'a'], ['羊駝', '🦙', 'Alpaca', '羊駝的毛軟軟的', 'a'], ['鸚鵡', '🦜', 'Parrot', '鸚鵡的羽毛有好多顏色', 'a'], ['美洲豹', '🐆', 'Jaguar', '美洲豹身上有花花的斑點', 'a'],
+      ['亞馬遜河', '🏞️', 'Amazon River', '亞馬遜河旁邊有好大的雨林', 'p'], ['雨林', '🌳', 'Rainforest', '雨林裡有好多好多動物', 'p']],
+    oc: [['袋鼠', '🦘', 'Kangaroo', '袋鼠媽媽把寶寶放在口袋裡', 'a'], ['無尾熊', '🐨', 'Koala', '無尾熊抱著樹睡覺', 'a'], ['鴯鶓', '🐦', 'Emu', '鴯鶓是很會跑的大鳥', 'a'],
+      ['大堡礁', '🪸', 'Great Barrier Reef', '大堡礁有好多漂亮的珊瑚', 'p'], ['雪梨歌劇院', '🎭', 'Sydney Opera House', '雪梨歌劇院的屋頂像貝殼', 'p']],
+    an: [['企鵝', '🐧', 'Penguin', '企鵝不會飛，可是很會游泳', 'a'], ['海豹', '🦭', 'Seal', '海豹在冰上睡覺', 'a'], ['鯨魚', '🐋', 'Whale', '鯨魚是很大很大的動物', 'a'],
+      ['冰山', '🧊', 'Iceberg', '南極有很多冰山，冷冰冰的', 'p']],
+  };
+  const PILOT = `<g class="plane"><path d="M-46 0q4-12 26-12h40q22 0 28 12-6 12-28 12h-40q-22 0-26-12z" fill="#F4EFE6" stroke="${OL}" stroke-width="3"/><path d="M-6 -2l-14-34h12l24 34z" fill="#E7A79A" stroke="${OL}" stroke-width="3" stroke-linejoin="round"/><path d="M-6 4l-14 30h12l24-30z" fill="#E7A79A" stroke="${OL}" stroke-width="3" stroke-linejoin="round"/><path d="M-44 -2l-10-16h8l12 14z" fill="#8FA9C0" stroke="${OL}" stroke-width="2.5"/><circle cx="34" cy="-2" r="4" fill="#9DBBD0"/><circle cx="22" cy="-2" r="4" fill="#9DBBD0"/>
+    <g transform="translate(0 -16)"><rect x="-14" y="-18" width="28" height="24" rx="11" fill="#C49A6C" stroke="${OL}" stroke-width="2.5"/><circle cx="-11" cy="-16" r="4" fill="#A57B52"/><circle cx="11" cy="-16" r="4" fill="#A57B52"/><circle cx="-5" cy="-8" r="2" fill="${OL}"/><circle cx="7" cy="-8" r="2" fill="${OL}"/><ellipse cx="2" cy="0" rx="6" ry="3.5" fill="#A57B52"/><path d="M-14 -14h28" stroke="#D9776B" stroke-width="4"/></g></g>`;
+  const worldMap = () => {
+    let s = `<rect width="1000" height="500" fill="#CFE2EA"/>`;
+    for (const o of OCEANS) s += `<text class="ocean" x="${MX(o.at[0])}" y="${MY(o.at[1])}">${o.name}</text>`;
+    for (const [k, shapes] of Object.entries(LAND)) s += `<g class="land" data-k="${k}">${shapes.map(p => `<path d="${poly(p)}" fill="${CONT[k].c}"/>`).join('')}</g>`;
+    // 台灣畫大一點，才點得到
+    s += `<g class="land tw" data-k="tw"><path d="${poly([[120.1, 23], [120.7, 25], [121.6, 25.3], [122, 24.5], [121.4, 22.8], [120.8, 21.9]])}" fill="${CONT.tw.c}" stroke="#fff" stroke-width="1.5"/><circle class="twhit" cx="${MX(121)}" cy="${MY(23.6)}" r="16" fill="none" stroke="#7FB37A" stroke-width="2.5" stroke-dasharray="4 4"/><circle cx="${MX(121)}" cy="${MY(23.6)}" r="24" fill="transparent"/><text class="twstar" x="${MX(121) + 14}" y="${MY(23.6) - 10}">⭐</text></g>`;
+    for (const o of OCEANS) s += `<circle class="ohit" data-o="${o.k}" cx="${MX(o.at[0])}" cy="${MY(o.at[1])}" r="46" fill="transparent"/>`;
+    return `<svg class="wmap" viewBox="0 0 1000 500" aria-hidden="true">${s}<path class="ftrail" d="" fill="none"/><g class="pilot">${PILOT}</g></svg>`;
+  };
+  let worldAt = 'tw';
+  const passport = () => (settings.passport = settings.passport || {});
+  const stampRow = () => `<div class="stamps">${Object.keys(CONT).map(k => `<span class="stamp${passport()[k] ? ' on' : ''}" style="--c:${CONT[k].c}" title="${CONT[k].name}">${passport()[k] ? (PLACES[k].find(x => x[4] === 'a') || [])[1] || '⭐' : ''}</span>`).join('')}</div>`;
+  const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇']], run: {
+    fly: (stage, tray, again) => {
+      const L = lvOf('world'), TRIPS = 3;
+      let trip = 0, busy = false, mission = null, wrong = 0;
+      stage.innerHTML = `<div class="world"><div class="wbox">${worldMap()}</div><div class="wscene" hidden></div></div>`;
+      const svg = stage.querySelector('svg'), pilot = svg.querySelector('.pilot'), trail = svg.querySelector('.ftrail'), scene = stage.querySelector('.wscene');
+      let pos = [MX(CONT[worldAt].at[0]), MY(CONT[worldAt].at[1])];
+      const setPilot = (x, y, a = 0) => pilot.setAttribute('transform', `translate(${x} ${y}) rotate(${a}) scale(.62)`);
+      setPilot(...pos);
+      tray.innerHTML = stampRow();
+      // 慢慢飛過去（弧線、3 秒多），不捲動地圖，眼睛比較舒服
+      const flyTo = (k, done) => {
+        busy = true; const to = [MX(CONT[k].at[0]), MY(CONT[k].at[1])], from = pos.slice();
+        const d = Math.hypot(to[0] - from[0], to[1] - from[1]), T = 1600 + Math.min(2400, d * 4);
+        const c = [(from[0] + to[0]) / 2, Math.min(from[1], to[1]) - Math.max(40, d * .3)];
+        trail.setAttribute('d', `M${from[0]} ${from[1]}Q${c[0]} ${c[1]} ${to[0]} ${to[1]}`);
+        const t0 = performance.now(), g = gen; ding(520);
+        const step = (now) => {
+          if (g !== gen) return;
+          const t = Math.min(1, (now - t0) / T), e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          const x = (1 - e) * (1 - e) * from[0] + 2 * (1 - e) * e * c[0] + e * e * to[0], y = (1 - e) * (1 - e) * from[1] + 2 * (1 - e) * e * c[1] + e * e * to[1];
+          const dx = 2 * (1 - e) * (c[0] - from[0]) + 2 * e * (to[0] - c[0]), dy = 2 * (1 - e) * (c[1] - from[1]) + 2 * e * (to[1] - c[1]);
+          const flip = to[0] < from[0];
+          pilot.setAttribute('transform', `translate(${x} ${y}) rotate(${(Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI * (flip ? -1 : 1)).toFixed(1)}) scale(${flip ? -.62 : .62} .62)`);
+          if (t < 1) requestAnimationFrame(step); else { pos = to; worldAt = k; setPilot(...to); done(); }
+        };
+        requestAnimationFrame(step);
+      };
+      const land = (k, focus) => {
+        const P = PLACES[k], C = CONT[k];
+        const pool = L === 1 ? P.filter(x => x[4] === 'a') : P;
+        let set = shuffle(pool).slice(0, 3);
+        if (focus && !set.includes(focus)) set = [focus, ...set.slice(0, 2)];
+        passport()[k] = 1; saveSettings();
+        scene.hidden = false; scene.style.setProperty('--c', C.c);
+        scene.innerHTML = `<div class="wtitle">${C.name}<small>${C.en}</small></div><div class="wcards">${set.map((x, i) => `<button class="wcard${focus === x ? ' focus' : ''}" data-i="${i}" style="animation-delay:${(.3 + i * .35).toFixed(2)}s">${x[1]}<span>${x[0]}</span></button>`).join('')}</div><button class="round-btn wgo" aria-label="繼續飛">✈️</button>`;
+        sayName(C.name, C.en, `${C.say || ''}${C.say ? '，' : ''}歡迎來到${C.name}`);
+        const seen = new Set();
+        scene.querySelectorAll('.wcard').forEach(b => b.addEventListener('click', () => {
+          const x = set[+b.dataset.i]; seen.add(x); b.classList.add('seen'); ding(700 + seen.size * 80);
+          sayName(x[0], x[2], `${x[0]}，${x[3]}`);
+          if (seen.size === set.length) { const go = scene.querySelector('.wgo'); go.classList.add('hint-me'); }
+        }));
+        scene.querySelector('.wgo').addEventListener('click', () => {
+          scene.hidden = true; tray.innerHTML = stampRow(); cheer();
+          if (++trip >= TRIPS) { tray.innerHTML = ''; say('今天飛了好多地方，回家休息囉'); finishFree(again); }
+          else next();
+        });
+      };
+      // 2、3 級：小任務（某某住在哪裡？某某在哪裡？）
+      const newMission = () => {
+        const ks = Object.keys(PLACES).filter(k => k !== worldAt), k = ks[rnd(ks.length)];
+        if (L === 3 && Math.random() < .3) return { ocean: OCEANS[rnd(OCEANS.length)] };
+        const list = PLACES[k].filter(x => L === 3 || x[4] === 'a'), x = list[rnd(list.length)];
+        return { k, x };
+      };
+      const ask = () => {
+        if (!mission) return say(trip === 0 ? '我們從台灣出發，想飛去哪裡呢？點一下地圖' : '想飛去哪裡呢？點一下');
+        if (mission.ocean) return say(`${mission.ocean.name}在哪裡呢？點一點藍色的海`);
+        say(mission.x[4] === 'a' ? `${mission.x[0]}住在哪裡呢？飛去找牠` : `${mission.x[0]}在哪裡呢？飛過去看看`);
+      };
+      const next = () => {
+        busy = false; wrong = 0; svg.querySelectorAll('.hint-me').forEach(e => e.classList.remove('hint-me'));
+        mission = L === 1 ? null : newMission();
+        stage.querySelector('.wask')?.remove();
+        if (mission) stage.querySelector('.world').insertAdjacentHTML('afterbegin', `<button class="wask" aria-label="再聽一次">${mission.ocean ? '🌊' : mission.x[1]}<span>${mission.ocean ? mission.ocean.name : mission.x[0]}</span></button>`);
+        stage.querySelector('.wask')?.addEventListener('click', ask);
+        ask();
+      };
+      const pickLand = (k) => {
+        if (busy) return;
+        if (mission && mission.ocean) { oops(`這裡是${CONT[k].name}，要找藍色的海喔`); return; }
+        if (mission && mission.k !== k) {
+          if (k === worldAt) return;
+          oops(`${mission.x[0]}不在${CONT[k].name}喔`);
+          if (++wrong >= 2) svg.querySelector(`.land[data-k="${mission.k}"]`)?.classList.add('hint-me');
+          return;
+        }
+        if (!mission && k === worldAt && trip > 0) return say(`我們已經在${CONT[k].name}了，飛去別的地方吧`);
+        if (mission && !wrong) lvOk();
+        sayName(CONT[k].name, CONT[k].en, `出發，飛去${CONT[k].name}`);
+        stage.querySelector('.wask')?.remove();
+        const focus = mission && mission.x; flyTo(k, () => land(k, focus));
+      };
+      svg.querySelectorAll('.land').forEach(g => g.addEventListener('click', (e) => { e.stopPropagation(); pickLand(g.dataset.k); }));
+      svg.querySelectorAll('.ohit').forEach(c => c.addEventListener('click', () => {
+        if (busy) return;
+        const o = OCEANS.find(q => q.k === c.dataset.o);
+        if (mission && mission.ocean) {
+          if (o === mission.ocean) { if (!wrong) lvOk(); ding(880); sayName(o.name, o.en, `答對了，${o.fact}`); cheer(); busy = true; later(() => { if (++trip >= TRIPS) { tray.innerHTML = ''; finishFree(again); } else next(); }, 3600); }
+          else { oops(`這是${o.name}`); if (++wrong >= 2) { c.classList.add('hint-me'); svg.querySelector(`.ohit[data-o="${mission.ocean.k}"]`)?.classList.add('hint-me'); } }
+          return;
+        }
+        sayName(o.name, o.en, o.fact);
+      }));
+      roundActive = true; next();
+    },
+
+    // 坐潛水艇往下潛：越深越暗，會遇到不同的海洋動物
+    dive: (stage, tray, again) => {
+      const L = lvOf('world'), NL = L === 1 ? 3 : 4, PER = L === 1 ? 2 : 3;
+      const ANGLER = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M40 30q10-26 30-24" stroke="#C9B48A" stroke-width="3" fill="none"/><circle cx="72" cy="7" r="7" fill="#F6E49A" class="lure"/><ellipse cx="46" cy="56" rx="38" ry="28" fill="#6B6A8C"/><path d="M84 56l14-16v32z" fill="#5A5878"/><path d="M14 60q20 10 40 0" stroke="#F4EFE6" stroke-width="3" fill="none"/><path d="M18 60l4 6 4-6 4 6 4-6 4 6 4-6 4 6 4-6" stroke="#F4EFE6" stroke-width="2" fill="none"/><circle cx="32" cy="44" r="6" fill="#F4EFE6"/><circle cx="32" cy="44" r="3" fill="#2E2A3A"/></svg>';
+      const STARFISH = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 6 61 38 95 40 68 60 78 94 50 74 22 94 32 60 5 40 39 38z" fill="#E98A6A" stroke="#C96A4E" stroke-width="3" stroke-linejoin="round"/><circle cx="44" cy="46" r="3" fill="#3E342A"/><circle cx="56" cy="46" r="3" fill="#3E342A"/><path d="M45 55q5 4 10 0" stroke="#3E342A" stroke-width="2.5" fill="none"/></svg>';
+      const TURTLE = ANIMALS.find(a => a.name === '海龜').pic;
+      const LAYERS = [
+        { name: '海面', en: 'Sea surface', bg: '#CFE6EE', fish: [['海豚', '🐬', 'Dolphin', '海豚很聰明，會跳出水面'], ['海鷗', '🕊️', 'Seagull', '海鷗在海上飛來飛去'], ['飛魚', '🐟', 'Flying fish', '飛魚可以跳出水面滑翔'], ['帆船', '⛵', 'Sailboat', '帆船靠風前進']] },
+        { name: '珊瑚礁', en: 'Coral reef', bg: '#A8D0DE', fish: [['小丑魚', '🐠', 'Clownfish', '小丑魚住在海葵裡'], ['海龜', TURTLE, 'Sea turtle', '海龜可以游很遠很遠'], ['海星', STARFISH, 'Starfish', '海星有五隻手'], ['珊瑚', '🪸', 'Coral', '珊瑚是很多小動物的家'], ['章魚', '🐙', 'Octopus', '章魚有八隻腳']] },
+        { name: '深海', en: 'Deep sea', bg: '#6F9AB8', fish: [['鯨鯊', '🦈', 'Whale shark', '鯨鯊是最大的魚，很溫和'], ['座頭鯨', '🐳', 'Humpback whale', '座頭鯨會唱歌'], ['水母', '🪼', 'Jellyfish', '水母軟軟的，輕輕飄'], ['魷魚', '🦑', 'Squid', '魷魚游得很快']] },
+        { name: '很深很暗的海底', en: 'Deep ocean floor', bg: '#3E5674', fish: [['燈籠魚', ANGLER, 'Anglerfish', '燈籠魚頭上有一盞小燈'], ['深海螃蟹', '🦀', 'Deep sea crab', '海底的螃蟹慢慢走'], ['貝殼', '🐚', 'Seashell', '海底有漂亮的貝殼'], ['海參', '🥒', 'Sea cucumber', '海參在海底慢慢爬']] },
+      ].slice(0, NL);
+      const SUB = `<svg viewBox="0 0 160 100" aria-hidden="true"><path d="M70 22v-14h16v14" fill="#E2C267" stroke="${OL}" stroke-width="3"/><ellipse cx="80" cy="56" rx="66" ry="34" fill="#E8C35E" stroke="${OL}" stroke-width="3"/><path d="M146 56l12-14v28z" fill="#D9A84A" stroke="${OL}" stroke-width="3" stroke-linejoin="round"/><circle cx="60" cy="54" r="16" fill="#CFE6EE" stroke="${OL}" stroke-width="3"/><circle cx="100" cy="54" r="11" fill="#CFE6EE" stroke="${OL}" stroke-width="3"/>
+        <g transform="translate(60 56)"><ellipse cx="-5" cy="-14" rx="3" ry="8" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><ellipse cx="5" cy="-14" rx="3" ry="8" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><circle cx="0" cy="0" r="9" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><circle cx="-3" cy="-1" r="1.4" fill="${OL}"/><circle cx="3" cy="-1" r="1.4" fill="${OL}"/><ellipse cx="0" cy="3" rx="1.6" ry="1.1" fill="#EBB7B0"/></g></svg>`;
+      let li = 0, met = 0, mission = null, wrong = 0;
+      stage.innerHTML = `<div class="dive"><div class="dsea" style="height:${NL * 100}%">${LAYERS.map((ly, i) => `<div class="dlayer" style="background:${ly.bg};height:${100 / NL}%" data-i="${i}">${i === 0 ? '<div class="dsky"></div><div class="dwave"></div>' : ''}${i === NL - 1 ? '<div class="dfloor"></div>' : ''}</div>`).join('')}</div><div class="dsub">${SUB}</div><div class="ddepth"></div></div>`;
+      const sea = stage.querySelector('.dsea'), depth = stage.querySelector('.ddepth');
+      const fill = (i) => {
+        const ly = LAYERS[i], box = sea.children[i];
+        box.querySelectorAll('.dfish').forEach(f => f.remove());
+        const set = shuffle(ly.fish).slice(0, PER);
+        if (L === 3 && i > 0) mission = set[rnd(set.length)]; else mission = null;
+        set.forEach((f, k) => {
+          const b = document.createElement('button'); b.className = 'dfish' + (i === NL - 1 ? ' glow' : '');
+          b.innerHTML = f[1]; b.setAttribute('aria-label', f[0]);
+          b.style.cssText = `left:${12 + k * (76 / PER) + rnd(8)}%;top:${30 + rnd(40)}%;animation-duration:${6 + rnd(5)}s;animation-delay:-${rnd(5)}s`;
+          b.addEventListener('click', () => {
+            if (mission && f !== mission) { oops(`這是${f[0]}，我們要找${mission[0]}`); if (++wrong >= 2) nudge([...box.querySelectorAll('.dfish')][set.indexOf(mission)]); return; }
+            if (mission && f === mission) { if (!wrong) lvOk(); mission = null; stage.querySelector('.dmission')?.remove(); cheer(); }
+            if (!b.classList.contains('seen')) { b.classList.add('seen'); met++; } ding(760 + met * 40);
+            sayName(f[0], f[2], `${f[0]}，${f[3]}`);
+            if (!mission && (met >= 2 || box.querySelectorAll('.dfish:not(.seen)').length === 0)) showGo();
+          });
+          box.appendChild(b);
+        });
+        wrong = 0; met = 0;
+        depth.innerHTML = `<b>${ly.name}</b><small>${ly.en}</small>`;
+        tray.innerHTML = '';
+        if (mission) { stage.querySelector('.dive').insertAdjacentHTML('beforeend', `<button class="dmission">${mission[1]}<span>找到${mission[0]}</span></button>`); stage.querySelector('.dmission').addEventListener('click', () => say(`${mission[0]}在哪裡呢？`)); }
+        say(i === 0 ? '坐上潛水艇，我們要去看海底世界囉。點一點海裡的朋友' : mission ? [`來到${ly.name}了`, `找找看，${mission[0]}在哪裡？`] : i === NL - 1 ? `來到${ly.name}了，好暗喔，有些魚會自己發光` : `來到${ly.name}了，越往下越暗喔`);
+      };
+      const showGo = () => {
+        if (tray.querySelector('.round-btn')) return;
+        const last = li === NL - 1;
+        tray.innerHTML = `<div class="done-row"><button class="round-btn wide dgo">${last ? '⬆️ 浮上去' : '⬇️ 往下潛'}</button></div>`;
+        tray.querySelector('.dgo').addEventListener('click', () => {
+          if (last) {
+            sea.style.transform = 'translateY(0)'; stage.querySelector('.dsub').classList.add('up'); ding(880);
+            say('浮上來了，海底世界好好玩'); tray.innerHTML = ''; later(() => finishFree(again), 2600); return;
+          }
+          li++; ding(400 - li * 40); tray.innerHTML = '';
+          stage.querySelector('.dmission')?.remove();
+          sea.style.transform = `translateY(-${li * 100 / NL}%)`; stage.querySelector('.dsub').classList.add('bub');
+          later(() => { stage.querySelector('.dsub').classList.remove('bub'); fill(li); }, 2600);
+        });
+      };
+      roundActive = true; fill(0);
+    },
+  } };
+  const startWorld = () => modeGame(WORLD);
+
+  // ================= 第三批新遊戲（2026-11） =================
+  // 共用：照順序排好（長大的順序也用）
+  const seqGame = (steps, intro, outro, again) => {
+    roundActive = true;
+    const board = $('board'); board.className = 'board steps'; board.innerHTML = ''; $('tray2').innerHTML = '';
+    const targets = steps.map((_, i) => {
+      const el = document.createElement('div'); el.className = 'step'; el.innerHTML = `<b>${i + 1}</b><div class="in"></div>`;
+      board.appendChild(el); return { el, k: i, single: true };
+    });
+    dragMatch(targets, steps.map(([name, pic, en], i) => ({ k: i, name, pic, en })), {
+      margin: 30,
+      put: (t, g) => { g.el.querySelector('.in').innerHTML = t.pic; g.el.classList.add('done'); sayName(t.name, t.en); },
+      onDone: () => { board.classList.add('alive'); say(outro); finishFree(again); },
+    });
+    show('play'); say(intro);
+  };
+
+  // ---------- A. 砂紙描字（手指照筆順描數字和字母） ----------
+  const ell = (cx, cy, rx, ry, n = 28, a0 = -Math.PI / 2, dir = -1) => Array.from({ length: n + 1 }, (_, k) => { const a = a0 + dir * k * 2 * Math.PI / n; return [+(cx + rx * Math.cos(a)).toFixed(1), +(cy + ry * Math.sin(a)).toFixed(1)]; });
+  const GLYPHS = {
+    0: [ell(50, 50, 22, 35)], 1: [[[38, 26], [50, 15], [50, 85]]], 2: [[[30, 32], [36, 20], [50, 15], [64, 20], [70, 32], [66, 44], [30, 85], [72, 85]]],
+    3: [[[32, 22], [45, 15], [60, 17], [68, 28], [62, 42], [48, 48], [62, 52], [70, 64], [64, 80], [48, 86], [32, 80]]],
+    4: [[[56, 15], [26, 62], [76, 62]], [[60, 40], [60, 86]]], 5: [[[66, 15], [36, 15], [34, 46], [48, 42], [62, 46], [70, 58], [68, 74], [56, 85], [42, 86], [30, 80]]],
+    6: [[[64, 18], [50, 15], [36, 24], [30, 44], [30, 64], [38, 80], [52, 86], [66, 78], [70, 64], [64, 52], [50, 48], [36, 54], [31, 64]]],
+    7: [[[28, 18], [72, 18], [44, 86]]], 8: [[[62, 24], [50, 15], [38, 22], [38, 36], [50, 46], [64, 56], [68, 70], [60, 82], [50, 86], [38, 82], [32, 70], [36, 56], [50, 46], [62, 36], [62, 24]]],
+    9: [[[68, 30], [60, 18], [48, 15], [36, 22], [32, 34], [38, 46], [52, 48], [66, 40], [68, 30], [66, 60], [58, 80], [44, 86]]],
+    // 字母用小寫（蒙特梭利砂紙字母先學小寫）
+    c: [[[66, 50], [56, 44], [44, 45], [36, 52], [33, 63], [36, 74], [45, 81], [57, 82], [66, 76]]], o: [ell(50, 63, 18, 20)], a: [ell(46, 63, 16, 20), [[64, 43], [64, 84]]], d: [ell(46, 63, 16, 20), [[64, 15], [64, 84]]],
+    l: [[[50, 15], [50, 85]]], t: [[[50, 22], [50, 85]], [[36, 42], [64, 42]]], i: [[[50, 44], [50, 85]], [[50, 27], [50, 31]]], v: [[[32, 44], [50, 85], [68, 44]]],
+  };
+  // 每個點之間補小點，手指一路描過去比較順
+  const dense = (pts) => { const out = [pts[0]]; for (let k = 1; k < pts.length; k++) { const [a, b] = [pts[k - 1], pts[k]], n = Math.max(1, Math.round(Math.hypot(b[0] - a[0], b[1] - a[1]) / 2.5)); for (let j = 1; j <= n; j++) out.push([a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n]); } return out; };
+  const ABC_OF = (g) => ABC_ITEMS[g.toUpperCase().charCodeAt(0) - 65];
+  const GLYPH_SAY = (g) => /\d/.test(g) ? [D9[+g], NUM_EN[+g]] : [g, ABC_OF(g).word];
+  let sandBag = [];
+  const SANDP = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('sandp'), pool = L === 1 ? ['1', '0', '7', '2', '3', '4'] : L === 2 ? '0123456789'.split('') : [...'0123456789', 'c', 'o', 'a', 'd', 'l', 't', 'i', 'v'];
+    const N = 3; let i = 0;
+    const one = () => {
+      if (!sandBag.length) sandBag = shuffle(pool);
+      const g = sandBag.pop(), strokes = GLYPHS[g].map(dense), letter = !/\d/.test(g);
+      let si = 0, idx = 0, drawing = false;
+      stage.innerHTML = `<div class="sandwrap"><div class="prog" aria-hidden="true">${Array.from({ length: N }, (_, k) => `<i${k < i ? ' class="on"' : ''}></i>`).join('')}</div><svg class="sandboard${letter ? ' pink' : ''}" viewBox="0 0 100 100"><defs><pattern id="sand" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#CDBFA6"/><circle cx="1" cy="1" r=".6" fill="#B5A688"/><circle cx="2.4" cy="2.2" r=".4" fill="#E2D6C0"/></pattern></defs>
+        ${strokes.map(p => `<polyline class="sand" points="${p.map(q => q.join(',')).join(' ')}"/>`).join('')}<g class="inks"></g><circle class="tip" r="4.2"/><text class="snum" x="8" y="14"></text></svg></div>`;
+      const svg = stage.querySelector('svg'), inks = svg.querySelector('.inks'), tip = svg.querySelector('.tip'), num = svg.querySelector('.snum');
+      const ns = 'http://www.w3.org/2000/svg';
+      let ink = null;
+      const startStroke = () => { idx = 0; ink = document.createElementNS(ns, 'polyline'); ink.setAttribute('class', 'ink'); inks.appendChild(ink); place(); num.textContent = strokes.length > 1 ? `${si + 1}` : ''; };
+      const place = () => { const p = strokes[si][Math.min(idx, strokes[si].length - 1)]; tip.setAttribute('cx', p[0]); tip.setAttribute('cy', p[1]); };
+      const loc = (e) => { const r = svg.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100]; };
+      const follow = (e) => {
+        const [x, y] = loc(e), P = strokes[si];
+        // 只往前走：手指靠近接下來幾個點就前進
+        let moved = false;
+        for (let k = idx; k < Math.min(P.length, idx + 6); k++) if (Math.hypot(P[k][0] - x, P[k][1] - y) < 9) { idx = k + 1; moved = true; }
+        if (!moved) return;
+        ink.setAttribute('points', P.slice(0, idx).map(q => q.join(',')).join(' ')); place();
+        if (idx >= P.length - 1) {
+          ink.setAttribute('points', P.map(q => q.join(',')).join(' ')); ding(700 + si * 120); drawing = false;
+          if (++si < strokes.length) { startStroke(); return; }
+          tip.style.display = 'none'; svg.classList.add('done'); lvOk();
+          const [zh, en] = GLYPH_SAY(g);
+          sayName(letter ? g : zh, en, letter ? undefined : zh);
+          if (letter) sayLang([[abcName(ABC_OF(g)), 'en-US'], [en, 'en-US']]);
+          later(() => { if (++i < N) one(); else { stage.innerHTML = ''; say('描得好漂亮'); finishFree(again); } }, 2600);
+        }
+      };
+      let hinted = -1;
+      svg.addEventListener('pointerdown', (e) => {
+        drawing = true; try { svg.setPointerCapture(e.pointerId); } catch {}
+        // 從別的地方開始描：亮點跳一下，提醒從亮亮的地方開始（每一筆只說一次）
+        const [x, y] = loc(e), P = strokes[si], q = P && P[Math.min(idx, P.length - 1)];
+        if (q && Math.hypot(q[0] - x, q[1] - y) > 14) { tip.classList.remove('hey'); void tip.getBBox(); tip.classList.add('hey'); if (hinted !== si) { hinted = si; say('從亮亮的地方開始喔'); } }
+        follow(e);
+      });
+      svg.addEventListener('pointermove', (e) => { if (drawing) follow(e); });
+      const up = () => { drawing = false; };
+      svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+      startStroke();
+      const [zh, en] = GLYPH_SAY(g);
+      if (letter) sayLang([['用手指從亮亮的地方開始，描一描', 'zh-TW'], [abcName(ABC_OF(g)), 'en-US']]);
+      else say(i === 0 ? ['用手指從亮亮的地方開始，慢慢描', zh] : ['描一描', zh]);
+    };
+    roundActive = true; tray.innerHTML = ''; one();
+  } } };
+  const startSandp = () => modeGame(SANDP);
+
+  // ---------- B. 紡錘棒箱（0–9：每一格放進一樣多的棒子；零就是沒有） ----------
+  const SPINDLE = '<svg viewBox="0 0 20 100" preserveAspectRatio="none" aria-hidden="true"><path d="M10 2c5 14 6 30 6 48s-1 34-6 48c-5-14-6-30-6-48s1-34 6-48z" fill="#D6B27E" stroke="#9A7650" stroke-width="1.5"/><path d="M8 20q-1 30 0 60" stroke="#F0DDB8" stroke-width="1.5" fill="none"/></svg>';
+  const SPINDLE_B = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('spindle'), nums = L === 1 ? [0, 1, 2, 3, 4] : L === 2 ? [5, 6, 7, 8, 9] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // 3 級：十格裡有三格是空的
+    const todo = L === 3 ? shuffle(nums).slice(0, 3).sort((a, b) => a - b) : nums.slice();
+    let cur = 0, errs = 0;
+    stage.innerHTML = `<div class="spbox">${nums.map(n => `<div class="spcell" data-n="${n}"><b>${n}</b><div class="spin"></div></div>`).join('')}</div>`;
+    tray.innerHTML = `<div class="sppile"><span class="sphint">${SPINDLE.repeat(5)}</span></div>`;
+    const cells = [...stage.querySelectorAll('.spcell')];
+    // 3 級：其他格子先放好
+    cells.forEach(c => { const n = +c.dataset.n; if (!todo.includes(n)) { c.querySelector('.spin').innerHTML = `<span>${SPINDLE}</span>`.repeat(n); c.classList.add('full'); } });
+    const cellOf = (n) => cells.find(c => +c.dataset.n === n);
+    const focus = () => {
+      cells.forEach(c => c.classList.remove('now'));
+      if (cur >= todo.length) {
+        tray.innerHTML = ''; stage.querySelector('.spbox').classList.add('alive'); say('每一格的棒子都剛剛好'); if (!errs) { lvOk(); lvOk(); } return finishFree(again);
+      }
+      const n = todo[cur], c = cellOf(n); c.classList.add('now');
+      if (n === 0) {
+        say('零的格子，要放幾根呢？零就是沒有，什麼都不放。點一下零');
+        c.addEventListener('click', function z() { c.removeEventListener('click', z); ding(880); c.classList.add('full'); say('對，零就是空空的，什麼都沒有'); cur++; later(focus, 2600); });
+      } else say(`${D9[n]}的格子，放進${LI[n]}根棒子`);
+    };
+    // 從棒子堆拖一根出來
+    const pile = tray.querySelector('.sppile');
+    const spawnOne = () => {
+      const it = document.createElement('div'); it.className = 'spitem'; it.innerHTML = SPINDLE; pile.appendChild(it);
+      dragify(it, (x, y) => {
+        const n = todo[cur]; if (n === undefined || n === 0) { it.remove(); spawnOne(); return true; }
+        const c = hitAt(cells, x, y, 20);
+        if (!c) return false;
+        const box = c.querySelector('.spin'), have = box.children.length;
+        if (+c.dataset.n !== n) { errs++; oops(`要放在${D9[n]}的格子喔`); nudge(cellOf(n)); return false; }
+        if (have >= n) { oopsAt = 0; oops(`已經${LI[n]}根了`); return false; }
+        box.insertAdjacentHTML('beforeend', `<span class="pop">${SPINDLE}</span>`); it.remove(); spawnOne();
+        ding(500 + (have + 1) * 50); say(D9[have + 1]);
+        if (have + 1 === n) { c.classList.add('full'); later(() => say(`${LI[n]}根，剛剛好`), 700); cur++; later(focus, 2400); }
+        return true;
+      }, () => say('一根一根拿，放進格子裡'));
+    };
+    spawnOne();
+    roundActive = true; say(L === 3 ? '有三格還是空的，數一數放進去' : L === 2 ? '我們從五開始，一格一格放棒子' : '我們從零開始，一格一格放棒子'); later(focus, L === 3 ? 2600 : 2400);
+  } } };
+  const startSpindle = () => modeGame(SPINDLE_B);
+
+  // ---------- C. 長大的順序（生命週期） ----------
+  const CHRYSALIS = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 6v10" stroke="#8E6A4A" stroke-width="4"/><path d="M50 16c16 8 18 30 14 48-3 14-8 26-14 30-6-4-11-16-14-30-4-18-2-40 14-48z" fill="#9DBB6E" stroke="#6E8A44" stroke-width="3"/><path d="M42 40q8 4 16 0M40 56q10 5 20 0M42 72q8 4 16 0" stroke="#6E8A44" stroke-width="2" fill="none"/></svg>';
+  const TADPOLE = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M40 50q30-6 54 14-26-2-54-4z" fill="#6E7F5A"/><ellipse cx="34" cy="52" rx="24" ry="18" fill="#56664A"/><circle cx="26" cy="46" r="4" fill="#fff"/><circle cx="26" cy="46" r="2" fill="#2E2A28"/></svg>';
+  const FROGLET = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M60 56q20 2 34 18-20-4-34-10z" fill="#6E9A5A"/><ellipse cx="40" cy="56" rx="26" ry="18" fill="#7FB06A"/><circle cx="30" cy="40" r="9" fill="#7FB06A"/><circle cx="50" cy="40" r="9" fill="#7FB06A"/><circle cx="30" cy="40" r="4" fill="#2E2A28"/><circle cx="50" cy="40" r="4" fill="#2E2A28"/><path d="M22 74l-8 10M58 74l8 10" stroke="#6E9A5A" stroke-width="5" stroke-linecap="round"/></svg>';
+  const BFLY_EGGS = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M10 70Q30 20 90 18Q76 70 10 70z" fill="#8DBA7C" stroke="#5E8A4E" stroke-width="3"/><path d="M14 66Q48 44 86 22" stroke="#5E8A4E" stroke-width="2.5" fill="none"/>' + [[40, 46], [52, 40], [46, 56], [60, 50], [66, 38]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#F3E6B8" stroke="#B9A06A" stroke-width="1.5"/>`).join('') + '</svg>';
+  const FROG_EGGS = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><ellipse cx="50" cy="74" rx="44" ry="14" fill="#A9C3D6"/>' + [[34, 50], [50, 44], [66, 50], [42, 64], [58, 64], [26, 64], [74, 64], [50, 56]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#E8F0F2" stroke="#9DB7C4" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="3" fill="#3E3A34"/>`).join('') + '</svg>';
+  const GROWS = [
+    { name: '植物長大', steps: [['種子', '🌰', 'Seed'], ['發芽', '🌱', 'Sprout'], ['長出葉子', '🌿', 'Leaves'], ['開花', '🌷', 'Flower'], ['結果子', '🍎', 'Fruit']], intro: '小種子怎麼長大呢？照順序排好', outro: '小種子長成大樹，結出好吃的果子' },
+    { name: '小雞長大', steps: [['蛋', '🥚', 'Egg'], ['破殼', '🐣', 'Hatching'], ['小雞', '🐥', 'Chick'], ['大一點的小雞', '🐤', 'Young chicken'], ['大雞', '🐔', 'Chicken']], intro: '小雞是怎麼長大的呢？照順序排好', outro: '從蛋變成大雞了' },
+    { name: '蝴蝶長大', steps: [['蝴蝶的蛋', BFLY_EGGS, 'Eggs'], ['毛毛蟲', '🐛', 'Caterpillar'], ['吃很多葉子', '🍃', 'Eating leaves'], ['蛹', CHRYSALIS, 'Chrysalis'], ['蝴蝶', '🦋', 'Butterfly']], intro: '毛毛蟲會變成什麼呢？照順序排好', outro: '毛毛蟲變成漂亮的蝴蝶了' },
+    { name: '青蛙長大', steps: [['青蛙的蛋', FROG_EGGS, 'Frog eggs'], ['蝌蚪', TADPOLE, 'Tadpole'], ['長出腳', FROGLET, 'Froglet'], ['青蛙', '🐸', 'Frog']], intro: '蝌蚪會變成什麼呢？照順序排好', outro: '蝌蚪長大變成青蛙了' },
+    { name: '人長大', steps: [['小寶寶', '👶', 'Baby'], ['小朋友', '🧒', 'Child'], ['大人', '🧑', 'Adult'], ['爺爺奶奶', '👵', 'Grandparent']], intro: '我們會怎麼長大呢？照順序排好', outro: '我們每天都在慢慢長大' },
+  ];
+  let growN = -1;
+  const startGrow = () => {
+    const L = lvOf('grow'), g = GROWS[growN = (growN + 1) % GROWS.length];
+    // 1 級只排頭、中間、尾巴 3 張；2 級 4 張；3 級全部
+    const n = Math.min(g.steps.length, [3, 4, 5][L - 1]);
+    const steps = n === g.steps.length ? g.steps : n === 3 ? [g.steps[0], g.steps[Math.floor(g.steps.length / 2)], g.steps[g.steps.length - 1]] : [g.steps[0], g.steps[1], g.steps[g.steps.length - 2], g.steps[g.steps.length - 1]];
+    seqGame(steps, g.intro, g.outro, startGrow);
+  };
+
+  // ---------- D. 翻牌記憶 ----------
+  const MEM_PICS = ['🐰', '🐻', '🐼', '🐱', '🐶', '🦊', '🐸', '🐷', '🐨', '🦁', '🐥', '🐢', '🐙', '🦋'];
+  const MEM_NAMES = { '🐰': ['兔子', 'Rabbit'], '🐻': ['小熊', 'Bear'], '🐼': ['貓熊', 'Panda'], '🐱': ['小貓', 'Kitten'], '🐶': ['小狗', 'Puppy'], '🦊': ['狐狸', 'Fox'], '🐸': ['青蛙', 'Frog'], '🐷': ['小豬', 'Piglet'], '🐨': ['無尾熊', 'Koala'], '🦁': ['獅子', 'Lion'], '🐥': ['小雞', 'Chick'], '🐢': ['烏龜', 'Turtle'], '🐙': ['章魚', 'Octopus'], '🦋': ['蝴蝶', 'Butterfly'] };
+  const MEMORY = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('memory'), P = [2, 3, 4][L - 1] + (L === 3 && Math.random() < .5 ? 2 : 0);
+    const pics = shuffle(MEM_PICS).slice(0, P), cards = shuffle([...pics, ...pics]);
+    let open = [], left = P, lock = false, miss = 0;
+    stage.innerHTML = `<div class="memgrid" style="--c:${cards.length <= 4 ? 2 : cards.length <= 6 ? 3 : 4}">${cards.map((p, i) => `<button class="mcard" data-i="${i}" aria-label="翻牌"><span class="back">⭐</span><span class="face">${p}</span></button>`).join('')}</div>`;
+    tray.innerHTML = '';
+    stage.querySelectorAll('.mcard').forEach(b => b.addEventListener('click', () => {
+      if (lock || b.classList.contains('open')) return;
+      b.classList.add('open'); ding(620); open.push(b);
+      const p = cards[+b.dataset.i]; say(MEM_NAMES[p][0]);
+      if (open.length < 2) return;
+      const [a, c] = open; open = []; lock = true;
+      if (cards[+a.dataset.i] === cards[+c.dataset.i]) {
+        later(() => { a.classList.add('got'); c.classList.add('got'); ding(880); sayName(MEM_NAMES[p][0], MEM_NAMES[p][1], `兩隻${MEM_NAMES[p][0]}，一樣的`); if (!miss) lvOk(); miss = 0; lock = false;
+          if (--left === 0) later(() => { say('全部都找到了，記性好好'); finishFree(again); }, 1800); }, 500);
+      } else {
+        miss++; logErr();
+        later(() => { a.classList.remove('open'); c.classList.remove('open'); lock = false; }, 1300);
+      }
+    }));
+    roundActive = true; say('翻翻看，找出兩張一樣的');
+  } } };
+  const startMemory = () => modeGame(MEMORY);
+
+  // ---------- E. 接下來是什麼（規律） ----------
+  const PAT_SETS = [['🍎', '🍌', '🍇', '🍊'], ['🐰', '🐻', '🐱', '🐶'], ['⭐', '🌙', '☀️', '☁️'], ['🚗', '🚌', '🚲', '🚂'], ['🌷', '🌻', '🌸', '🍀']];
+  const PAT_RULES = [['A', 'B'], ['A', 'A', 'B'], ['A', 'B', 'B'], ['A', 'B', 'C']];
+  const PATTERN = { modes: [['q', '']], run: { q: (stage, tray, again) => quizRun(stage, tray, 3, () => {
+    const L = lvOf('pattern'), rule = PAT_RULES[L === 1 ? 0 : L === 2 ? 1 + rnd(2) : rnd(4)], set = shuffle(PAT_SETS[rnd(PAT_SETS.length)]);
+    const map = { A: set[0], B: set[1], C: set[2] }, len = rule.length * 2 + (L === 3 ? rule.length : 0) + 1;
+    const seq = Array.from({ length: len }, (_, k) => map[rule[k % rule.length]]), ans = seq[len - 1];
+    const opts = shuffle([...new Set([ans, set[0], set[1], set[2], set[3]])]).slice(0, 3);
+    if (!opts.includes(ans)) opts[0] = ans;
+    const fin = shuffle(opts);
+    return {
+      html: `<div class="patrow">${seq.slice(0, -1).map((p, k) => `<span class="pt" style="animation-delay:${(k * .12).toFixed(2)}s">${p}</span>`).join('')}<span class="pt q">?</span></div>`,
+      opts: fin, ok: fin.indexOf(ans),
+      ask: () => say('看一看，接下來是什麼呢？'),
+      mount: (st) => { const ps = st.querySelectorAll('.pt:not(.q)'); ps.forEach((p, k) => p.addEventListener('click', () => ding(500 + k * 60))); },
+      right: (st) => { const q = st.querySelector('.pt.q'); q.textContent = ans; q.classList.remove('q'); q.classList.add('pop'); st.querySelector('.patrow').classList.add('alive'); say('對了，一直重複下去'); },
+      wait: 3000,
+    };
+  }, again) } };
+  const startPattern = () => modeGame(PATTERN);
+
+  // ---------- F. 心情小動物（認識心情、心情不好可以怎麼辦） ----------
+  // 用小兔子的臉畫不同的心情（不用笑臉 emoji）
+  const bunnyFace = (m) => {
+    const eyes = { happy: '<path d="M32 50q6-7 12 0M56 50q6-7 12 0" stroke="#3E342A" stroke-width="3.5" fill="none" stroke-linecap="round"/>', sad: '<circle cx="38" cy="50" r="4.5" fill="#3E342A"/><circle cx="62" cy="50" r="4.5" fill="#3E342A"/><path d="M36 58q-2 6 0 10" stroke="#8FB2CF" stroke-width="3" fill="none" stroke-linecap="round"/>', angry: '<circle cx="38" cy="52" r="4.5" fill="#3E342A"/><circle cx="62" cy="52" r="4.5" fill="#3E342A"/>', scared: '<circle cx="38" cy="50" r="6" fill="#fff" stroke="#3E342A" stroke-width="2"/><circle cx="62" cy="50" r="6" fill="#fff" stroke="#3E342A" stroke-width="2"/><circle cx="38" cy="51" r="2.5" fill="#3E342A"/><circle cx="62" cy="51" r="2.5" fill="#3E342A"/>', wow: '<circle cx="38" cy="48" r="5" fill="#3E342A"/><circle cx="62" cy="48" r="5" fill="#3E342A"/>' }[m];
+    const brow = { happy: '', sad: '<path d="M30 40l12-4M70 40l-12-4" stroke="#8E7A64" stroke-width="3" stroke-linecap="round"/>', angry: '<path d="M30 38l14 6M70 38l-14 6" stroke="#6E5A44" stroke-width="3.5" stroke-linecap="round"/>', scared: '<path d="M30 36q6-4 12 0M58 36q6-4 12 0" stroke="#8E7A64" stroke-width="3" fill="none" stroke-linecap="round"/>', wow: '<path d="M30 34q6-5 12 0M58 34q6-5 12 0" stroke="#8E7A64" stroke-width="3" fill="none" stroke-linecap="round"/>' }[m];
+    const mouth = { happy: '<path d="M40 66q10 12 20 0z" fill="#C9675E"/>', sad: '<path d="M40 72q10-9 20 0" stroke="#3E342A" stroke-width="3.5" fill="none" stroke-linecap="round"/>', angry: '<path d="M40 70h20" stroke="#3E342A" stroke-width="4" stroke-linecap="round"/>', scared: '<path d="M40 70q5-5 10 0t10 0" stroke="#3E342A" stroke-width="3" fill="none" stroke-linecap="round"/>', wow: '<ellipse cx="50" cy="70" rx="6" ry="8" fill="#C9675E"/>' }[m];
+    const cheek = m === 'angry' ? '#E07A6A' : '#EBB7B0';
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="34" cy="20" rx="9" ry="20" fill="#F6EFE4" stroke="${OL}" stroke-width="2.5" transform="rotate(-10 34 20)"/><ellipse cx="66" cy="20" rx="9" ry="20" fill="#F6EFE4" stroke="${OL}" stroke-width="2.5" transform="rotate(10 66 20)"/><ellipse cx="34" cy="22" rx="4" ry="13" fill="#EBB7B0" transform="rotate(-10 34 22)"/><ellipse cx="66" cy="22" rx="4" ry="13" fill="#EBB7B0" transform="rotate(10 66 22)"/><circle cx="50" cy="58" r="34" fill="#F6EFE4" stroke="${OL}" stroke-width="2.5"/>${brow}${eyes}<ellipse cx="26" cy="64" rx="6" ry="4" fill="${cheek}" opacity=".7"/><ellipse cx="74" cy="64" rx="6" ry="4" fill="${cheek}" opacity=".7"/>${mouth}</svg>`;
+  };
+  const MOODS = { happy: ['開心', 'Happy'], sad: ['難過', 'Sad'], angry: ['生氣', 'Angry'], scared: ['害怕', 'Scared'], wow: ['驚訝', 'Surprised'] };
+  const STORIES = [
+    ['happy', '🎂', '今天是小兔子的生日，大家幫牠唱生日快樂歌'], ['happy', '🎁', '小兔子收到一個禮物'], ['happy', '🛝', '小兔子和好朋友一起溜滑梯'],
+    ['sad', '🍦', '小兔子的冰淇淋掉到地上了'], ['sad', '🎈', '小兔子的氣球飛走了'],
+    ['angry', '🧱', '小兔子堆好的積木，被別人推倒了'], ['angry', '🧸', '有人沒問就拿走小兔子的玩具'],
+    ['scared', '⛈️', '外面打雷了，轟隆隆'], ['scared', '🌑', '房間突然變得好暗'],
+    ['wow', '🌈', '天空突然出現一道彩虹'], ['wow', '🎩', '魔術師從帽子裡變出一隻兔子'],
+  ];
+  const COPE = { sad: ['抱一抱', '🤗', '難過的時候，可以找爸爸媽媽抱一抱'], angry: ['深呼吸', '🌬️', '生氣的時候，慢慢吸氣、慢慢吐氣'], scared: ['說出來', '🗣️', '害怕的時候，告訴大人我很害怕'] };
+  const FEEL = { modes: [['q', '']], run: { q: (stage, tray, again) => quizRun(stage, tray, 3, () => {
+    const L = lvOf('feel'), moods = ['happy', 'sad', 'angry', 'scared', 'wow'].slice(0, [2, 3, 5][L - 1]);
+    const pool = STORIES.filter(s => moods.includes(s[0])), st = pool[rnd(pool.length)];
+    const opts = shuffle([st[0], ...shuffle(moods.filter(m => m !== st[0])).slice(0, L === 1 ? 1 : 2)]);
+    return {
+      html: `<div class="story"><span class="sp">${st[1]}</span><span class="sbun">${bunnyFace('wow').replace(/<path d="M30 34[^>]*>|<ellipse cx="50" cy="70"[^>]*>/g, '')}</span></div>`,
+      opts: opts.map(m => `<span class="moodf">${bunnyFace(m)}</span>`), ok: opts.indexOf(st[0]), cls: 'mood',
+      ask: () => say([st[2], '小兔子覺得怎麼樣呢？']),
+      right: (s) => {
+        s.querySelector('.sbun').innerHTML = bunnyFace(st[0]); s.querySelector('.sbun').classList.add('pop');
+        const c = COPE[st[0]], [zh, en] = MOODS[st[0]];
+        if (c && L > 1) { s.querySelector('.story').insertAdjacentHTML('beforeend', `<span class="cope pop">${c[1]}<small>${c[0]}</small></span>`); sayName(zh, en, `小兔子覺得${zh}。${c[2]}`); }
+        else sayName(zh, en, `小兔子覺得${zh}`);
+      },
+      wait: 4600,
+    };
+  }, again) } };
+  const startFeel = () => modeGame(FEEL);
+
+  // ---------- G. 走迷宮（手指帶小兔子去找紅蘿蔔） ----------
+  const makeMaze = (W, H) => {
+    // walls[y][x] = { r, b }：右邊、下面有沒有牆；深度優先挖路
+    const cells = Array.from({ length: H }, () => Array.from({ length: W }, () => ({ r: true, b: true, v: false })));
+    const st = [[0, 0]]; cells[0][0].v = true;
+    while (st.length) {
+      const [x, y] = st[st.length - 1], nb = shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]).map(([dx, dy]) => [x + dx, y + dy]).filter(([a, b]) => a >= 0 && b >= 0 && a < W && b < H && !cells[b][a].v);
+      if (!nb.length) { st.pop(); continue; }
+      const [a, b] = nb[0];
+      if (a > x) cells[y][x].r = false; else if (a < x) cells[b][a].r = false; else if (b > y) cells[y][x].b = false; else cells[b][a].b = false;
+      cells[b][a].v = true; st.push([a, b]);
+    }
+    return cells;
+  };
+  const MAZE = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('maze'), [W, H] = [[3, 2], [4, 3], [5, 4]][L - 1], C = 100, maze = makeMaze(W, H);
+    const pairs = [['🐰', '🥕', '小兔子', '紅蘿蔔'], ['🐶', '🦴', '小狗', '骨頭'], ['🐱', '🐟', '小貓', '小魚'], ['🐝', '🌸', '小蜜蜂', '花'], ['🐼', '🎋', '貓熊', '竹子']];
+    const [who, goal, wn, gn] = pairs[rnd(pairs.length)];
+    let s = '';
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const c = maze[y][x];
+      if (c.r && x < W - 1) s += `<path d="M${(x + 1) * C} ${y * C}v${C}"/>`;
+      if (c.b && y < H - 1) s += `<path d="M${x * C} ${(y + 1) * C}h${C}"/>`;
+    }
+    stage.innerHTML = `<div class="mazewrap"><svg class="maze" viewBox="-8 -8 ${W * C + 16} ${H * C + 16}"><rect x="0" y="0" width="${W * C}" height="${H * C}" rx="14" class="mfloor"/><polyline class="mpath" points=""/><g class="mwall">${s}<rect x="0" y="0" width="${W * C}" height="${H * C}" rx="14" fill="none"/></g>
+      <text class="mgoal" x="${(W - .5) * C}" y="${(H - .5) * C}">${goal}</text><text class="mwho" x="${C / 2}" y="${C / 2}">${who}</text></svg></div>`;
+    const svg = stage.querySelector('svg'), whoEl = svg.querySelector('.mwho'), path = svg.querySelector('.mpath');
+    let cx = 0, cy = 0, trail = [[C / 2, C / 2]], drag = false, done = false, bumps = 0;
+    const open = (x, y, nx, ny) => { if (nx < 0 || ny < 0 || nx >= W || ny >= H) return false; if (nx > x) return !maze[y][x].r; if (nx < x) return !maze[y][nx].r; if (ny > y) return !maze[y][x].b; return !maze[ny][x].b; };
+    const loc = (e) => { const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal; return [vb.x + (e.clientX - r.left) / r.width * vb.width, vb.y + (e.clientY - r.top) / r.height * vb.height]; };
+    const move = (e) => {
+      if (done) return;
+      const [px, py] = loc(e), nx = Math.floor(px / C), ny = Math.floor(py / C);
+      if (nx === cx && ny === cy) return;
+      if (Math.abs(nx - cx) + Math.abs(ny - cy) !== 1) return;
+      if (!open(cx, cy, nx, ny)) { if (++bumps % 3 === 1) { ding(300); whoEl.classList.remove('bump'); void whoEl.getBBox(); whoEl.classList.add('bump'); } return; }
+      // 走回頭路就把線收回來
+      if (trail.length > 1 && trail[trail.length - 2][0] === (nx + .5) * C && trail[trail.length - 2][1] === (ny + .5) * C) trail.pop(); else trail.push([(nx + .5) * C, (ny + .5) * C]);
+      cx = nx; cy = ny; ding(520 + trail.length * 15);
+      whoEl.setAttribute('x', (cx + .5) * C); whoEl.setAttribute('y', (cy + .5) * C);
+      path.setAttribute('points', trail.map(p => p.join(',')).join(' '));
+      if (cx === W - 1 && cy === H - 1) {
+        done = true; lvOk(); if (bumps < 3) lvOk();
+        svg.classList.add('won'); ding(880); setTimeout(() => ding(1100), 160);
+        say(`${wn}找到${gn}了`);
+        later(() => finishFree(again), 1600);
+      }
+    };
+    svg.addEventListener('pointerdown', (e) => { drag = true; try { svg.setPointerCapture(e.pointerId); } catch {} move(e); });
+    svg.addEventListener('pointermove', (e) => { if (drag) move(e); });
+    const up = () => { drag = false; };
+    svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+    tray.innerHTML = ''; roundActive = true;
+    say(`用手指帶${wn}走，去找${gn}。碰到牆壁要換一條路`);
+  } } };
+  const startMaze = () => modeGame(MAZE);
+
+  // ---------- H. 地圖拼圖（台灣分區；3 級拼世界七大洲） ----------
+  const TW_REG = [
+    { k: 'n', name: '北部', en: 'Northern Taiwan', c: '#D9867A', icon: '🏙️', fact: '北部有台北一零一', pts: [[66, 8], [76, 4], [88, 8], [98, 16], [96, 30], [94, 38], [78, 40], [35, 42], [46, 30], [56, 18]] },
+    { k: 'c', name: '中部', en: 'Central Taiwan', c: '#E9CF6E', icon: '🏞️', fact: '中部有日月潭', pts: [[35, 42], [78, 40], [74, 62], [70, 84], [27, 84], [26, 76], [28, 60]] },
+    { k: 's', name: '南部', en: 'Southern Taiwan', c: '#8DBA7C', icon: '🏖️', fact: '南部有墾丁的海邊', pts: [[27, 84], [70, 84], [66, 108], [76, 108], [74, 116], [66, 136], [60, 152], [54, 140], [48, 124], [38, 108], [30, 92]] },
+    { k: 'e', name: '東部', en: 'Eastern Taiwan', c: '#8FA9C0', icon: '⛰️', fact: '東部有很高的山，和美麗的太平洋', pts: [[94, 38], [92, 46], [88, 62], [84, 80], [80, 98], [76, 108], [66, 108], [70, 84], [74, 62], [78, 40]] },
+    { k: 'p', name: '澎湖', en: 'Penghu', c: '#E7A9BE', icon: '🐚', fact: '澎湖是海上的小島', pts: [[6, 84], [14, 82], [16, 90], [12, 98], [4, 94]] },
+  ];
+  const regSVG = (pts, c, cls = '') => { const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), x0 = Math.min(...xs) - 3, y0 = Math.min(...ys) - 3, w = Math.max(...xs) - x0 + 3, h = Math.max(...ys) - y0 + 3; return `<svg class="${cls}" viewBox="${x0} ${y0} ${w} ${h}" aria-hidden="true"><path d="M${pts.map(p => p.join(' ')).join('L')}Z" fill="${c}" stroke="#6E5A44" stroke-width="1.2" stroke-linejoin="round"/></svg>`; };
+  const bbox = (pts) => { const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
+  const MAPPUZ = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('map'), world = L === 3;
+    // 拼圖片：台灣分區，或世界七大洲（用環遊世界的地圖）
+    const pieces = world ? Object.keys(LAND).map(k => ({ k, name: CONT[k].name, en: CONT[k].en, c: CONT[k].c, icon: (PLACES[k].find(x => x[4] === 'a') || [])[1], fact: `${CONT[k].name}有${PLACES[k].find(x => x[4] === 'a')[0]}`, pts: LAND[k][0].map(([lo, la]) => [MX(lo), MY(la)]), more: LAND[k].map(sh => sh.map(([lo, la]) => [MX(lo), MY(la)])) }))
+      : L === 1 ? TW_REG.slice(0, 4) : TW_REG;
+    const VB = world ? '0 0 1000 500' : '0 0 104 158';
+    const all = pieces.map(p => bbox(p.pts));
+    stage.innerHTML = `<div class="mappuz${world ? ' w' : ''}"><svg viewBox="${VB}" class="mapbase">${world ? '<rect width="1000" height="500" fill="#CFE2EA" rx="16"/>' : '<rect x="-4" y="-4" width="112" height="166" rx="10" fill="#CFE2EA"/>'}${pieces.map(p => (p.more || [p.pts]).map(pts => `<path class="msil" data-k="${p.k}" d="M${pts.map(q => q.join(' ')).join('L')}Z"/>`).join('')).join('')}</svg></div>`;
+    const base = stage.querySelector('.mapbase'), wrap = stage.firstChild;
+    // 每一塊的放置區：依照 SVG 座標換算到畫面上
+    const targets = pieces.map((p, i) => {
+      const el = document.createElement('div'); el.className = 'mspot';
+      const vb = base.viewBox.baseVal, [x0, y0, x1, y1] = all[i];
+      el.style.cssText = `left:${(x0 - vb.x) / vb.width * 100}%;top:${(y0 - vb.y) / vb.height * 100}%;width:${(x1 - x0) / vb.width * 100}%;height:${(y1 - y0) / vb.height * 100}%`;
+      wrap.appendChild(el); return { el, k: p.k, single: true };
+    });
+    tray.innerHTML = '';
+    dragMatch(targets, pieces.map(p => ({ k: p.k, name: p.name, en: p.en, pic: regSVG(p.pts, p.c), cls: 'item mpiece' + (p.k === 'an' ? ' wide' : '') })), {
+      margin: world ? 20 : 26, own: true,
+      put: (t, g) => { const p = pieces.find(q => q.k === t.k); base.querySelectorAll(`.msil[data-k="${p.k}"]`).forEach(m => { m.setAttribute('style', `fill:${p.c}`); m.classList.add('in'); }); g.el.innerHTML = `<span class="micon pop">${p.icon || ''}</span>`; sayName(p.name, p.en, `${p.name}，${p.fact}`); },
+      onDone: () => { wrap.classList.add('lit'); say(world ? '世界地圖拼好了，七大洲都在這裡' : '台灣拼好了，這是我們住的地方'); finishFree(again); },
+    });
+    roundActive = true; say(world ? '把七大洲放回世界地圖上' : '把台灣的拼圖放回去，看形狀找位置');
+  } } };
+  const startMap = () => modeGame(MAPPUZ);
+
+  // ---------- I. 上下裡外（位置的詞） ----------
+  const PL_THINGS = [['小貓', '🐱', 'Kitten'], ['小狗', '🐶', 'Puppy'], ['球', '⚽', 'Ball'], ['泰迪熊', '🧸', 'Teddy bear'], ['兔子', '🐰', 'Rabbit']];
+  const PL_WORDS = { top: ['上面', 'On top of'], in: ['裡面', 'Inside'], under: ['下面', 'Under'], side: ['旁邊', 'Next to'], left: ['左邊', 'Left of'], right: ['右邊', 'Right of'] };
+  const BOXART = '<svg viewBox="0 0 200 160" aria-hidden="true"><path d="M20 50h160v100H20z" fill="#C9A27A" stroke="#8E6A4A" stroke-width="4"/><path d="M20 50l-14-24h52l14 24zM180 50l14-24h-52l-14 24z" fill="#D8B88E" stroke="#8E6A4A" stroke-width="4" stroke-linejoin="round"/><rect x="34" y="60" width="132" height="80" rx="6" fill="#8E6A4A" opacity=".35"/></svg>';
+  const TABLEART = '<svg viewBox="0 0 200 160" aria-hidden="true"><rect x="10" y="40" width="180" height="16" rx="6" fill="#B08A5A" stroke="#7A5A3A" stroke-width="4"/><path d="M30 56v96M170 56v96" stroke="#7A5A3A" stroke-width="10" stroke-linecap="round"/></svg>';
+  const PLACE = { modes: [['q', '']], run: { q: (stage, tray, again) => {
+    const L = lvOf('place'); let i = 0; const N = 3;
+    const one = () => {
+      const box = Math.random() < .5, words = box ? ['top', 'in', 'side'] : ['top', 'under', 'side'];
+      const pool = L === 1 ? words.slice(0, 2) : L === 2 ? words : [...words.filter(w => w !== 'side'), 'left', 'right'];
+      const w = pool[rnd(pool.length)], [tn, tp, te] = PL_THINGS[rnd(PL_THINGS.length)], obj = box ? '箱子' : '桌子';
+      stage.innerHTML = `<div class="plscene"><div class="plobj">${box ? BOXART : TABLEART}</div><div class="prog" aria-hidden="true">${Array.from({ length: N }, (_, k) => `<i${k < i ? ' class="on"' : ''}></i>`).join('')}</div></div>`;
+      const scene = stage.firstChild, objEl = scene.querySelector('.plobj');
+      tray.innerHTML = '';
+      const it = document.createElement('div'); it.className = 'item big'; it.textContent = tp; tray.appendChild(it);
+      const zoneOf = (x, y) => {
+        const r = objEl.getBoundingClientRect(), fx = (x - r.left) / r.width, fy = (y - r.top) / r.height;
+        if (fx < -.45 || fx > 1.45 || fy < -.8 || fy > 1.3) return null;
+        if (fx < .08) return 'left'; if (fx > .92) return 'right';
+        if (fy < .32) return 'top';
+        return box ? 'in' : fy > .4 ? 'under' : 'top';
+      };
+      const ask = () => say([`把${tn}放在${obj}的${PL_WORDS[w][0]}`]);
+      let tries = 0;
+      dragify(it, (x, y) => {
+        let z = zoneOf(x, y); if (!z) return false;
+        const ok = z === w || (w === 'side' && (z === 'left' || z === 'right'));
+        if (!ok) { tries++; oops(`這是${obj}的${PL_WORDS[z === 'left' || z === 'right' ? (L === 3 ? z : 'side') : z][0]}`); return false; }
+        if (!tries) lvOk();
+        const r = objEl.getBoundingClientRect(), sr = scene.getBoundingClientRect();
+        const pos = { top: [.5, box ? -.05 : .05], in: [.5, .6], under: [.5, .72], left: [-.25, .6], right: [1.25, .6], side: [z === 'left' ? -.25 : 1.25, .6] }[z === 'left' || z === 'right' ? z : w];
+        const put = document.createElement('span'); put.className = 'plput pop'; put.textContent = tp;
+        put.style.left = (r.left - sr.left + r.width * pos[0]) + 'px'; put.style.top = (r.top - sr.top + r.height * pos[1]) + 'px';
+        scene.appendChild(put); it.remove(); ding(880);
+        sayName(PL_WORDS[w][0], PL_WORDS[w][1], `${tn}在${obj}的${PL_WORDS[w][0]}`);
+        later(() => { if (++i < N) one(); else { tray.innerHTML = ''; finishFree(again); } }, 2600);
+        return true;
+      }, ask);
+      ask();
+    };
+    roundActive = true; one();
+  } } };
+  const startPlace = () => modeGame(PLACE);
+
+  // ---------- J. 音感鐘（蒙特梭利音感鐘：Do Re Mi） ----------
+  const BELL_NOTES = [[523, 'Do', '#D9776B'], [587, 'Re', '#E3904A'], [659, 'Mi', '#E3C04E'], [698, 'Fa', '#86AA82'], [784, 'So', '#7E9CC0'], [880, 'La', '#8E86B8'], [988, 'Ti', '#B88EB0'], [1047, 'Do', '#D9776B']];
+  const bellRing = (f) => {
+    if (!settings.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume();
+      const t = actx.currentTime + .02, out = actx.createGain(); out.gain.value = .5; out.connect(actx.destination);
+      [[1, .5], [2.01, .14], [3.0, .06], [4.2, .03]].forEach(([m, a]) => { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = f * m; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(a, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + 1.8); o.connect(g).connect(out); o.start(t); o.stop(t + 1.9); });
+    } catch {}
+  };
+  const bellSVG = (c) => `<svg viewBox="0 0 100 120" aria-hidden="true"><path d="M50 6v10" stroke="#6E5A44" stroke-width="5" stroke-linecap="round"/><path d="M50 16c-20 0-28 18-28 40v20l-8 12h72l-8-12V56c0-22-8-40-28-40z" fill="#F4EFE6" stroke="#9A8C78" stroke-width="3"/><path d="M36 40q4-14 14-16" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="14" y="94" width="72" height="22" rx="6" fill="${c}"/></svg>`;
+  const BELLS = { modes: [['free', '🎵 敲敲看'], ['match', '👂 一樣的聲音'], ['order', '🪜 由低到高']], run: {
+    free: (stage, tray) => {
+      roundActive = false;
+      stage.innerHTML = `<div class="bells">${BELL_NOTES.map(([f, n, c], i) => `<button class="bell" data-i="${i}" aria-label="${n}">${bellSVG(c)}<span>${n}</span></button>`).join('')}</div>`;
+      tray.innerHTML = '<div class="kbhello">🎵 一個一個敲，聽聽看聲音越來越高</div>';
+      stage.querySelectorAll('.bell').forEach(b => b.addEventListener('click', () => { const [f] = BELL_NOTES[+b.dataset.i]; bellRing(f); b.classList.remove('ring'); void b.offsetWidth; b.classList.add('ring'); }));
+      say('敲敲看音感鐘，從左邊開始，聲音越來越高');
+    },
+    // 聽一個鐘的聲音，找出一樣聲音的鐘（2 級以上鐘的底座都同一個顏色，要用耳朵聽）
+    match: (stage, tray, again) => {
+      const L = lvOf('bells'); let i = 0; const N = 3;
+      const one = () => {
+        const n = [2, 3, 4][L - 1], idx = shuffle([0, 2, 4, 7, 1, 5]).slice(0, n), ans = idx[rnd(n)];
+        const col = (k) => L === 1 ? BELL_NOTES[k][2] : '#B9AE9C';
+        stage.innerHTML = `<div class="bellq"><button class="bell big" aria-label="再聽一次">${bellSVG(col(ans))}<span>👂</span></button><div class="prog" aria-hidden="true">${Array.from({ length: N }, (_, k) => `<i${k < i ? ' class="on"' : ''}></i>`).join('')}</div></div>`;
+        stage.querySelector('.bell.big').addEventListener('click', () => bellRing(BELL_NOTES[ans][0]));
+        tray.innerHTML = `<div class="bells">${idx.map(k => `<button class="bell" data-k="${k}">${bellSVG(col(k))}</button>`).join('')}</div>`;
+        let wrong = 0, done = false;
+        tray.querySelectorAll('.bell').forEach(b => b.addEventListener('click', () => {
+          if (done) return; const k = +b.dataset.k; bellRing(BELL_NOTES[k][0]); b.classList.remove('ring'); void b.offsetWidth; b.classList.add('ring');
+          if (k === ans) { done = true; if (!wrong) lvOk(); b.classList.add('right'); later(() => { ding(880); say(`一樣的聲音，是${BELL_NOTES[ans][1]}`); }, 900); later(() => { if (++i < N) one(); else { tray.innerHTML = ''; finishFree(again); } }, 3200); }
+          else if (++wrong >= 2) { logErr(); nudge(tray.querySelector(`.bell[data-k="${ans}"]`)); }
+        }));
+        say('聽聽大鐘的聲音，下面哪一個一樣？'); later(() => bellRing(BELL_NOTES[ans][0]), 1800);
+      };
+      roundActive = true; one();
+    },
+    order: (stage, tray, again) => {
+      const L = lvOf('bells'), n = [3, 4, 5][L - 1], picks = [0, 2, 4, 5, 7].slice(0, n).sort((a, b) => a - b);
+      stage.innerHTML = `<div class="bells slots">${picks.map((_, i) => `<div class="bslot"><b>${i + 1}</b></div>`).join('')}</div>`;
+      const slots = [...stage.querySelectorAll('.bslot')];
+      tray.innerHTML = '';
+      const check = () => {
+        if (slots.some(s => !s.querySelector('.bell'))) return;
+        const got = slots.map(s => +s.querySelector('.bell').dataset.k);
+        if (got.every((k, i) => k === picks[i])) { slots.forEach((s, i) => later(() => { bellRing(BELL_NOTES[picks[i]][0]); s.classList.add('glow'); }, i * 450)); lvOk(); lvOk(); later(() => { say('由低到高，排好了'); finishFree(again); }, picks.length * 450 + 600); return; }
+        oops('聽一聽，再排排看'); slots.forEach((s, i) => { const b = s.querySelector('.bell'); if (+b.dataset.k !== picks[i]) later(() => tray.appendChild(b), 700); });
+      };
+      for (const k of shuffle(picks)) {
+        const b = document.createElement('div'); b.className = 'bell drag'; b.dataset.k = k; b.innerHTML = bellSVG(L === 1 ? BELL_NOTES[k][2] : '#B9AE9C'); tray.appendChild(b);
+        dragify(b, (x, y) => {
+          const s = hitAt(slots, x, y, 30); if (!s) return false;
+          const old = s.querySelector('.bell'); if (old && old !== b) tray.appendChild(old);
+          s.appendChild(b); bellRing(BELL_NOTES[k][0]); later(check, 300); return true;
+        }, () => bellRing(BELL_NOTES[k][0]));
+      }
+      roundActive = true; say('點一點聽聽看，把最低的放在第一個，一個比一個高');
+    },
+  } };
+  const startBells = () => modeGame(BELLS);
+
 
   // ---------- 12. 打字練習（螢幕大鍵盤＋外接鍵盤） ----------
   const KB_ROWS = { qwerty: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], abc: ['ABCDEFGHI', 'JKLMNOPQR', 'STUVWXYZ'] };
