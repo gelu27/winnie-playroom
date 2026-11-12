@@ -1715,13 +1715,16 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       p.innerHTML = pieceSVG(sh);
       tray.appendChild(p);
       const sym = SHAPE_SYM[sh.name] || 360;
-      let tries = 0, rot = lv === 3 && sym < 360 ? 90 : lv === 3 && sym === 360 && Math.random() < .7 ? [90, 180, 270][rnd(3)] : 0;
+      let turnMiss = 0, tries = 0, rot = lv === 3 && sym < 360 ? 90 : lv === 3 && sym === 360 && Math.random() < .7 ? [90, 180, 270][rnd(3)] : 0;
       if (lv === 3 && sym === 90) rot = 0;
       const turn = () => { p.firstElementChild.style.transform = `rotate(${rot}deg)`; };
       turn();
       dragify(p, (x, y) => {
         const h = hitAt(holes.filter(q => !q.dataset.done), x, y, 50);
-        if (h && h.dataset.n === sh.name && rot % sym !== 0) { oopsAt = 0; oops('方向不對，點一下轉一轉'); p.classList.remove('hop'); void p.offsetWidth; p.classList.add('hop'); return false; }
+        if (h && h.dataset.n === sh.name && rot % sym !== 0) {
+          // 方向不對第二次：小幫手幫忙轉好，避免卡關
+          if (++turnMiss >= 2) { rot = 0; p.firstElementChild.style.transition = 'transform .6s ease'; turn(); oopsAt = 0; oops('我幫你轉好了，再放一次'); return false; }
+          oopsAt = 0; oops('方向不對，點一下轉一轉'); p.classList.remove('hop'); void p.offsetWidth; p.classList.add('hop'); return false; }
         if (h && h.dataset.n === sh.name) {
           if (!tries) lvOk();
           h.dataset.done = '1'; h.innerHTML = holeSVG(sh) + pieceSVG(sh); h.classList.add('in'); p.remove();
@@ -3716,6 +3719,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       const loc = (e) => { const r = svg.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100]; };
       const follow = (e) => {
         const [x, y] = loc(e), P = strokes[si];
+        if (!P) return; // 已經描完了
         // 只往前走：手指靠近接下來幾個點就前進
         let moved = false;
         for (let k = idx; k < Math.min(P.length, idx + 6); k++) if (Math.hypot(P[k][0] - x, P[k][1] - y) < 9) { idx = k + 1; moved = true; }
@@ -4101,7 +4105,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       roundActive = true; say('點一點聽聽看，把最低的放在第一個，一個比一個高');
     },
   } };
-  const startBells = () => modeGame(BELLS);
+  const startBells = () => { modeGame(BELLS); if (!settings.sound) $('board').insertAdjacentHTML('afterbegin', '<div class="kbhello" style="font-size:22px">🔇 音感鐘要開聲音才聽得到（家長設定）</div>'); };
 
 
   // ---------- 12. 打字練習（螢幕大鍵盤＋外接鍵盤） ----------
