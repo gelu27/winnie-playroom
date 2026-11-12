@@ -125,6 +125,10 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
   width: 64px; height: 64px; border-radius: 50%; border: none; background: var(--panel);
   font-size: 30px; cursor: pointer; box-shadow: var(--lift);
 }
+.home { position: relative; touch-action: none; }
+.home::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 4px solid var(--wood); opacity: 0; transform: scale(.7); pointer-events: none; }
+.home.holding::after { opacity: 1; transform: scale(1); transition: transform .8s linear, opacity .2s; }
+.home.nudge { animation: hop .5s ease; }
 .skybox { width: 96px; height: 56px; border-radius: 16px; background: linear-gradient(var(--sky), color-mix(in srgb, var(--sky) 60%, var(--bg))); position: relative; overflow: hidden; box-shadow: var(--lift); }
 .skybox .s { position: absolute; left: 34px; width: 28px; height: 28px; border-radius: 50%; background: var(--sun); transition: top 1s linear, background 2s; }
 .skybox .hill { position: absolute; left: -10px; right: -10px; bottom: -22px; height: 36px; border-radius: 50%; background: var(--land); }
@@ -223,7 +227,7 @@ h1 { font-size: clamp(28px, 5vw, 44px); margin: 0; font-weight: 400; letter-spac
 /* 數一數、整理房間 */
 .baskets { display: flex; gap: clamp(16px, 4vw, 40px); justify-content: center; flex-wrap: wrap; width: 100%; }
 .basket { width: clamp(150px, 24vw, 230px); min-height: 190px; border-radius: 22px 22px 60px 60px; background: repeating-linear-gradient(90deg, transparent 0 18px, color-mix(in srgb, var(--ink) 6%, transparent) 18px 21px), color-mix(in srgb, var(--wood) 55%, var(--bg)); display: flex; flex-direction: column; align-items: center; padding: 12px; box-sizing: border-box; gap: 8px; transition: box-shadow .4s ease; box-shadow: var(--lift); }
-.basket .num { font-size: 54px; line-height: 1; border: none; background: none; cursor: pointer; font-family: inherit; color: var(--ink); }
+.basket .num { font-size: 54px; line-height: 1; border: none; background: none; cursor: pointer; font-family: inherit; color: var(--ink); min-width: 72px; min-height: 72px; border-radius: 50%; }
 .basket .in { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; font-size: 42px; }
 .basket.full { box-shadow: 0 0 0 5px var(--ok), var(--lift); }
 .item { font-size: 78px; line-height: 1; width: 106px; height: 106px; display: flex; align-items: center; justify-content: center; border-radius: 50%; touch-action: none; cursor: grab; position: relative; z-index: 10; flex: none; }
@@ -360,8 +364,9 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .act { border: none; border-radius: 16px; padding: 14px 20px; font-size: 20px; cursor: pointer; background: var(--wood); color: #FFF8EC; min-height: 56px; }
 .act.plain { background: var(--panel); color: var(--ink); }
 .q { font-size: 36px; text-align: center; font-variant-numeric: tabular-nums; }
-.answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .answers button { font-size: 28px; padding: 14px; border-radius: 16px; border: none; background: var(--panel); cursor: pointer; font-variant-numeric: tabular-nums; }
+.log { border-collapse: collapse; font-size: 16px; width: 100%; } .log th, .log td { padding: 6px 8px; border-bottom: 1px solid var(--panel); text-align: left; } .log th { color: var(--soft); font-weight: normal; }
 .wrong-note { color: var(--soft); text-align: center; min-height: 1.2em; margin: 0; }
 
 /* 直立：家矮一點、動物大一點 */
@@ -392,7 +397,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   .round-btn { width: 92px; height: 92px; font-size: 42px; }
   .item { width: 84px; height: 84px; font-size: 64px; }
   .item.big { width: 92px; height: 92px; font-size: 70px; }
-  .basket { min-height: 120px; } .basket .num { font-size: 40px; } .basket .in { font-size: 30px; }
+  .basket { min-height: 120px; } .basket .num { font-size: 40px; min-width: 56px; min-height: 56px; } .basket .in { font-size: 30px; }
   .room { padding: 8px; gap: 10px; }
   .spot { min-height: 96px; } .spot .label { font-size: 40px; padding: 0; } .spot .in { font-size: 30px; } .spot .mini { width: 38px; height: 38px; }
   .hole, .piece { width: min(14vw, 26vh); }
@@ -423,7 +428,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 #play .tray2 { flex-shrink: 0; }
 .qz .qmain { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: clamp(12px, 3vw, 30px); flex-wrap: wrap; }
 .seg { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.seg button { border: none; border-radius: 22px; background: var(--panel); padding: 10px 20px; font-size: 22px; box-shadow: var(--lift); cursor: pointer; min-height: 52px; }
+.seg button { border: none; border-radius: 22px; background: var(--panel); padding: 10px 22px; font-size: 22px; box-shadow: var(--lift); cursor: pointer; min-height: 64px; min-width: 64px; }
 .seg button.on { outline: 3px solid var(--wood); background: color-mix(in srgb, var(--sun) 25%, var(--panel)); }
 .prog { display: flex; gap: 10px; }
 .prog i { width: 16px; height: 16px; border-radius: 50%; background: var(--panel); box-shadow: var(--sink); transition: background .4s ease; }
@@ -472,6 +477,17 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .tl small { font-size: .5em; color: var(--soft); }
 .qopt.time { font-size: min(6vw, 7vh, 56px); white-space: nowrap; }
 .tbig { font-size: clamp(40px, 7vw, 76px); }
+/* 翻頁 */
+.paged { overflow: hidden !important; position: relative; padding-bottom: 84px !important; touch-action: manipulation !important; }
+.pager { position: absolute; left: 0; right: 0; bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 18px; }
+.pager .pg { width: 72px; height: 68px; border: none; border-radius: 22px; background: var(--panel); box-shadow: var(--lift); font-size: 30px; color: var(--wood); cursor: pointer; }
+.pager .pg[disabled] { opacity: .3; }
+.pager b { font-weight: 400; color: var(--soft); font-size: 18px; min-width: 64px; text-align: center; }
+@media (max-height: 500px) {
+  .paged { padding-bottom: 58px !important; }
+  .pager { bottom: 2px; } .pager .pg { width: 64px; height: 52px; font-size: 24px; }
+}
+.pager span { display: flex; gap: 8px; } .pager i { width: 12px; height: 12px; border-radius: 50%; background: var(--panel); box-shadow: var(--sink); } .pager i.on { background: var(--wood); }
 /* 5–7. 字母、50音、注音 */
 .glyphs { flex: 1; min-height: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; overflow-y: auto; touch-action: pan-y; padding: 4px; box-sizing: border-box; align-content: start; }
 .glyphs.abc { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
@@ -480,6 +496,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .glyph { aspect-ratio: 1.15; border: none; border-radius: 18px; background: var(--panel); font-size: 38px; box-shadow: var(--lift); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; gap: 2px; }
 .glyph small, .qopt small { font-size: .5em; color: var(--soft); }
 .glyph.on { outline: 3px solid var(--wood); }
+@media (max-height: 500px) { .glyph { aspect-ratio: 1.6; font-size: 28px; } .glyphs { gap: 6px; } }
 .gcard { display: flex; align-items: center; gap: clamp(12px, 3vw, 30px); }
 .gcard .g { font-size: clamp(54px, 9vw, 96px); display: flex; align-items: baseline; gap: 8px; line-height: 1; }
 .gcard .g small { font-size: .55em; color: var(--soft); }
@@ -491,7 +508,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .item.gl { font-size: 70px; background: var(--bg); box-shadow: var(--lift); }
 .gl-in { font-size: 60px; }
 /* 8. 九九乘法 */
-.seg.rows button { min-width: 56px; font-size: 26px; padding: 8px 12px; }
+.seg.rows button { min-width: 64px; min-height: 64px; font-size: 26px; padding: 8px 12px; }
 .mulcards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(560px, 100%); }
 .mulc { border: none; border-radius: 18px; background: var(--panel); box-shadow: var(--lift); font-size: clamp(22px, 3.4vw, 32px); padding: 10px 6px; cursor: pointer; font-family: inherit; }
 .mulc.on { outline: 3px solid var(--wood); }
@@ -514,7 +531,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .princess { height: 100%; max-height: 62vh; width: auto; aspect-ratio: 200 / 340; display: block; }
 .princess .glow { fill: none; stroke: #E8B86A; stroke-width: 6; opacity: .8; animation: breatheS 2.4s ease-in-out infinite; }
 @keyframes breatheS { 50% { opacity: .3; } }
-.ptabs button { font-size: 20px; padding: 8px 14px; min-height: 48px; }
+.ptabs button { font-size: 20px; padding: 8px 14px; min-height: 64px; }
 .pitems { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
 .pitem { width: 86px; height: 86px; border: none; border-radius: 22px; background: var(--bg); box-shadow: var(--lift); padding: 8px; box-sizing: border-box; cursor: pointer; font-size: 44px; display: flex; align-items: center; justify-content: center; }
 .pitem svg { width: 100%; height: 100%; }
@@ -538,12 +555,12 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .fc-list { font-size: 34px; letter-spacing: 2px; }
 .tile .txtpic { font-size: .82em; color: var(--wood); }
 @media (max-height: 520px) and (orientation: landscape) {
-  .seg button { min-height: 42px; padding: 6px 14px; font-size: 18px; }
+  .seg button { min-height: 52px; min-width: 52px; padding: 6px 14px; font-size: 18px; }
   .pitem { width: 64px; height: 64px; }
   .gcard .g { font-size: 44px; } .gcard .p { font-size: 40px; } .gcard .w { font-size: 22px; }
   .eq { font-size: 26px; } .addrow .ans, .op { font-size: 40px; } .grp { padding: 4px; } .plate { font-size: 26px; padding: 4px 12px; }
   .qz .stage, .board.qz { gap: 6px; }
-  .mulc { padding: 4px; font-size: 20px; } .mulcards { gap: 6px; } .seg.rows button { min-height: 36px; font-size: 20px; }
+  .mulc { padding: 4px; font-size: 20px; } .mulcards { gap: 6px; } .seg.rows button { min-height: 48px; min-width: 48px; font-size: 20px; }
 }
 @media (orientation: portrait) {
   .qopt { width: min(27vw, 22vh, 190px); }
@@ -552,7 +569,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 /* ===== 打字練習 ===== */
 .kbwrap { position: relative; flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .kbshow { position: relative; flex: 1; min-height: 0; width: 100%; padding-top: 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.kbswap { position: absolute; top: 0; right: 0; z-index: 2; border: none; border-radius: 18px; background: var(--panel); box-shadow: var(--lift); padding: 6px 14px; font-size: 15px; color: var(--soft); cursor: pointer; min-height: 40px; }
+.kbswap { position: absolute; top: 0; right: 0; z-index: 2; border: none; border-radius: 18px; background: var(--panel); box-shadow: var(--lift); padding: 6px 14px; font-size: 15px; color: var(--soft); cursor: pointer; min-height: 48px; }
 .kbtrail { min-height: 1.3em; font-size: clamp(24px, 4vh, 34px); letter-spacing: .18em; color: var(--soft); }
 .kbhello { font-size: clamp(30px, 6vh, 46px); text-align: center; line-height: 1.4; }
 .kbhello small { font-size: .45em; color: var(--soft); }
@@ -594,6 +611,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   .kbhello { font-size: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+/* 安靜模式：只留下一次性的小動畫，不要一直動的 */
+:root.calm *, :root.calm *::before, :root.calm *::after { animation-iteration-count: 1 !important; }
 </style>
 
 <div class="app" id="app">
@@ -697,7 +716,12 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   // 家長設定不再提供「用裝置語音」，之前選了的改回錄好的聲音（沒有錄音的句子程式仍會自動用裝置語音補）
   if (settings.rec === 'off' || settings.enRec === 'off') { if (settings.rec === 'off') settings.rec = 'A'; if (settings.enRec === 'off') settings.enRec = 'K'; saveSettings(); }
   const saveSession = () => save('wt_session', session);
-  const applyNight = () => document.documentElement.classList.toggle('night', !!settings.night);
+  const applyNight = () => {
+    if (settings.nightAuto) { const h = new Date().getHours(); settings.night = h >= 18 || h < 7; }
+    document.documentElement.classList.toggle('night', !!settings.night);
+    document.documentElement.classList.toggle('calm', !!settings.calm);
+  };
+  setInterval(() => { if (settings.nightAuto) applyNight(); }, 60000);
   applyNight();
 
   // ---------- 聲音 ----------
@@ -830,7 +854,23 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   let current = 'start', gen = 0;
   // 跟著畫面走的計時器：換畫面或開新的一局後就不執行
   const later = (fn, ms) => { const g = gen; return setTimeout(() => { if (g === gen) fn(); }, ms); };
+  // ---------- 學習紀錄（只存在這台 iPad，不上傳） ----------
+  const gameLog = load('wt_log', {});
+  let curGame = null, curStart = 0;
+  const logRec = (id) => (gameLog[id] = gameLog[id] || { p: 0, d: 0, e: 0, ms: 0, last: 0 });
+  const logStart = (id) => { logStop(); curGame = id; curStart = Date.now(); const r = logRec(id); r.p++; r.last = Date.now(); save('wt_log', gameLog); };
+  const logStop = () => { if (!curGame) return; logRec(curGame).ms += Math.min(Date.now() - curStart, 30 * 60000); curGame = null; save('wt_log', gameLog); };
+  const logDone = () => { if (curGame) { logRec(curGame).d++; save('wt_log', gameLog); } };
+  const logErr = () => { if (curGame) { logRec(curGame).e++; save('wt_log', gameLog); } };
+  // 放錯、答錯：一聲低低輕輕的聲音＋（隔一段時間才）溫和地說「嗯，再看看」，不責備
+  let oopsAt = 0;
+  const oops = (line) => {
+    logErr(); ding(300);
+    if (Date.now() - oopsAt > 10000) { oopsAt = Date.now(); setTimeout(() => say(line || '嗯，再看看'), 350); }
+  };
   const cheer = () => {
+    logDone();
+    if (settings.calm) return;
     const box = document.createElement('div'); box.className = 'cheer'; box.setAttribute('aria-hidden', 'true');
     for (let i = 0; i < 9; i++) {
       const s = document.createElement('i'); s.textContent = ['⭐', '🌟', '✨'][i % 3];
@@ -841,10 +881,31 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   };
   const show = (id) => {
     for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
+    if (id === 'menu' || id === 'rest' || id === 'start') logStop();
     current = id; gen++;
     const st = document.getElementById('subt'); if (st) st.classList.remove('on');
     try { bgmSync(); } catch {}
   };
+
+  // ---------- 翻頁（取代捲動：小手一滑就會點到東西） ----------
+  // box 是一格一格的 grid；放不下時只顯示一頁，下面有大大的 ◀ ▶
+  const pageify = (box, page = 0) => {
+    const kids = [...box.children].filter(k => !k.classList.contains('pager'));
+    box.querySelector(':scope > .pager')?.remove();
+    box.classList.add('paged'); kids.forEach(k => { k.style.display = ''; });
+    const H = box.clientHeight - (parseFloat(getComputedStyle(box).paddingBottom) || 84), top0 = kids[0] ? kids[0].offsetTop : 0;
+    let per = kids.filter(k => k.offsetTop - top0 + k.offsetHeight <= H).length;
+    if (!kids.length || per >= kids.length || box.clientHeight < 60) { box.classList.remove('paged'); return; }
+    per = Math.max(1, per);
+    const pages = Math.ceil(kids.length / per); page = Math.max(0, Math.min(page, pages - 1));
+    kids.forEach((k, i) => { k.style.display = Math.floor(i / per) === page ? '' : 'none'; });
+    const nav = document.createElement('div'); nav.className = 'pager';
+    nav.innerHTML = `<button class="pg" aria-label="上一頁"${page ? '' : ' disabled'}>◀</button>${pages > 8 ? `<b>${page + 1} / ${pages}</b>` : `<span>${[...Array(pages)].map((_, i) => `<i${i === page ? ' class="on"' : ''}></i>`).join('')}</span>`}<button class="pg" aria-label="下一頁"${page < pages - 1 ? '' : ' disabled'}>▶</button>`;
+    const [pv, nx] = nav.querySelectorAll('button');
+    pv.addEventListener('click', () => pageify(box, page - 1)); nx.addEventListener('click', () => pageify(box, page + 1));
+    box.appendChild(nav); box.dataset.page = page;
+  };
+  window.addEventListener('resize', () => { for (const b of document.querySelectorAll('.paged, .cards, .glyphs')) if (b.isConnected && b.offsetParent) pageify(b, +(b.dataset.page || 0)); });
 
   // 防止縮放與長按選單
   document.addEventListener('gesturestart', e => e.preventDefault());
@@ -855,7 +916,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     unlockAudio();
     if (inRest()) return enterRest(false);
     if (session && session.end > Date.now()) return goMenu(true);
-    showSetup();
+    openGate(showSetup);
   });
   const showSetup = () => {
     const box = $('setupChoices'); box.innerHTML = '';
@@ -900,29 +961,56 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     { id: 'princess', name: '兔兔公主', pic: '👑', ready: true },
     { id: 'fruit', name: '切水果', pic: '🍉', ready: true },
     { id: 'keys', name: '打字練習', pic: '⌨️', ready: true },
+    { id: 'safe', name: '身體小祕密', pic: '🛡️', ready: true },
   ];
+  // 選單預設只放 10 格（蒙特梭利：環境裡的教具少量、定期輪替）；家長設定可以打開其他的
+  const DEFAULT_TILES = ['animals', 'colors', 'shapes', 'count', 'tidy', 'dots', 'learn', 'sound', 'shadow', 'help'];
+  if (!settings.tiles) { settings.tiles = DEFAULT_TILES.slice(); saveSettings(); }
   const tilesBox = $('menuTiles');
   const TINTS = ['#C9DCE6', '#EED6C4', '#DCD3C2', '#F0D8D4', '#E2D6EA', '#D6E4CE', '#E8E0C8', '#D4E2E2'];
-  GAMES.forEach((g, gi) => {
-    const b = document.createElement('button');
-    b.className = 'tile' + (g.ready ? '' : ' locked'); b.style.setProperty('--tint', TINTS[gi % TINTS.length]);
-    b.innerHTML = `<span class="pic">${g.pic}</span><span>${g.name}</span>`;
-    let armed = false, armTimer;
-    b.addEventListener('click', () => {
-      if (!g.ready) { say([g.name, '還在準備中喔']); return; }
-      // 點一下唸名稱，再點一下進入
-      if (!armed) {
-        for (const t of tilesBox.querySelectorAll('.armed')) t.dispatchEvent(new Event('disarm'));
-        armed = true; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
-      }
-      disarm(); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys })[g.id]();
+  let menuTaps = [];
+  const renderMenu = () => {
+    tilesBox.innerHTML = '';
+    GAMES.filter(g => settings.tiles.includes(g.id)).forEach((g, gi) => {
+      const b = document.createElement('button');
+      b.className = 'tile' + (g.ready ? '' : ' locked'); b.style.setProperty('--tint', TINTS[GAMES.indexOf(g) % TINTS.length]);
+      b.dataset.g = g.id;
+      b.innerHTML = `<span class="pic">${g.pic}</span><span>${g.name}</span>`;
+      let armed = false, armedAt = 0, armTimer;
+      b.addEventListener('click', () => {
+        if (!g.ready) { say([g.name, '還在準備中喔']); return; }
+        // 亂按保護：1.5 秒內點了 4 下以上就不進入遊戲
+        const now = performance.now(); menuTaps = menuTaps.filter(t => now - t < 1500); menuTaps.push(now);
+        // 點一下唸名稱，隔一下再點才進入
+        if (!armed) {
+          for (const t of tilesBox.querySelectorAll('.armed')) t.dispatchEvent(new Event('disarm'));
+          armed = true; armedAt = now; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
+        }
+        if (now - armedAt < 450 || menuTaps.length > 3) return;
+        disarm(); logStart(g.id); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys, safe: startSafe })[g.id]();
+      });
+      const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
+      b.addEventListener('disarm', disarm);
+      tilesBox.appendChild(b);
     });
-    const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
-    b.addEventListener('disarm', disarm);
-    tilesBox.appendChild(b);
-  });
-  const goMenu = (greet) => { show('menu'); if (greet) say('想玩什麼呢？點一下聽聽看'); };
-  $('homeBtn').addEventListener('click', () => { roundActive = false; goMenu(false); maybeRest(); });
+  };
+  const goMenu = (greet) => { renderMenu(); show('menu'); if (greet) say('想玩什麼呢？點一下聽聽看'); };
+  // 遊戲中的房子鍵：要按住 0.8 秒才回選單，避免小手不小心碰到就離開；只點一下會跳一下並提醒
+  let holdHintAt = 0;
+  const holdHome = (el, fn) => {
+    let t = null, fired = false;
+    const cancel = () => { clearTimeout(t); t = null; el.classList.remove('holding'); };
+    el.addEventListener('pointerdown', (e) => { e.preventDefault(); fired = false; el.classList.add('holding'); clearTimeout(t); t = setTimeout(() => { fired = true; cancel(); fn(); }, 800); });
+    el.addEventListener('pointerup', () => {
+      if (t && !fired) {
+        cancel(); el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge');
+        if (Date.now() - holdHintAt > 8000) { holdHintAt = Date.now(); say('要回選單，請按住房子'); }
+      }
+    });
+    el.addEventListener('pointerleave', cancel); el.addEventListener('pointercancel', cancel);
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+  };
+  holdHome($('homeBtn'), () => { roundActive = false; goMenu(false); maybeRest(); });
 
   // ---------- 動物回家 ----------
   const ZONES = {
@@ -1106,7 +1194,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         later(nextAnimal, 1500);
       } else {
         el.classList.add('back'); el.style.transform = '';
-        if (z) { errors++; triesOnThis++; }
+        if (z) { errors++; triesOnThis++; oops(); }
         if (triesOnThis >= 2) {
           const right = document.querySelector(`.zone[data-z="${a.homes.find(h => zoneKeys.includes(h))}"]`);
           if (right) { right.classList.remove('hint-me'); void right.offsetWidth; right.classList.add('hint-me'); }
@@ -1179,7 +1267,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     $('toMenu2').addEventListener('click', () => { goMenu(false); maybeRest(); });
     maybeRest();
   };
-  $('homeBtn2').addEventListener('click', () => { roundActive = false; goMenu(false); maybeRest(); });
+  holdHome($('homeBtn2'), () => { sndTok++; roundActive = false; goMenu(false); maybeRest(); });
 
   // ---------- 顏色排排站 ----------
   const HUES = [
@@ -1227,7 +1315,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         sayName(hue.name, hue.en, `你把${hue.name}從深排到淺了`);
         return finishPlay('lvColors', 'stColors', errs, startColors);
       }
-      errs++;
+      errs++; oops('亮亮的是對的，其他的再排排看');
       slots.forEach(sl => { if (!wrong.includes(sl)) sl.classList.add('glow'); });
       later(() => wrong.forEach(sl => { const c = chipIn(sl); tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
     };
@@ -1243,7 +1331,14 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           if (old && old !== c) tray.appendChild(old);
           sl.appendChild(c); slots.forEach(q => q.classList.remove('glow'));
           c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop');
-          ding(600 + i * 60); later(check, 250); return true;
+          ding(600 + i * 60);
+          // 比較的語言：和左邊那一格比，深一點還是淺一點
+          const si = slots.indexOf(sl), prev = si > 0 && chipIn(slots[si - 1]);
+          if (slots.some(q => !chipIn(q))) {
+            if (prev) say(+prev.dataset.i < i ? '比較淺' : '比較深');
+            else if (si === 0 && i === 0) say('這是最深的');
+          }
+          later(check, 250); return true;
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
         return false;
@@ -1315,7 +1410,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           return true;
         }
         if (h) {
-          errs++; tries++;
+          errs++; tries++; oops();
           if (tries >= 2) { const right = holes.find(q => q.dataset.n === sh.name); right.classList.remove('hop'); void right.offsetWidth; right.classList.add('hop'); }
         }
         return false;
@@ -1356,7 +1451,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       dragify(it, (x, y) => {
         const b = hitAt(baskets, x, y, 40);
         if (!b) return false;
-        if (b.dataset.f !== pic || +b.dataset.c >= +b.dataset.t) { errs++; return false; }
+        if (b.dataset.f !== pic || +b.dataset.c >= +b.dataset.t) { errs++; if (+b.dataset.c >= +b.dataset.t) oopsAt = 0; oops(+b.dataset.c >= +b.dataset.t ? `已經${NUMS[+b.dataset.c]}個了` : undefined); return false; }
         const c = +b.dataset.c + 1; b.dataset.c = c;
         const s = document.createElement('span'); s.textContent = pic; b.querySelector('.in').appendChild(s);
         it.remove(); ding(520 + c * 70); sayName(NUMS[c], NUM_EN[c]);
@@ -1419,7 +1514,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           if (--left === 0) later(() => { board.classList.add('lit'); say('房間整理好了，好舒服'); finishPlay('lvTidy', 'stTidy', errs, startTidy); }, 1300);
           return true;
         }
-        if (sp) { errs++; if (++tries >= 2) { const r = spots.find(q => q.dataset.k === t.to); r.classList.remove('hint-me'); void r.offsetWidth; r.classList.add('hint-me'); } }
+        if (sp) { errs++; oops(); if (++tries >= 2) { const r = spots.find(q => q.dataset.k === t.to); r.classList.remove('hint-me'); void r.offsetWidth; r.classList.add('hint-me'); } }
         return false;
       }, () => sayName(t.name, t.en));
     }
@@ -1446,7 +1541,11 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   ];
   let dotsOrder = [];
   const startDots = () => {
-    if (!dotsOrder.length) dotsOrder = shuffle(OUTLINES);
+    // 先從點少的開始：前 4 次 6 點以內、再 6 次 8 點以內，之後全部
+    const done = settings.dotsDone || 0, cap = done < 4 ? 6 : done < 10 ? 8 : 99;
+    settings.dotsDone = done + 1; saveSettings();
+    dotsOrder = dotsOrder.filter(o => o.pts.length <= cap);
+    if (!dotsOrder.length) dotsOrder = shuffle(OUTLINES.filter(o => o.pts.length <= cap));
     const o = dotsOrder.shift();
     roundActive = true;
     const board = $('board'), tray = $('tray2');
@@ -1532,6 +1631,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       });
       box.appendChild(c);
     }
+    requestAnimationFrame(() => pageify(box));
   };
   const cats = $('cats');
   CATS.forEach((c, i) => {
@@ -1541,7 +1641,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     cats.appendChild(b);
   });
   const startLearn = () => { roundActive = false; showLearnCat(learnCat); show('learn'); say('點一下，聽聽看它叫什麼'); };
-  $('homeBtn3').addEventListener('click', () => { goMenu(false); maybeRest(); });
+  holdHome($('homeBtn3'), () => { goMenu(false); maybeRest(); });
 
   // ---------- 共用：沒有關卡的結束畫面、提示、拖到對的位置 ----------
   const finishFree = (again) => {
@@ -1573,7 +1673,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           if (--left === 0) later(() => onDone(errs), 1300);
           return true;
         }
-        if (g) { errs++; if (++tries >= 2) { const r = targets.find(q => q.k === t.k && !q.done); if (r) nudge(r.el); } }
+        if (g) { errs++; oops(); if (++tries >= 2) { const r = targets.find(q => q.k === t.k && !q.done); if (r) nudge(r.el); } }
         return false;
       }, () => sayName(t.name, t.en));
     }
@@ -1898,7 +1998,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           setTimeout(() => { if (tok !== sndTok || current !== 'play') return; roundActive = false; if (!maybeRest()) nextSound(false); }, 3000);
         } else {
           b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop');
-          if (++tries >= 2) nudge(right);
+          logErr(); if (++tries >= 2) nudge(right);
           later(play, 500);
         }
       });
@@ -1908,7 +2008,6 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     if (first) { say('聽聽看，是誰的聲音？'); later(play, 2200); }
     else later(play, 500);
   };
-  $('homeBtn2').addEventListener('click', () => { sndTok++; });
 
   // ---------- 大小排排站（像粉紅塔，由大排到小） ----------
   const SIZE_SETS = [{ name: '粉紅塔', en: 'Pink tower', pic: '' }, { name: '小熊', en: 'Bear', pic: '🐻' }, { name: '星星', en: 'Star', pic: '⭐' }, { name: '蘋果', en: 'Apple', pic: '🍎' }, { name: '小魚', en: 'Fish', pic: '🐟' }, { name: '花', en: 'Flower', pic: '🌸' }, { name: '汽車', en: 'Car', pic: '🚗' }, { name: '樹', en: 'Tree', pic: '🌳' }, { name: '氣球', en: 'Balloon', pic: '🎈' }, { name: '房子', en: 'House', pic: '🏠' }, { name: '愛心', en: 'Heart', pic: '❤️' }, { name: '小貓', en: 'Kitten', pic: '🐱' }, { name: '草莓', en: 'Strawberry', pic: '🍓' }, { name: '大象', en: 'Elephant', pic: '🐘' }];
@@ -1917,7 +2016,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   const startSize = () => {
     let si; do { si = Math.floor(Math.random() * SIZE_SETS.length); } while (si === lastSize); lastSize = si;
     const set = SIZE_SETS[si];
-    sizeUp = !sizeUp; // false＝大排到小，true＝小排到大
+    sizeUp = false; // 先固定由大排到小（和粉紅塔一樣），不要每回合換方向
     roundActive = true;
     const board = $('board'), tray = $('tray2');
     board.className = 'board sizes'; board.innerHTML = ''; tray.innerHTML = '';
@@ -1930,6 +2029,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         say(sizeUp ? '從小排到大，排好了' : '從大排到小，排好了');
         return finishFree(startSize);
       }
+      oops('亮亮的是對的，其他的再排排看');
       slots.forEach(sl => { if (!wrong.includes(sl)) sl.classList.add('glow'); });
       later(() => wrong.forEach(sl => { const c = sl.firstChild; tray.appendChild(c); c.classList.add('hop'); setTimeout(() => c.classList.remove('hop'), 700); }), 700);
     };
@@ -1942,7 +2042,13 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         if (sl) {
           if (sl.firstChild && sl.firstChild !== c) tray.appendChild(sl.firstChild);
           sl.appendChild(c); slots.forEach(q => q.classList.remove('glow'));
-          ding(950 - i * 90); later(check, 250); return true;
+          ding(950 - i * 90);
+          const si = slots.indexOf(sl), prev = si > 0 && slots[si - 1].firstChild;
+          if (slots.some(q => !q.firstChild)) {
+            if (prev) say(+prev.dataset.i < i ? '比較小' : '比較大');
+            else if (si === 0 && i === 0) say('這是最大的');
+          }
+          later(check, 250); return true;
         }
         if (hitAt([tray], x, y, 10)) { tray.appendChild(c); return true; }
         return false;
@@ -2166,7 +2272,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   // ---------- 拼圖（大塊動物拼圖，4 片和 6 片輪流） ----------
   const PUZ = [['兔子','🐰','Rabbit','#E9DCC6'],['貓熊','🐼','Panda','#D6E2D0'],['獅子','🦁','Lion','#EFD9B4'],['小狗','🐶','Puppy','#DCE3EA'],['小貓','🐱','Kitten','#EADFD0'],['青蛙','🐸','Frog','#D8E6CF'],['老虎','🐯','Tiger','#EFE0C4'],['無尾熊','🐨','Koala','#E0E2E6'],['小豬','🐷','Piglet','#F0DCD8'],['狐狸','🦊','Fox','#E3E7D4'],['倉鼠','🐹','Hamster','#EDE0CC'],['熊','🐻','Bear','#E2E6D8'],['乳牛','🐮','Cow','#E4E8DC'],['猴子','🐵','Monkey','#EEE2CC'],['獨角獸','🦄','Unicorn','#ECDDE6'],['小雞','🐥','Chick','#E2E8D8'],['企鵝','🐧','Penguin','#DCE6EC'],['貓頭鷹','🦉','Owl','#E8E0CE'],['章魚','🐙','Octopus','#DCE6EC'],['鯨魚','🐳','Whale','#D8E4EC'],['蝴蝶','🦋','Butterfly','#E6E8D6'],['恐龍','🦖','Dinosaur','#E6E4D0'],['烏龜','🐢','Turtle','#DCE8DC'],['小馬','🐴','Pony','#ECE2D2']];
   let puzBag = [], puzN = -1;
-  const PUZ_SIZES = [[2, 2], [3, 2], [2, 2], [3, 2], [3, 3]];
+  const PUZ_SIZES = [[2, 2], [3, 2], [2, 2], [3, 2]]; // 9 片對 3 歲偏難，先拿掉
   const puzImage = (pic, bg, cols, rows) => {
     const u = 220, cv = document.createElement('canvas'); cv.width = cols * u; cv.height = rows * u;
     const x = cv.getContext('2d'), W = cv.width, H = cv.height;
@@ -2191,7 +2297,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     for (let i = 0; i < cols * rows; i++) { const c = document.createElement('div'); c.className = 'pcell'; puz.appendChild(c); targets.push({ el: c, k: i, single: true }); }
     dragMatch(targets, targets.map((_, i) => ({ k: i, name, en, pic: '', cls: 'ppiece', style: art(i) })), {
       margin: 40,
-      put: (t, g) => { g.el.style.cssText = art(t.k); g.el.classList.add('done'); },
+      put: (t, g) => { g.el.style.cssText = art(t.k); g.el.classList.add('done'); if (targets.filter(q => !q.done).length === 1) say('還差一片'); },
       onDone: () => { puz.classList.add('whole'); sayName(name, en, `是${name}`); finishFree(startPuzzle); },
     });
     show('play');
@@ -2246,8 +2352,15 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   // 兩個不一樣、而且不是答案的數字選項
   const numOpts = (ans, cands) => shuffle([ans, ...shuffle([...new Set(cands)].filter(v => v > 0 && v !== ans)).slice(0, 2)]);
   // 用裝置語音唸指定語言（英文字母、日文）：parts = [[文字, 語言], ...]
+  // 先找錄好的聲音（中文＝目前的姐姐，英文＝英語老師）；每一段都有錄音才播錄音，不然整句改用裝置語音
+  // parts 第三個值 'opt' 表示選用段落（例如字母的發音），沒錄音就略過
+  const zFile = (p) => { const dir = recDir(), f = clips.zh[p] || ((clips.zhv || {})[settings.rec] || {})[p]; return dir && f ? dir + f : null; };
   const sayLang = (parts) => {
-    if (!settings.sound || !('speechSynthesis' in window)) return;
+    if (!settings.sound) return;
+    const files = parts.map(([t, lang, opt]) => { const f = lang === 'zh-TW' ? zFile(t) : lang.startsWith('en') ? enFile(t) : null; return f || (opt ? '' : null); });
+    if (files.every(f => f !== null) && files.some(Boolean)) { try { speechSynthesis.cancel(); } catch {} playSeq(files.filter(Boolean)); return; }
+    parts = parts.filter(p => !p[2]);
+    if (!('speechSynthesis' in window)) return;
     playToken++; player.pause();
     try { speechSynthesis.cancel(); } catch {}
     setTimeout(() => {
@@ -2289,7 +2402,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         b.addEventListener('click', () => {
           if (done) return;
           if (k === q.ok) return win(b);
-          b.classList.remove('nope'); void b.offsetWidth; b.classList.add('nope'); ding(330);
+          b.classList.remove('nope'); void b.offsetWidth; b.classList.add('nope'); oops();
           if (++wrong >= 2) nudge(tray.children[q.ok]);
         });
         tray.appendChild(b);
@@ -2368,6 +2481,9 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     { name: '氣球', en: 'Balloon', pic: '🎈', pts: [[50,8],[70,14],[80,32],[76,52],[58,70],[54,94],[46,94],[42,70],[24,52],[20,32],[30,14]] },
     { name: '蘋果', en: 'Apple', pic: '🍎', pts: [[50,24],[58,6],[56,24],[74,20],[88,36],[86,62],[72,86],[50,82],[28,86],[14,62],[12,36],[30,20]] },
     { name: '汽車', en: 'Car', pic: '🚗', pts: [[8,74],[10,54],[28,50],[38,30],[66,30],[78,50],[92,54],[92,74]] },
+    { name: '鑽石', en: 'Diamond', pic: '💎', pts: [[30,22],[70,22],[90,42],[50,88],[10,42]] },
+    { name: '帳篷', en: 'Tent', pic: '⛺', pts: [[50,12],[90,84],[60,84],[50,62],[40,84],[10,84]] },
+    { name: '小房子', en: 'House', pic: '🏡', pts: [[50,12],[88,44],[80,88],[20,88],[12,44]] },
     { name: '蛋糕', en: 'Cake', pic: '🎂', pts: [[18,90],[18,50],[46,50],[46,30],[50,16],[54,30],[54,50],[82,50],[82,90]] },
   );
   dotsOrder = [];
@@ -2439,6 +2555,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       const it = G.items[+b.dataset.k]; tray.innerHTML = `<div class="gcard pop">${G.card(it)}</div>`; G.speak(it);
     }));
     tray.innerHTML = `<div class="gcard">${G.card(G.items[0])}</div>`;
+    requestAnimationFrame(() => pageify(stage.querySelector('.glyphs')));
     say('點一個字，聽聽看怎麼唸');
   };
   const glyphFind = (G) => (stage, tray, again) => {
@@ -2462,7 +2579,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     .split(';').map((s, k) => { const [word, pic, zh] = s.split(','), L = String.fromCharCode(65 + k); return { L, l: L.toLowerCase(), g: `${L}<small>${L.toLowerCase()}</small>`, word, pic, zh }; });
   const abcName = (it) => ABC_NAME[it.L] || it.L;
   const ABC_G = { items: ABC_ITEMS, cls: 'abc', card: gCard,
-    speak: (it) => sayLang([[abcName(it), 'en-US'], [`${abcName(it)}, ${it.word}`, 'en-US'], [it.zh, 'zh-TW']]),
+    // 先唸字母，再唸它的發音（例如 A 的 /æ/），再唸單字和中文
+    speak: (it) => sayLang([[abcName(it), 'en-US'], ['/' + it.L + '/', 'en-US', 'opt'], [it.word, 'en-US'], [it.zh, 'zh-TW']]),
     ask: (it) => sayLang([[abcName(it), 'en-US']]) };
   const ABC = { modes: [['browse', '📖 認一認'], ['find', '👂 找一找'], ['match', '🔗 大小寫']], run: {
     browse: glyphBrowse(ABC_G), find: glyphFind(ABC_G),
@@ -2534,7 +2652,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   // ---------- 9. 看圖加法 ----------
   const ADD_THINGS = [{ pic: '🍎', name: '蘋果', u: '顆' }, { pic: '🍓', name: '草莓', u: '顆' }, { pic: '🍌', name: '香蕉', u: '根' }, { pic: '🐥', name: '小雞', u: '隻' }, { pic: '⭐', name: '星星', u: '顆' }, { pic: '🐟', name: '小魚', u: '條' }];
   const ADD = { modes: [['q', '']], run: { q: (stage, tray, again) => quizRun(stage, tray, 3, () => {
-    const a = 1 + rnd(4), b = 1 + rnd(4), s = a + b, f = ADD_THINGS[rnd(ADD_THINGS.length)];
+    const a = 1 + rnd(4), b = 1 + rnd(5 - a), s = a + b, f = ADD_THINGS[rnd(ADD_THINGS.length)]; // 合起來最多 5
     const grp = (n) => `<div class="grp">${`<button class="cnt">${f.pic}</button>`.repeat(n)}</div>`;
     const opts = numOpts(s, [s + 1, s - 1, s + 2, s - 2]);
     return {
@@ -2611,7 +2729,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     { t: '然後趕快走開，告訴爸爸媽媽。說出來的小朋友最勇敢', i: '🏃‍♀️ 👨‍👩‍👧' },
     { t: '洗澡、看醫生的時候，要有爸爸媽媽在旁邊喔', i: '🛁 🩺' },
   ];
-  const PRINCESS = { modes: [['dress', '👗 換裝'], ['safe', '🛡️ 身體小祕密']], run: {
+  const PRINCESS = { modes: [['dress', '👗 換裝']], run: {
     dress: (stage, tray) => {
       roundActive = false;
       stage.innerHTML = `<div class="pr-stage">${princessSVG()}</div>`;
@@ -2648,11 +2766,14 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     },
   } };
   const startPrincess = () => modeGame(PRINCESS);
+  // 身體小祕密：獨立一款，預設不在選單上，請家長打開並陪著一起看
+  const SAFE = { modes: [['safe', '']], run: { safe: (stage, tray, again) => { say('這一課，請爸爸媽媽陪著一起看'); later(() => PRINCESS.run.safe(stage, tray, again), 2600); } } };
+  const startSafe = () => modeGame(SAFE);
 
   // ---------- 11. 切水果 ----------
   const CUT_FRUITS = [['西瓜','🍉','Watermelon','#E8737E'],['蘋果','🍎','Apple','#F2E3B5'],['橘子','🍊','Orange','#F2A65A'],['檸檬','🍋','Lemon','#F3E08A'],['桃子','🍑','Peach','#F4B79A'],['鳳梨','🍍','Pineapple','#F3D36B'],['香蕉','🍌','Banana','#F5E7A8'],['奇異果','🥝','Kiwi','#9CC46A'],['草莓','🍓','Strawberry','#E8737E'],['葡萄','🍇','Grapes','#A98BC9'],['芒果','🥭','Mango','#F2B54A'],['梨子','🍐','Pear','#D8E3A0']];
   const CUT_GOAL = 10;
-  window.__NEW = { HALF_ITEMS, SOLIDS, ZHUYIN_ITEMS, PLATE, ADD_THINGS, P_ITEMS, P_TABS, SAFE_STEPS, CUT_FRUITS, OUTLINES, HR, LI, D9, chant: (a, b) => chant(a, b), cnNum: (n) => cnNum(n) };
+  window.__NEW = { ABC_ITEMS, HALF_ITEMS, SOLIDS, ZHUYIN_ITEMS, PLATE, ADD_THINGS, P_ITEMS, P_TABS, SAFE_STEPS, CUT_FRUITS, OUTLINES, HR, LI, D9, chant: (a, b) => chant(a, b), cnNum: (n) => cnNum(n) };
   const startFruit = () => {
     roundActive = true;
     const board = $('board'), tray = $('tray2');
@@ -2666,8 +2787,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       const w = area.clientWidth, h = area.clientHeight, [name, pic, en, c] = CUT_FRUITS[rnd(CUT_FRUITS.length)];
       const size = Math.min(w * .17, h * .24, 130), el = document.createElement('div');
       el.className = 'fruit'; el.textContent = pic; el.style.fontSize = size + 'px'; area.appendChild(el);
-      const x = w * (.18 + Math.random() * .64), peak = h * (.12 + Math.random() * .22), T = 1.5 + Math.random() * .4, G = 2 * (h + size / 2 - peak) / (T * T);
-      live.push({ el, name, en, pic, c, x, y: h + size / 2, vx: (w / 2 - x) * (.1 + Math.random() * .2), vy: -G * T, G, r: size * .5, size, rot: 0, vr: (Math.random() - .5) * 60 });
+      const x = w * (.18 + Math.random() * .64), peak = h * (.12 + Math.random() * .22), T = 2.5 + Math.random() * .5, G = 2 * (h + size / 2 - peak) / (T * T);
+      live.push({ el, name, en, pic, c, x, y: h + size / 2, vx: (w / 2 - x) * (.1 + Math.random() * .2), vy: -G * T, G, r: size * .5, size, rot: 0, vr: (Math.random() - .5) * 30 });
       spawned++; lastSpawn = now;
     };
     const place = (o) => { o.el.style.transform = `translate(${o.x - o.size / 2}px, ${o.y - o.size / 2}px) rotate(${o.rot}deg)`; };
@@ -2677,7 +2798,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         const el = document.createElement('div'); el.className = 'fruit fhalf ' + (side < 0 ? 'L' : 'R'); el.textContent = o.pic; el.style.fontSize = o.size + 'px'; area.appendChild(el);
         bits.push({ el, x: o.x + side * 6, y: o.y, vx: side * 90, vy: -120, G: o.G, size: o.size, rot: o.rot, vr: side * 90 });
       }
-      for (let k = 0; k < 7; k++) {
+      // 不再噴果汁（降低刺激）
+      for (let k = 0; k < 0; k++) {
         const el = document.createElement('div'); el.className = 'juice'; el.style.background = o.c; area.appendChild(el);
         const a = Math.random() * Math.PI * 2, v = 120 + Math.random() * 160;
         bits.push({ el, x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 80, G: o.G * .8, size: 14, rot: 0, vr: 0, fade: 1 });
@@ -2707,7 +2829,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     const frame = (now) => {
       if (g !== gen || !area.isConnected) return;
       const dt = Math.min(.05, lastT ? (now - lastT) / 1000 : 0); lastT = now;
-      if (!ended && live.length < 3 && now - lastSpawn > 1100) spawn(now);
+      if (!ended && live.length < 2 && now - lastSpawn > 1900) spawn(now);
       const h = area.clientHeight;
       for (const o of [...live, ...bits]) {
         o.vy += o.G * dt; o.x += o.vx * dt; o.y += o.vy * dt; o.rot += o.vr * dt;
@@ -2729,6 +2851,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   const KB_ROWS = { qwerty: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], abc: ['ABCDEFGHI', 'JKLMNOPQR', 'STUVWXYZ'] };
   const KB_WORDS = 'CAT,🐈,貓;DOG,🐕,狗;SUN,☀️,太陽;PIG,🐷,小豬;BUS,🚌,公車;CAR,🚗,車子;BEE,🐝,蜜蜂;COW,🐄,牛;EGG,🥚,蛋;HAT,🎩,帽子;FOX,🦊,狐狸;BED,🛏️,床;CUP,🥤,杯子;KEY,🔑,鑰匙;BAT,🦇,蝙蝠;ANT,🐜,螞蟻'
     .split(';').map(s => { const [w, pic, zh] = s.split(','); return { w, pic, zh, en: w.toLowerCase() }; });
+  window.__NEW.KB_WORDS = KB_WORDS;
   const KB_NAME = { w: 'WINNIE', pic: '👧', zh: '', en: 'Winnie', me: true };
   const KB_NOTES = [523, 587, 659, 784, 880, 1047, 1175];
   const KB_TINTS = ['#E9B4AC', '#AFCAD6', '#D6CB9C', '#C7B6DA', '#A9C9A4', '#EBCB8E'];
@@ -2790,7 +2913,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         f.style.left = (8 + Math.random() * 80) + '%'; f.style.background = KB_TINTS[n++ % KB_TINTS.length];
         show.appendChild(f); setTimeout(() => f.remove(), 2600);
         trail.textContent = (trail.textContent + L).slice(-14);
-        sayLang([[kbSay(L), 'en-US'], [it.word, 'en-US'], [it.zh, 'zh-TW']]);
+        sayLang([[kbSay(L), 'en-US'], ['/' + L + '/', 'en-US', 'opt'], [it.word, 'en-US'], [it.zh, 'zh-TW']]);
       });
       say('按按看鍵盤，會出現什麼字母呢');
     },
@@ -2811,7 +2934,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         const b = show.querySelector('.kbballoon'); b.classList.add('popped'); kbSpark(show);
         stage.querySelectorAll('.prog i')[i].classList.add('on');
         const cur = it;
-        later(() => { show.innerHTML = `<div class="gcard kbcard pop">${gCard(cur)}</div>`; sayLang([[kbSay(cur.L), 'en-US'], [`${kbSay(cur.L)}, ${cur.word}`, 'en-US'], [cur.zh, 'zh-TW']]); }, 450);
+        later(() => { show.innerHTML = `<div class="gcard kbcard pop">${gCard(cur)}</div>`; sayLang([[kbSay(cur.L), 'en-US'], ['/' + cur.L + '/', 'en-US', 'opt'], [cur.word, 'en-US'], [cur.zh, 'zh-TW']]); }, 450);
         later(() => {
           if (++i < N) next();
           else { kbPress = null; tray.innerHTML = ''; say('氣球都飛走了，好厲害'); finishFree(again); }
@@ -2848,8 +2971,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         busy = true; ding(1047); kbSpark(show);
         const pic = show.querySelector('.kbpic'); pic.classList.add('hop');
         stage.querySelectorAll('.prog i')[i].classList.add('on');
-        const spell = [...w.w].map(kbSay).join(', ');
-        sayLang(w.me ? [[spell, 'en-US'], ['Winnie!', 'en-US'], ['這是妳的名字喔', 'zh-TW']] : [[spell, 'en-US'], [w.en, 'en-US'], [w.zh, 'zh-TW']]);
+        const spell = [...w.w].map(L => [kbSay(L), 'en-US']);
+        sayLang(w.me ? [...spell, ['Winnie!', 'en-US'], ['這是妳的名字喔', 'zh-TW']] : [...spell, [w.en, 'en-US'], [w.zh, 'zh-TW']]);
         later(() => {
           if (++i < N) next();
           else { kbPress = null; tray.innerHTML = ''; say('單字都打好了，好厲害'); finishFree(again); }
@@ -2926,24 +3049,47 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   // ---------- 家長（長按三秒） ----------
   const pb = $('parentBtn'); let holdT = null;
   const cancelHold = () => { clearTimeout(holdT); pb.classList.remove('holding'); };
-  pb.addEventListener('pointerdown', () => { pb.classList.add('holding'); holdT = setTimeout(() => { cancelHold(); openGate(); }, 3000); });
+  pb.addEventListener('pointerdown', () => { pb.classList.add('holding'); holdT = setTimeout(() => { cancelHold(); openGate(openPanel); }, 3000); });
   pb.addEventListener('pointerup', cancelHold); pb.addEventListener('pointerleave', cancelHold); pb.addEventListener('pointercancel', cancelHold);
 
   const sheet = $('sheet');
   const close = () => { sheet.hidden = true; sheet.innerHTML = ''; };
-  const openGate = () => {
+  // 家長確認：答錯一次就關掉，要等一下才能再試（30 秒、60 秒、120 秒…），小孩亂點很難打開
+  let gateFails = load('wt_gate', { n: 0, until: 0 });
+  const openGate = (onOk) => {
+    const wait = Math.ceil((gateFails.until - Date.now()) / 1000);
+    if (wait > 0) {
+      sheet.innerHTML = `<div class="card"><h2>家長確認</h2><p class="hint">剛剛答錯了，請 ${wait} 秒後再試</p><button class="act plain" id="gx">關閉</button></div>`;
+      sheet.hidden = false; $('gx').addEventListener('click', close); return;
+    }
     const a = 11 + Math.floor(Math.random() * 30), b = 11 + Math.floor(Math.random() * 30), ans = a + b;
-    const opts = shuffle([ans, ans + 10, ans - 1, ans + 2]);
+    const opts = shuffle([ans, ans + 10, ans - 1, ans + 2, ans - 10, ans + 1]);
     sheet.innerHTML = `<div class="card"><h2>家長確認</h2><div class="q">${a} + ${b} = ?</div>
       <div class="answers">${opts.map(o => `<button data-v="${o}">${o}</button>`).join('')}</div>
       <p class="wrong-note" id="wn"></p><button class="act plain" id="gx">取消</button></div>`;
     sheet.hidden = false;
+    let used = false;
     sheet.querySelectorAll('.answers button').forEach(btn => btn.addEventListener('click', () => {
-      if (+btn.dataset.v === ans) openPanel(); else $('wn').textContent = '答案不對，再試一次';
+      if (used) return; used = true;
+      if (+btn.dataset.v === ans) { gateFails = { n: 0, until: 0 }; save('wt_gate', gateFails); close(); onOk(); return; }
+      gateFails.n++; gateFails.until = Date.now() + 30000 * Math.pow(2, Math.min(gateFails.n - 1, 4)); save('wt_gate', gateFails);
+      $('wn').textContent = `答案不對，${Math.round((gateFails.until - Date.now()) / 1000)} 秒後才能再試`;
+      setTimeout(close, 1800);
     }));
     $('gx').addEventListener('click', close);
   };
 
+  const showLog = () => {
+    const rows = GAMES.map(g => ({ g, r: gameLog[g.id] })).filter(x => x.r && x.r.p).sort((a, b) => b.r.last - a.r.last);
+    const fmt = (t) => { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()}`; };
+    const never = GAMES.filter(g => settings.tiles.includes(g.id) && !(gameLog[g.id] && gameLog[g.id].p)).map(g => g.name);
+    sheet.innerHTML = `<div class="card"><h2>學習紀錄</h2><p class="hint" style="text-align:left;font-size:15px">只存在這台裝置。放錯／答錯多不代表不好，可能是還在探索；連續幾次都很順，可以考慮打開下一款。</p>
+      ${rows.length ? `<table class="log"><tr><th>遊戲</th><th>玩</th><th>完成</th><th>放錯/答錯</th><th>共幾分鐘</th><th>最近</th></tr>${rows.map(({ g, r }) => `<tr><td>${g.name}</td><td>${r.p}</td><td>${r.d}</td><td>${r.e}</td><td>${Math.round(r.ms / 60000)}</td><td>${fmt(r.last)}</td></tr>`).join('')}</table>` : '<p>還沒有紀錄</p>'}
+      ${never.length ? `<p class="hint" style="text-align:left;font-size:15px">選單上還沒玩過：${never.join('、')}</p>` : ''}
+      <div class="row"><button class="act plain" id="lBack">返回</button><button class="act plain" id="lClear">清除紀錄</button></div></div>`;
+    $('lBack').addEventListener('click', openPanel);
+    $('lClear').addEventListener('click', () => { for (const k of Object.keys(gameLog)) delete gameLog[k]; save('wt_log', gameLog); showLog(); });
+  };
   const openPanel = () => {
     const pills = (key, vals, unit) => vals.map(v => `<button class="pill${settings[key] === v ? ' on' : ''}" data-k="${key}" data-v="${v}">${v}${unit}</button>`).join('');
     const left = session && session.end && !session.restEnd ? Math.max(0, Math.ceil((session.end - Date.now()) / 60000)) : null;
@@ -2959,7 +3105,10 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       <div class="row"><span>形狀難度</span>${pills('lvShapes', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>整理難度</span>${pills('lvTidy', [1, 2, 3], ' 級')}</div>
       <div class="row"><span>時鐘</span><button class="pill${!settings.clockHalf ? ' on' : ''}" data-k="clockHalf" data-v="0">只有整點</button><button class="pill${settings.clockHalf ? ' on' : ''}" data-k="clockHalf" data-v="1">加上半點</button></div>
-      <div class="row"><span>夜間模式</span><button class="pill${settings.night ? ' on' : ''}" data-k="night" data-v="1">開</button><button class="pill${!settings.night ? ' on' : ''}" data-k="night" data-v="0">關</button></div>
+      <div class="row"><span>夜間模式</span><button class="pill${settings.night && !settings.nightAuto ? ' on' : ''}" data-night="on">開</button><button class="pill${!settings.night && !settings.nightAuto ? ' on' : ''}" data-night="off">關</button><button class="pill${settings.nightAuto ? ' on' : ''}" data-night="auto">傍晚自動（18:00–7:00）</button></div>
+      <div class="row"><span>安靜模式</span><button class="pill${settings.calm ? ' on' : ''}" data-k="calm" data-v="1">開</button><button class="pill${!settings.calm ? ' on' : ''}" data-k="calm" data-v="0">關</button><small class="hint" style="font-size:14px">關掉星星雨和會一直動的動畫</small></div>
+      <div class="row tiles-row"><span>選單顯示</span>${GAMES.map(g => `<button class="pill${settings.tiles.includes(g.id) ? ' on' : ''}" data-tile="${g.id}">${g.name}</button>`).join('')}<small class="hint" style="font-size:14px">建議一次 8–10 格，每一兩週換幾格；「身體小祕密」請家長陪著看</small></div>
+      <div class="row"><button class="act plain" id="pLog">學習紀錄</button></div>
       <div class="row"><span>錄好的聲音</span>${clips.voices.map(v => `<button class="pill${settings.rec === v ? ' on' : ''}" data-rec="${v}">姐姐 ${v}</button>`).join('')}</div>
       <div class="row"><span>英文聲音</span>${clips.enVoices.map(v => `<button class="pill${enRecV() === v ? ' on' : ''}" data-enrec="${v}">${EN_LABEL[v] || v}</button>`).join('')}</div>
       <div class="row"><span>聲音</span><button class="pill${settings.sound ? ' on' : ''}" data-k="sound" data-v="1">開</button><button class="pill${!settings.sound ? ' on' : ''}" data-k="sound" data-v="0">關</button></div>
@@ -2978,9 +3127,19 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     sheet.querySelectorAll('.pill[data-mv]').forEach(p => p.addEventListener('click', () => {
       settings.musicVol = +p.dataset.mv; saveSettings(); openPanel();
     }));
+    sheet.querySelectorAll('.pill[data-tile]').forEach(p => p.addEventListener('click', () => {
+      const id = p.dataset.tile, i = settings.tiles.indexOf(id);
+      if (i >= 0) { if (settings.tiles.length > 1) settings.tiles.splice(i, 1); } else settings.tiles.push(id);
+      saveSettings(); renderMenu(); openPanel(); sheet.querySelector('.tiles-row').scrollIntoView({ block: 'center' });
+    }));
+    sheet.querySelectorAll('.pill[data-night]').forEach(p => p.addEventListener('click', () => {
+      const v = p.dataset.night; settings.nightAuto = v === 'auto'; if (v !== 'auto') settings.night = v === 'on';
+      saveSettings(); applyNight(); openPanel();
+    }));
+    $('pLog').addEventListener('click', showLog);
     sheet.querySelectorAll('.pill[data-k]').forEach(p => p.addEventListener('click', () => {
       const k = p.dataset.k; let v = k === 'voice' ? p.dataset.v : +p.dataset.v;
-      if (k === 'night' || k === 'sound') v = !!v;
+      if (k === 'night' || k === 'sound' || k === 'calm') v = !!v;
       settings[k] = v; if (k === 'level') settings.streak = 0; if (k.startsWith('lv')) settings['st' + k.slice(2)] = 0;
       saveSettings(); applyNight(); bgmSync(); openPanel();
     }));
