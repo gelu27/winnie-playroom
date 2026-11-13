@@ -1309,7 +1309,68 @@
   "White": "en689.mp3",
   "Wipe up": "en690.mp3",
   "Wipe your nose": "en691.mp3",
-  "Young chicken": "en692.mp3"
+  "Young chicken": "en692.mp3",
+  "T-shirt": "en693.mp3",
+  "High": "en694.mp3",
+  "Kenya": "en695.mp3",
+  "Jacket": "en696.mp3",
+  "Shoulder": "en697.mp3",
+  "Sandals": "en698.mp3",
+  "Twelve forty-five": "en699.mp3",
+  "Ears": "en700.mp3",
+  "Italy": "en701.mp3",
+  "N is for Nest": "en702.mp3",
+  "Hair": "en703.mp3",
+  "Knee": "en704.mp3",
+  "Mexico": "en705.mp3",
+  "S is for Sun": "en706.mp3",
+  "Eleven forty-five": "en707.mp3",
+  "Low": "en708.mp3",
+  "Eight forty-five": "en709.mp3",
+  "Quarter past twelve": "en710.mp3",
+  "Quarter past two": "en711.mp3",
+  "A is for Apple": "en712.mp3",
+  "B is for Ball": "en713.mp3",
+  "C is for Cat": "en714.mp3",
+  "D is for Dog": "en715.mp3",
+  "E is for Elephant": "en716.mp3",
+  "F is for Fish": "en717.mp3",
+  "G is for Grapes": "en718.mp3",
+  "H is for Hat": "en719.mp3",
+  "I is for Ice cream": "en720.mp3",
+  "J is for Juice": "en721.mp3",
+  "K is for Kite": "en722.mp3",
+  "L is for Lion": "en723.mp3",
+  "M is for Moon": "en724.mp3",
+  "O is for Orange": "en725.mp3",
+  "P is for Pig": "en726.mp3",
+  "Q is for Queen": "en727.mp3",
+  "R is for Rabbit": "en728.mp3",
+  "T is for Tiger": "en729.mp3",
+  "U is for Umbrella": "en730.mp3",
+  "V is for Violin": "en731.mp3",
+  "W is for Whale": "en732.mp3",
+  "Y is for Yo-yo": "en733.mp3",
+  "Z is for Zebra": "en734.mp3",
+  "One forty-five": "en735.mp3",
+  "Two forty-five": "en736.mp3",
+  "Three forty-five": "en737.mp3",
+  "Four forty-five": "en738.mp3",
+  "Five forty-five": "en739.mp3",
+  "Six forty-five": "en740.mp3",
+  "Seven forty-five": "en741.mp3",
+  "Nine forty-five": "en742.mp3",
+  "Ten forty-five": "en743.mp3",
+  "Quarter past one": "en744.mp3",
+  "Quarter past three": "en745.mp3",
+  "Quarter past four": "en746.mp3",
+  "Quarter past five": "en747.mp3",
+  "Quarter past six": "en748.mp3",
+  "Quarter past seven": "en749.mp3",
+  "Quarter past eight": "en750.mp3",
+  "Quarter past nine": "en751.mp3",
+  "Quarter past ten": "en752.mp3",
+  "Quarter past eleven": "en753.mp3"
  },
  "voices": [
   "A",
@@ -4091,6 +4152,250 @@
     "en692.mp3": [
      5642127,
      5421
+    ],
+    "en693.mp3": [
+     5647548,
+     4701
+    ],
+    "en694.mp3": [
+     5652249,
+     3117
+    ],
+    "en695.mp3": [
+     5655366,
+     3837
+    ],
+    "en696.mp3": [
+     5659203,
+     4269
+    ],
+    "en697.mp3": [
+     5663472,
+     4269
+    ],
+    "en698.mp3": [
+     5667741,
+     4845
+    ],
+    "en699.mp3": [
+     5672586,
+     7293
+    ],
+    "en700.mp3": [
+     5679879,
+     3981
+    ],
+    "en701.mp3": [
+     5683860,
+     3693
+    ],
+    "en702.mp3": [
+     5687553,
+     6573
+    ],
+    "en703.mp3": [
+     5694126,
+     3405
+    ],
+    "en704.mp3": [
+     5697531,
+     3261
+    ],
+    "en705.mp3": [
+     5700792,
+     4701
+    ],
+    "en706.mp3": [
+     5705493,
+     6285
+    ],
+    "en707.mp3": [
+     5711778,
+     7725
+    ],
+    "en708.mp3": [
+     5719503,
+     3261
+    ],
+    "en709.mp3": [
+     5722764,
+     6861
+    ],
+    "en710.mp3": [
+     5729625,
+     7581
+    ],
+    "en711.mp3": [
+     5737206,
+     7293
+    ],
+    "en712.mp3": [
+     5744499,
+     6285
+    ],
+    "en713.mp3": [
+     5750784,
+     6285
+    ],
+    "en714.mp3": [
+     5757069,
+     6429
+    ],
+    "en715.mp3": [
+     5763498,
+     6717
+    ],
+    "en716.mp3": [
+     5770215,
+     7581
+    ],
+    "en717.mp3": [
+     5777796,
+     6717
+    ],
+    "en718.mp3": [
+     5784513,
+     7005
+    ],
+    "en719.mp3": [
+     5791518,
+     6429
+    ],
+    "en720.mp3": [
+     5797947,
+     7581
+    ],
+    "en721.mp3": [
+     5805528,
+     6861
+    ],
+    "en722.mp3": [
+     5812389,
+     6429
+    ],
+    "en723.mp3": [
+     5818818,
+     6429
+    ],
+    "en724.mp3": [
+     5825247,
+     6141
+    ],
+    "en725.mp3": [
+     5831388,
+     7293
+    ],
+    "en726.mp3": [
+     5838681,
+     5853
+    ],
+    "en727.mp3": [
+     5844534,
+     7005
+    ],
+    "en728.mp3": [
+     5851539,
+     7005
+    ],
+    "en729.mp3": [
+     5858544,
+     7437
+    ],
+    "en730.mp3": [
+     5865981,
+     7437
+    ],
+    "en731.mp3": [
+     5873418,
+     7869
+    ],
+    "en732.mp3": [
+     5881287,
+     8157
+    ],
+    "en733.mp3": [
+     5889444,
+     7005
+    ],
+    "en734.mp3": [
+     5896449,
+     7293
+    ],
+    "en735.mp3": [
+     5903742,
+     7005
+    ],
+    "en736.mp3": [
+     5910747,
+     6573
+    ],
+    "en737.mp3": [
+     5917320,
+     7005
+    ],
+    "en738.mp3": [
+     5924325,
+     6717
+    ],
+    "en739.mp3": [
+     5931042,
+     7437
+    ],
+    "en740.mp3": [
+     5938479,
+     7005
+    ],
+    "en741.mp3": [
+     5945484,
+     7581
+    ],
+    "en742.mp3": [
+     5953065,
+     7149
+    ],
+    "en743.mp3": [
+     5960214,
+     6717
+    ],
+    "en744.mp3": [
+     5966931,
+     7149
+    ],
+    "en745.mp3": [
+     5974080,
+     7293
+    ],
+    "en746.mp3": [
+     5981373,
+     7005
+    ],
+    "en747.mp3": [
+     5988378,
+     7581
+    ],
+    "en748.mp3": [
+     5995959,
+     7437
+    ],
+    "en749.mp3": [
+     6003396,
+     7725
+    ],
+    "en750.mp3": [
+     6011121,
+     7149
+    ],
+    "en751.mp3": [
+     6018270,
+     7293
+    ],
+    "en752.mp3": [
+     6025563,
+     6861
+    ],
+    "en753.mp3": [
+     6032424,
+     8157
     ]
    }
   },

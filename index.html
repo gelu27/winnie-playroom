@@ -688,7 +688,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .kidbox.face .kidspot { width: 20%; font-size: min(7vw, 8vh, 70px); }
 .kidbox .kid { width: 100%; height: 100%; display: block; }
 .kidhits { position: absolute; inset: 0; }
-.kidhit { position: absolute; width: 12%; aspect-ratio: 1; transform: translate(-50%, -50%); border: none; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.kidhit { position: absolute; width: 12%; min-width: 44px; aspect-ratio: 1; transform: translate(-50%, -50%); border: none; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
 .kidhit.ok { background: color-mix(in srgb, var(--ok) 45%, transparent); } .kidhit.no { animation: nope .45s ease; }
 .kidhit.hint-me { box-shadow: 0 0 0 5px var(--ok); }
 .kidbox .prog { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); }
@@ -1091,7 +1091,8 @@ body:has(#bed:not([hidden])) { background: #12161F; }
   // 英文錄音：A＝姐姐 A 唸英文，K＝英語母語女聲；off 用裝置語音
   const EN_LABEL = { A: '姐姐 A', K: '英語老師' };
   const enRecV = () => settings.enRec === 'off' ? null : clips.enVoices.includes(settings.enRec) ? settings.enRec : clips.enVoices[0] || null;
-  const enFile = (en) => en && enRecV() && clips.en[en] ? `en/${enRecV()}/` + clips.en[en] : null;
+  const enKey = (en) => en && (clips.en[en] ? en : clips.en[en[0].toUpperCase() + en.slice(1)] ? en[0].toUpperCase() + en.slice(1) : null);
+  const enFile = (en) => { const k = enRecV() && enKey(en); return k ? `en/${enRecV()}/` + clips.en[k] : null; };
   // 聲音包：manifest.packs = { 'en/K': { file: 'en-K-pack.mp3', idx: { 'en001.mp3': [起點, 長度] } } }，（一個大 mp3）下載一次後切成小段播放
   // 只下載目前選用的聲音包（每包約 8MB），換聲音時再下載新的；還沒下載好之前先播單句檔
   const packData = {}, packWant = {};
@@ -3268,7 +3269,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     },
     // 開頭音：看圖聽單字，找出它的第一個字母（A is for Apple）
     first: (stage, tray, again) => {
-      const L = lvOf('abc'), pool = L === 1 ? ABC_ITEMS.slice(0, 10) : ABC_ITEMS; let bag = [];
+      const L = lvOf('abc'), pool = (L === 1 ? ABC_ITEMS.slice(0, 10) : ABC_ITEMS).filter(it => it.L !== 'X'); let bag = []; // X 的 Fox 是結尾音，不放開頭音
       quizRun(stage, tray, 3, () => {
         if (!bag.length) bag = shuffle(pool);
         const it = bag.pop(), opts = shuffle([it, ...others(pool, it, Math.min(L + 1, 4))]);
@@ -5101,7 +5102,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
           } else if (!warned && +pl.dataset.n === per) { warned = 1; say(`${LI[per]}${fu}了，換下一個朋友`); }
           return true;
         }, () => say(`把${fn}分給朋友，每個人一樣多`)));
-        say([`有${LI[total]}${fu}${fn}`, `分給${LI[nf]}個好朋友，每個人要一樣多喔`]);
+        say([`有${LI[total] || cnNum(total)}${fu}${fn}`, `分給${LI[nf]}個好朋友，每個人要一樣多喔`]);
       };
       roundActive = true; one();
     },
