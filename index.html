@@ -684,9 +684,11 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .pltools { display: flex; gap: 26px; justify-content: center; } .pltool { font-size: min(10vw, 12vh, 88px); touch-action: none; cursor: grab; padding: 10px 18px; border-radius: 22px; background: var(--bg); box-shadow: var(--lift); }
 /* 認識身體 */
 .kidbox { position: relative; height: min(62vh, 560px); aspect-ratio: 200 / 340; }
+.kidbox.face { aspect-ratio: 120 / 112; }
+.kidbox.face .kidspot { width: 20%; font-size: min(7vw, 8vh, 70px); }
 .kidbox .kid { width: 100%; height: 100%; display: block; }
 .kidhits { position: absolute; inset: 0; }
-.kidhit { position: absolute; width: 18%; aspect-ratio: 1; transform: translate(-50%, -50%); border: none; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
+.kidhit { position: absolute; width: 12%; aspect-ratio: 1; transform: translate(-50%, -50%); border: none; border-radius: 50%; background: transparent; cursor: pointer; padding: 0; }
 .kidhit.ok { background: color-mix(in srgb, var(--ok) 45%, transparent); } .kidhit.no { animation: nope .45s ease; }
 .kidhit.hint-me { box-shadow: 0 0 0 5px var(--ok); }
 .kidbox .prog { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); }
@@ -696,7 +698,8 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 /* 看天氣穿衣服 */
 .drbox { display: flex; gap: min(5vw, 50px); align-items: center; justify-content: center; width: 100%; }
 .drwin { width: min(26vw, 240px); aspect-ratio: 1; border-radius: 22px; box-shadow: inset 0 0 0 10px #C8A577, var(--lift); display: flex; align-items: center; justify-content: center; font-size: min(14vw, 130px); }
-.drkid { position: relative; height: min(58vh, 520px); aspect-ratio: .7; }
+.drkid { position: relative; height: min(60vh, 540px); aspect-ratio: 200 / 340; } .drkid .kid { width: 100%; height: 100%; } .drkid.hop { animation: hop .6s ease 2; }
+.drkid .drspot { width: 34%; }
 .drbun { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: min(30vh, 260px); line-height: 1; opacity: .9; } .drbun.hop { animation: hop .6s ease 2; }
 .drspot { position: absolute; width: 22%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 3px dashed #B9A58A; border-radius: 50%; background: rgba(255, 255, 255, .5); display: flex; align-items: center; justify-content: center; font-size: min(6vw, 7vh, 60px); z-index: 1; }
 .drspot.done { border-style: solid; border-color: var(--ok); }
@@ -3664,17 +3667,23 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     tw: [['台灣黑熊', BLACKBEAR, 'Formosan black bear', '台灣黑熊胸前有白色的 V 字', 'a'], ['台灣藍鵲', TW_BIRD, 'Taiwan blue magpie', '台灣藍鵲有長長的藍色尾巴', 'a'], ['梅花鹿', '🦌', 'Sika deer', '梅花鹿身上有白色的小點點', 'a'],
       ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['石虎', LCAT, 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
     as: [['貓熊', '🐼', 'Panda', '貓熊最喜歡吃竹子', 'a'], ['老虎', '🐯', 'Tiger', '老虎身上有黑色的條紋', 'a'], ['亞洲象', '🐘', 'Asian elephant', '大象用長長的鼻子喝水', 'a'], ['紅毛猩猩', '🦧', 'Orangutan', '紅毛猩猩住在樹上', 'a'],
-      ['富士山', '🗻', 'Mount Fuji', '富士山在日本，山頂有白白的雪', 'p'], ['聖母峰', '🏔️', 'Mount Everest', '聖母峰是世界上最高的山', 'p'], ['萬里長城', '🧱', 'Great Wall', '萬里長城是很長很長的城牆', 'p']],
+      ['富士山', '🗻', 'Mount Fuji', '富士山在日本，山頂有白白的雪', 'p'], ['聖母峰', '🏔️', 'Mount Everest', '聖母峰是世界上最高的山', 'p'], ['萬里長城', '🧱', 'Great Wall', '萬里長城是很長很長的城牆', 'p'],
+      ['日本', '🇯🇵', 'Japan', '日本有富士山，還有好吃的壽司', 'c'], ['韓國', '🇰🇷', 'Korea', '韓國有好吃的泡菜和石鍋拌飯', 'c'], ['印度', '🇮🇳', 'India', '印度有大象，還有漂亮的孔雀', 'c'], ['泰國', '🇹🇭', 'Thailand', '泰國有很多大象和漂亮的寺廟', 'c']],
     af: [['獅子', '🦁', 'Lion', '公獅子有大大的鬃毛', 'a'], ['長頸鹿', '🦒', 'Giraffe', '長頸鹿的脖子最長了', 'a'], ['斑馬', '🦓', 'Zebra', '斑馬身上是黑白條紋', 'a'], ['河馬', '🦛', 'Hippo', '河馬喜歡泡在水裡', 'a'],
-      ['金字塔', PYRAMID, 'Pyramids', '金字塔在埃及，是三角形的大石頭房子', 'p'], ['尼羅河', '🏞️', 'Nile River', '尼羅河是世界上很長很長的河', 'p'], ['沙漠', '🏜️', 'Desert', '撒哈拉沙漠有好多好多沙子', 'p']],
+      ['金字塔', PYRAMID, 'Pyramids', '金字塔在埃及，是三角形的大石頭房子', 'p'], ['尼羅河', '🏞️', 'Nile River', '尼羅河是世界上很長很長的河', 'p'], ['沙漠', '🏜️', 'Desert', '撒哈拉沙漠有好多好多沙子', 'p'],
+      ['埃及', '🇪🇬', 'Egypt', '埃及有金字塔和駱駝', 'c'], ['肯亞', '🇰🇪', 'Kenya', '肯亞的大草原上有斑馬和長頸鹿', 'c'], ['南非', '🇿🇦', 'South Africa', '南非的海邊住著小企鵝', 'c']],
     eu: [['刺蝟', '🦔', 'Hedgehog', '刺蝟身上有很多小刺', 'a'], ['狐狸', '🦊', 'Fox', '狐狸有毛茸茸的大尾巴', 'a'], ['天鵝', '🦢', 'Swan', '白天鵝在湖上游泳', 'a'],
-      ['艾菲爾鐵塔', '🗼', 'Eiffel Tower', '艾菲爾鐵塔在法國', 'p'], ['風車', ICON.windmill, 'Windmill', '荷蘭有很多風車', 'p'], ['城堡', '🏰', 'Castle', '歐洲有很多古老的城堡', 'p']],
+      ['艾菲爾鐵塔', '🗼', 'Eiffel Tower', '艾菲爾鐵塔在法國', 'p'], ['風車', ICON.windmill, 'Windmill', '荷蘭有很多風車', 'p'], ['城堡', '🏰', 'Castle', '歐洲有很多古老的城堡', 'p'],
+      ['法國', '🇫🇷', 'France', '法國有高高的艾菲爾鐵塔', 'c'], ['英國', '🇬🇧', 'United Kingdom', '英國有大大的時鐘，叫做大笨鐘', 'c'], ['義大利', '🇮🇹', 'Italy', '義大利有好吃的披薩和麵', 'c'], ['荷蘭', '🇳🇱', 'Netherlands', '荷蘭有風車和好多鬱金香', 'c']],
     na: [['白頭海鵰', '🦅', 'Bald eagle', '白頭海鵰的頭是白色的', 'a'], ['野牛', '🦬', 'Bison', '野牛又大又壯', 'a'], ['浣熊', '🦝', 'Raccoon', '浣熊的眼睛像戴了面具', 'a'], ['北極熊', '🐻‍❄️', 'Polar bear', '北極熊住在很冷的北邊', 'a'],
-      ['自由女神像', '🗽', 'Statue of Liberty', '自由女神像在美國', 'p'], ['大峽谷', '🏜️', 'Grand Canyon', '大峽谷是又大又深的山谷', 'p']],
+      ['自由女神像', '🗽', 'Statue of Liberty', '自由女神像在美國', 'p'], ['大峽谷', '🏜️', 'Grand Canyon', '大峽谷是又大又深的山谷', 'p'],
+      ['美國', '🇺🇸', 'United States', '美國有拿著火把的自由女神像', 'c'], ['加拿大', '🇨🇦', 'Canada', '加拿大的國旗上有一片紅紅的楓葉', 'c'], ['墨西哥', '🇲🇽', 'Mexico', '墨西哥有很多仙人掌', 'c']],
     sa: [['樹懶', '🦥', 'Sloth', '樹懶動作好慢好慢', 'a'], ['羊駝', '🦙', 'Alpaca', '羊駝的毛軟軟的', 'a'], ['鸚鵡', '🦜', 'Parrot', '鸚鵡的羽毛有好多顏色', 'a'], ['美洲豹', '🐆', 'Jaguar', '美洲豹身上有花花的斑點', 'a'],
-      ['亞馬遜河', '🏞️', 'Amazon River', '亞馬遜河旁邊有好大的雨林', 'p'], ['雨林', '🌳', 'Rainforest', '雨林裡有好多好多動物', 'p']],
+      ['亞馬遜河', '🏞️', 'Amazon River', '亞馬遜河旁邊有好大的雨林', 'p'], ['雨林', '🌳', 'Rainforest', '雨林裡有好多好多動物', 'p'],
+      ['巴西', '🇧🇷', 'Brazil', '巴西有很大很大的亞馬遜雨林', 'c'], ['秘魯', '🇵🇪', 'Peru', '秘魯的高山上住著羊駝', 'c'], ['阿根廷', '🇦🇷', 'Argentina', '阿根廷的南邊有企鵝和冰河', 'c']],
     oc: [['袋鼠', '🦘', 'Kangaroo', '袋鼠媽媽把寶寶放在口袋裡', 'a'], ['無尾熊', '🐨', 'Koala', '無尾熊抱著樹睡覺', 'a'], ['鴯鶓', EMU, 'Emu', '鴯鶓是很會跑的大鳥', 'a'],
-      ['大堡礁', '🪸', 'Great Barrier Reef', '大堡礁有好多漂亮的珊瑚', 'p'], ['雪梨歌劇院', '🎭', 'Sydney Opera House', '雪梨歌劇院的屋頂像貝殼', 'p']],
+      ['大堡礁', '🪸', 'Great Barrier Reef', '大堡礁有好多漂亮的珊瑚', 'p'], ['雪梨歌劇院', '🎭', 'Sydney Opera House', '雪梨歌劇院的屋頂像貝殼', 'p'],
+      ['澳洲', '🇦🇺', 'Australia', '澳洲有袋鼠和無尾熊', 'c'], ['紐西蘭', '🇳🇿', 'New Zealand', '紐西蘭有一種不會飛的鳥，叫做奇異鳥', 'c']],
     an: [['企鵝', '🐧', 'Penguin', '企鵝不會飛，可是很會游泳', 'a'], ['海豹', '🦭', 'Seal', '海豹在冰上睡覺', 'a'], ['鯨魚', '🐋', 'Whale', '鯨魚是很大很大的動物', 'a'],
       ['冰山', '🧊', 'Iceberg', '南極有很多冰山，冷冰冰的', 'p']],
   };
@@ -3692,7 +3701,18 @@ body:has(#bed:not([hidden])) { background: #12161F; }
   let worldAt = 'tw';
   const passport = () => (settings.passport = settings.passport || {});
   const stampRow = () => `<div class="stamps">${Object.keys(CONT).map(k => `<span class="stamp${passport()[k] ? ' on' : ''}" style="--c:${CONT[k].c}" title="${CONT[k].name}">${passport()[k] ? (PLACES[k].find(x => x[4] === 'a') || [])[1] || '⭐' : ''}</span>`).join('')}</div>`;
-  const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇']], run: {
+  const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇'], ['flag', '🏳️ 國旗']], run: {
+    // 國旗：聽國家的名字，找出它的國旗；答對後說一個小知識
+    flag: (stage, tray, again) => quizRun(stage, tray, 3, () => {
+      const L = lvOf('world'), all = Object.keys(PLACES).flatMap(k => PLACES[k].filter(x => x[4] === 'c').map(x => [...x, k]));
+      const it = all[rnd(all.length)], opts = shuffle([it, ...shuffle(all.filter(x => x !== it && (L >= 3 || x[5] !== it[5]))).slice(0, L === 4 ? 3 : 2)]);
+      return {
+        name: it[0], html: `<div class="bigpic">🌏</div>`, opts: opts.map(x => x[1]), ok: opts.indexOf(it),
+        ask: () => say(`${it[0]}的國旗是哪一個？`),
+        right: (st) => { st.querySelector('.bigpic').textContent = it[1]; sayName(it[0], it[2], [it[0], it[3]]); },
+        wait: 4200,
+      };
+    }, again),
     fly: (stage, tray, again) => {
       const L = lvOf('world'), TRIPS = L === 4 ? 4 : 3;
       let trip = 0, busy = false, mission = null, wrong = 0;
@@ -5171,9 +5191,9 @@ body:has(#bed:not([hidden])) { background: #12161F; }
   };
   // ---------- 認識身體與五官 ----------
   // 部位：[名字, 英文, x, y（在 200×340 的小朋友圖上）, 第幾級開始出現, 圖]
-  const BODY_PARTS = [['眼睛', 'Eyes', 100, 66, 1, '👀'], ['鼻子', 'Nose', 100, 80, 1, '👃'], ['嘴巴', 'Mouth', 100, 96, 1, '👄'], ['耳朵', 'Ears', 148, 74, 1, '👂'],
+  const BODY_PARTS = [['眼睛', 'Eyes', 100, 64, 1, '👀'], ['鼻子', 'Nose', 100, 82, 1, '👃'], ['嘴巴', 'Mouth', 100, 100, 1, '👄'], ['耳朵', 'Ears', 148, 74, 1, '👂'],
     ['頭髮', 'Hair', 100, 26, 2, '💇'], ['手', 'Hand', 32, 212, 2, '✋'], ['腳', 'Foot', 122, 324, 2, '🦶'], ['肚子', 'Tummy', 100, 186, 3, '🫃'],
-    ['膝蓋', 'Knee', 82, 268, 3, '🦵'], ['肩膀', 'Shoulder', 64, 132, 3, '🤷'], ['脖子', 'Neck', 100, 120, 4, '🧣'], ['手肘', 'Elbow', 44, 172, 4, '💪'], ['眉毛', 'Eyebrows', 84, 54, 4, '🤨']];
+    ['膝蓋', 'Knee', 82, 268, 3, '🦵'], ['肩膀', 'Shoulder', 64, 132, 3, '🤷'], ['脖子', 'Neck', 100, 120, 4, '🧣'], ['手肘', 'Elbow', 44, 172, 4, '💪'], ['眉毛', 'Eyebrows', 84, 50, 4, '🤨']];
   const KID_SVG = `<svg class="kid" viewBox="0 0 200 340" aria-hidden="true">
     <path d="M84 112h32v14H84z" fill="#F2CDB0"/>
     <path d="M62 128q38-12 76 0l6 96H56z" fill="#9DBBD0"/>
@@ -5215,11 +5235,13 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     },
     // 拼臉：把眼睛、鼻子、嘴巴、耳朵放到臉上
     face: (stage, tray, again) => {
-      stage.innerHTML = `<div class="kidbox face">${KID_SVG}</div>`;
+      // 只放大臉的部分（viewBox 40 16 120 112）
+      stage.innerHTML = `<div class="kidbox face">${KID_SVG.replace('viewBox="0 0 200 340"', 'viewBox="40 16 120 112"')}</div>`;
       const box = stage.firstChild; box.querySelectorAll('.kf').forEach(e => e.style.opacity = 0);
-      const parts = BODY_PARTS.slice(0, 4).concat(lvOf('body') >= 3 ? [BODY_PARTS[12]] : []);
-      const targets = parts.map(p => { const el = document.createElement('div'); el.className = 'kidspot'; el.style.cssText = `left:${p[2] / 2}%;top:${p[3] / 3.4}%`; box.appendChild(el); return { el, k: p[0], single: true }; });
-      dragMatch(targets, shuffle(parts).map(p => ({ k: p[0], name: p[0], en: p[1], pic: p[5], cls: 'item' })), {
+      const FP = [['眼睛', 'Eyes', 100, 64, '👀'], ['鼻子', 'Nose', 100, 82, '👃'], ['嘴巴', 'Mouth', 100, 100, '👄'], ['耳朵', 'Ear', 51, 76, '👂'], ['耳朵', 'Ear', 149, 76, '👂']];
+      const parts = lvOf('body') >= 3 ? FP : FP.slice(0, 4);
+      const targets = parts.map(p => { const el = document.createElement('div'); el.className = 'kidspot'; el.style.cssText = `left:${(p[2] - 40) / 1.2}%;top:${(p[3] - 16) / 1.12}%`; box.appendChild(el); return { el, k: p[0], single: true }; });
+      dragMatch(targets, shuffle(parts).map(p => ({ k: p[0], name: p[0], en: p[1], pic: p[4], cls: 'item' })), {
         margin: 34,
         put: (t, g) => { g.el.classList.add('done'); g.el.innerHTML = `<span class="pop">${t.pic}</span>`; sayName(t.name, t.en); if (t.k === '眼睛') box.querySelectorAll('.kf')[0].style.opacity = box.querySelectorAll('.kf')[1].style.opacity = 1; if (t.k === '鼻子') box.querySelectorAll('.kf')[2].style.opacity = 1; if (t.k === '嘴巴') box.querySelectorAll('.kf')[3].style.opacity = 1; },
         onDone: () => { say('臉拼好了，笑一個'); finishFree(again); },
@@ -5247,14 +5269,14 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     { k: 'cold', name: '冷冷的冬天', sky: '❄️', bg: '#E4EAF0', say: '今天好冷，風呼呼地吹', slots: [['neck', ['圍巾', '🧣', 'Scarf']], ['hand', ['手套', '🧤', 'Gloves']], ['body', ['外套', '🧥', 'Coat']], ['feet', ['靴子', '🥾', 'Boots']]] },
     { k: 'swim', name: '去海邊玩水', sky: '🏖️', bg: '#D4E8EE', say: '今天要去海邊玩水', slots: [['body', ['泳衣', '🩱', 'Swimsuit']], ['eyes', ['蛙鏡', '🥽', 'Goggles']], ['hand', ['游泳圈', '🛟', 'Swim ring']]] },
   ];
-  const DRESS_POS = { head: [50, 8], eyes: [50, 22], neck: [50, 34], body: [50, 52], hand: [16, 56], feet: [50, 88] };
+  const DRESS_POS = { head: [50, 8], eyes: [50, 19], neck: [50, 35], body: [50, 52], hand: [16, 63], feet: [50, 93] };
   let dressN = 0;
   const startDress = () => {
     const L = lvOf('dress'), W = DRESS_W[dressN++ % (L <= 2 ? 3 : DRESS_W.length)];
     const slots = W.slots.slice(0, L === 1 ? 2 : L === 2 ? 3 : 4);
     roundActive = true;
     const board = $('board'); board.className = 'board'; $('tray2').innerHTML = '';
-    board.innerHTML = `<div class="drbox"><div class="drwin" style="background:${W.bg}"><span>${W.sky}</span></div><div class="drkid"><span class="drbun">🐰</span></div></div>`;
+    board.innerHTML = `<div class="drbox"><div class="drwin" style="background:${W.bg}"><span>${W.sky}</span></div><div class="drkid">${KID_SVG}</div></div>`;
     const kid = board.querySelector('.drkid');
     const targets = slots.map(([pos]) => { const el = document.createElement('div'); el.className = 'drspot'; el.style.cssText = `left:${DRESS_POS[pos][0]}%;top:${DRESS_POS[pos][1]}%`; kid.appendChild(el); return { el, k: pos, single: true }; });
     // 不適合的東西（別的天氣用的）也放在盤子裡
@@ -5265,9 +5287,9 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     dragMatch(targets, items, {
       margin: 40,
       put: (t, g) => { g.el.innerHTML = `<span class="pop">${t.pic}</span>`; g.el.classList.add('done'); sayName(t.name, t.en, `${W.name}，${t.name}`); },
-      onDone: () => { $('tray2').innerHTML = ''; board.querySelector('.drbun').classList.add('hop'); say(['準備好了', '出門囉']); finishFree(startDress); },
+      onDone: () => { $('tray2').innerHTML = ''; board.querySelector('.drkid').classList.add('hop'); say(['準備好了', '出門囉']); finishFree(startDress); },
     });
-    show('play'); say([W.say, '幫小兔子穿上適合的衣服']);
+    show('play'); say([W.say, '幫小朋友穿上適合的衣服']);
   };
   // ---------- 唱歌律動（奧福）：聽節奏拍一樣的、跟著歌打拍子、快快慢慢 ----------
   // 節奏：1 = 一拍（ta），.5 = 半拍（ti）
