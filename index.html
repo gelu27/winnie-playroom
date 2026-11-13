@@ -707,6 +707,14 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .rhdrum { font-size: min(22vw, 28vh, 220px); border: none; background: var(--bg); border-radius: 50%; box-shadow: var(--lift); width: 1.4em; height: 1.4em; cursor: pointer; touch-action: manipulation; }
 .rhdrum.hit { animation: rhhit .18s ease; } @keyframes rhhit { 50% { transform: scale(.92); } }
 .rhstars { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 90vw; font-size: min(5vw, 6vh, 48px); font-style: normal; } .rhstars i { font-style: normal; color: #C9B48A; } .rhstars i.now { transform: scale(1.25); } .rhstars i.on { color: #D9B24C; }
+/* 台語小教室 */
+.tgwrap { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.tgcats { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.tggrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(130px, 22vw), 1fr)); gap: 12px; width: min(96vw, 1000px); }
+.tgcard { border: none; border-radius: 22px; background: var(--panel); box-shadow: var(--lift); padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--ink); }
+.tgcard .tp { font-size: min(8vw, 9vh, 64px); line-height: 1.1; } .tgcard b { font-size: clamp(18px, 2.4vw, 26px); }
+.tgcard.seen { box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 60%, transparent), var(--lift); } .tgcard.hop { animation: hop .5s ease; }
+.tgcard.big .tp { font-size: min(18vw, 22vh, 170px); } .tgcard.big b { font-size: 40px; }
 /* 睡前故事 */
 #bed { position: fixed; inset: 0; z-index: 20; background: #12161F; color: #CFC6B4; }
 body:has(#bed:not([hidden])) { background: #12161F; }
@@ -1364,6 +1372,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     { id: 'body', name: '認識身體', pic: '👀', ready: true },
     { id: 'dress', name: '看天氣穿衣服', pic: '🧥', ready: true },
     { id: 'rhythm', name: '唱歌律動', pic: '🥁', ready: true },
+    { id: 'taigi', name: '台語小教室', pic: '<span class="txtpic">台</span>', ready: true },
   ];
   // 選單預設只放 10 格（蒙特梭利：環境裡的教具少量、定期輪替）；家長設定可以打開其他的
   const DEFAULT_TILES = ['animals', 'colors', 'shapes', 'count', 'tidy', 'dots', 'learn', 'sound', 'shadow', 'help'];
@@ -1401,7 +1410,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
           armed = true; armedAt = now; b.classList.add('armed'); say(g.name); clearTimeout(armTimer); armTimer = setTimeout(disarm, 4000); return;
         }
         if (now - armedAt < 450 || menuTaps.length > 3) return;
-        disarm(); logStart(g.id); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys, safe: startSafe, world: startWorld, sandp: startSandp, spindle: startSpindle, grow: startGrow, memory: startMemory, pattern: startPattern, feel: startFeel, maze: startMaze, map: startMap, place: startPlace, bells: startBells, beads: startBeads, sleep: startBed, book: startBook, share: startShare, plant: startPlant, body: startBody, dress: startDress, rhythm: startRhythm })[g.id]();
+        disarm(); logStart(g.id); ({ animals: startAnimals, colors: startColors, shapes: startShapes, count: startCount, tidy: startTidy, dots: startDots, learn: startLearn, sound: startSound, size: startSize, shadow: startShadow, sort: startSort, help: startHelp, puzzle: startPuzzle, weather: startWeather, half: startHalf, net: startNet, clock: startClock, abc: startAbc, kana: startKana, zhuyin: startZhuyin, mul: startMul, add: startAdd, princess: startPrincess, fruit: startFruit, keys: startKeys, safe: startSafe, world: startWorld, sandp: startSandp, spindle: startSpindle, grow: startGrow, memory: startMemory, pattern: startPattern, feel: startFeel, maze: startMaze, map: startMap, place: startPlace, bells: startBells, beads: startBeads, sleep: startBed, book: startBook, share: startShare, plant: startPlant, body: startBody, dress: startDress, rhythm: startRhythm, taigi: startTaigi })[g.id]();
       });
       const disarm = () => { armed = false; b.classList.remove('armed'); clearTimeout(armTimer); };
       b.addEventListener('disarm', disarm);
@@ -5337,6 +5346,45 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     }, again),
   } };
   const startRhythm = () => { modeGame(RHYTHM); if (!settings.sound) $('board').insertAdjacentHTML('afterbegin', '<div class="kbhello" style="font-size:22px">🔇 律動遊戲要開聲音才聽得到（家長設定）</div>'); };
+  // ---------- 台語小教室：動物、數字、顏色、身體、家人、問好、食物、自然 ----------
+  // 台語發音用開源模型（facebook/mms-tts-nan，白話字輸入）產生；家長可在設定裡關掉。格式：分類,華語,台語字,圖
+  const TG_ITEMS = '動物,小狗,狗,🐶;動物,小貓,貓,🐱;動物,牛,牛,🐮;動物,小豬,豬,🐷;動物,雞,雞,🐔;動物,鴨子,鴨,🦆;動物,羊,羊,🐑;動物,魚,魚,🐟;動物,小鳥,鳥仔,🐦;動物,馬,馬,🐴;動物,兔子,兔仔,🐰;動物,老鼠,鳥鼠,🐭;動物,猴子,猴,🐵;動物,老虎,虎,🐯;動物,大象,象,🐘;動物,青蛙,水雞,🐸;動物,蝴蝶,尾蝶,🦋;動物,蜜蜂,蜜蜂,🐝;動物,烏龜,龜,🐢;動物,蛇,蛇,🐍;數字,一,一,1️⃣;數字,二,二,2️⃣;數字,三,三,3️⃣;數字,四,四,4️⃣;數字,五,五,5️⃣;數字,六,六,6️⃣;數字,七,七,7️⃣;數字,八,八,8️⃣;數字,九,九,9️⃣;數字,十,十,🔟;顏色,紅色,紅色,🔴;顏色,黃色,黃色,🟡;顏色,綠色,青色,🟢;顏色,藍色,藍色,🔵;顏色,白色,白色,⚪;顏色,黑色,烏色,⚫;顏色,粉紅色,粉紅色,🩷;身體,頭,頭,🙂;身體,眼睛,目睭,👀;身體,鼻子,鼻仔,👃;身體,嘴巴,喙,👄;身體,耳朵,耳仔,👂;身體,手,手,✋;身體,腳,跤,🦶;身體,肚子,腹肚,🫃;身體,頭髮,頭毛,💇;身體,牙齒,喙齒,🦷;家人,爺爺,阿公,👴;家人,奶奶,阿媽,👵;家人,爸爸,阿爸,👨;家人,媽媽,阿母,👩;家人,哥哥,阿兄,👦;家人,姊姊,阿姊,👧;家人,弟弟,小弟,🧒;家人,妹妹,小妹,👶;問好,你好,你好,👋;問好,謝謝,多謝,🙏;問好,早安,敖早,🌅;問好,再見,再會,👋;問好,對不起,歹勢,🙇;問好,吃飽了嗎,食飽未,🍚;問好,很好,真好,👍;問好,好漂亮,真媠,🌸;問好,好好吃,好食,😋;問好,不客氣,免客氣,😊;食物,飯,飯,🍚;食物,水,水,💧;食物,水果,果子,🍎;食物,西瓜,西瓜,🍉;食物,香蕉,芎蕉,🍌;食物,橘子,柑仔,🍊;食物,鳳梨,王梨,🍍;食物,芭樂,菝仔,🍐;食物,蛋,卵,🥚;食物,牛奶,牛奶,🥛;食物,麵,麵,🍜;食物,茶,茶,🍵;自然,太陽,日頭,☀️;自然,月亮,月娘,🌙;自然,星星,星,⭐;自然,下雨,落雨,🌧️;自然,風,風,🌬️;自然,山,山,⛰️;自然,海,海,🌊;自然,花,花,🌸;自然,樹,樹仔,🌳'.split(';').map((s, i) => { const [cat, zh, tg, pic] = s.split(','); return { i, cat, zh, tg, pic, f: 'tg/tg' + String(i + 1).padStart(3, '0') + '.mp3' }; });
+  const TG_CATS = [...new Set(TG_ITEMS.map(t => t.cat))];
+  const TG_ICON = { 動物: '🐶', 數字: '🔢', 顏色: '🎨', 身體: '👀', 家人: '👨‍👩‍👧', 問好: '👋', 食物: '🍚', 自然: '🌳' };
+  // 先用姐姐的聲音說華語，再播台語
+  const tgSay = (it, pre) => {
+    if (!settings.sound) return;
+    const dir = recDir(), zf = (p) => clips.zh[p] || ((clips.zhv || {})[settings.rec] || {})[p];
+    const parts = (pre || [it.zh, '台語叫做']).filter(Boolean);
+    if (dir && parts.every(zf)) { try { speechSynthesis.cancel(); } catch {} playSeq([...parts.map(p => dir + zf(p)), it.f]); return; }
+    say(parts); later(() => playSeq([it.f]), 1400 + parts.join('').length * 220);
+  };
+  let tgCat = 0;
+  const TAIGI = { modes: [['learn', '📖 聽一聽'], ['find', '👂 找一找']], run: {
+    learn: (stage, tray, again) => {
+      const cat = TG_CATS[tgCat % TG_CATS.length], list = TG_ITEMS.filter(t => t.cat === cat);
+      stage.innerHTML = `<div class="tgwrap"><div class="tgcats">${TG_CATS.map((c, k) => `<button class="pill${c === cat ? ' on' : ''}" data-k="${k}">${TG_ICON[c]} ${c}</button>`).join('')}</div><div class="tggrid">${list.map(t => `<button class="tgcard" data-i="${t.i}" aria-label="${t.zh}"><span class="tp">${t.pic}</span><b>${t.tg}</b></button>`).join('')}</div></div>`;
+      tray.innerHTML = '';
+      const seen = new Set();
+      stage.querySelectorAll('.tgcats button').forEach(b => b.addEventListener('click', () => { tgCat = +b.dataset.k; TAIGI.run.learn(stage, tray, again); }));
+      stage.querySelectorAll('.tgcard').forEach(b => b.addEventListener('click', () => {
+        const it = TG_ITEMS[+b.dataset.i]; b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop', 'seen'); tgSay(it);
+        seen.add(it.i); if (seen.size === Math.min(6, list.length)) { lvOk(); later(() => { say('學了好多台語，好厲害'); tgCat++; finishFree(again); }, 3600); }
+      }));
+      roundActive = true; say(`我們來學台語，${cat}`);
+    },
+    find: (stage, tray, again) => quizRun(stage, tray, 3, () => {
+      const L = lvOf('taigi'), pool = L <= 2 ? TG_ITEMS.filter(t => ['動物', '數字', '身體', '家人'].includes(t.cat)) : TG_ITEMS;
+      const it = pool[rnd(pool.length)], same = pool.filter(t => t.cat === it.cat && t !== it && t.pic !== it.pic), opts = shuffle([it, ...shuffle(same).slice(0, L === 4 ? 3 : 2)]);
+      return {
+        name: it.zh, html: `<button class="listen bigpic" aria-label="再聽一次">👂</button>`, opts: opts.map(o => o.pic), ok: opts.indexOf(it),
+        mount: (st) => st.querySelector('.listen').addEventListener('click', () => playSeq([it.f])),
+        ask: (i) => { if (i === 0) { say('聽台語，找一找是哪一個？'); later(() => playSeq([it.f]), 2600); } else playSeq([it.f]); },
+        right: (st) => { st.querySelector('.qmain').innerHTML = `<div class="tgcard big pop"><span class="tp">${it.pic}</span><b>${it.tg}</b></div>`; tgSay(it, [`對了，是${it.zh}`]); },
+      };
+    }, again),
+  } };
+  const startTaigi = () => modeGame(TAIGI);
   const startBells = () => { modeGame(BELLS); if (!settings.sound) $('board').insertAdjacentHTML('afterbegin', '<div class="kbhello" style="font-size:22px">🔇 音感鐘要開聲音才聽得到（家長設定）</div>'); };
 
 
