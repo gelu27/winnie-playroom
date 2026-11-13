@@ -2337,8 +2337,18 @@ body:has(#bed:not([hidden])) { background: #12161F; }
         ad(g, s, .35, .04, d, .12); v.start(s); v.stop(s + d + .2); }),
     };
   })();
+  // 真實動物叫聲（ESC-50 錄音集，K. J. Piczak，CC BY-NC 3.0）；家長設定可改回合成音效
+  const REAL_FX = { meow: 'cat', woof: 'dog', moo: 'cow', baa: 'sheep', ribbit: 'frog', oink: 'pig', crow: 'rooster', buzz: 'bee', hen: 'hen', caw: 'crow' };
+  const realFx = {};
   const playFx = (name) => {
     if (!settings.sound) return;
+    if (REAL_FX[name] && (settings.realFx !== false || !FX[name])) {
+      try {
+        const a = realFx[name] = realFx[name] || new Audio('sfx/' + REAL_FX[name] + '.mp3');
+        a.volume = settings.calm ? .35 : .8; a.currentTime = 0; a.play().catch(() => {}); return;
+      } catch {}
+    }
+    if (!FX[name]) return;
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume();
       const out = actx.createGain(); out.gain.value = settings.calm ? .25 : .55; out.connect(actx.destination);
@@ -2474,6 +2484,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
       { name: '青蛙', pic: '🐸', en: 'Frog', call: '呱呱叫', fx: 'ribbit' }, { name: '小豬', pic: '🐷', en: 'Piglet', fx: 'oink' },
       { name: '公雞', pic: '🐓', en: 'Rooster', call: '喔喔啼', fx: 'crow' }, { name: '貓頭鷹', pic: '🦉', en: 'Owl', call: '咕咕叫', fx: 'hoot' },
       { name: '蜜蜂', pic: '🐝', en: 'Bee', call: '嗡嗡叫', fx: 'buzz' },
+      { name: '母雞', pic: '🐔', en: 'Hen', call: '咯咯叫', fx: 'hen' }, { name: '烏鴉', pic: '🐦‍⬛', en: 'Crow', call: '嘎嘎叫', fx: 'caw' },
     ],
     music: [
       { name: '鼓', pic: '🥁', en: 'Drum', fx: 'drum' }, { name: '鈴鐺', pic: '🔔', en: 'Bell', fx: 'bell' }, { name: '鋼琴', pic: '🎹', en: 'Piano', fx: 'piano' },
@@ -5413,6 +5424,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
       <div class="row"><span>夜間模式</span><button class="pill${settings.night && !settings.nightAuto ? ' on' : ''}" data-night="on">開</button><button class="pill${!settings.night && !settings.nightAuto ? ' on' : ''}" data-night="off">關</button><button class="pill${settings.nightAuto ? ' on' : ''}" data-night="auto">傍晚自動（18:00–7:00）</button></div>
       <div class="row"><span>安靜模式</span><button class="pill${settings.calm ? ' on' : ''}" data-k="calm" data-v="1">開</button><button class="pill${!settings.calm ? ' on' : ''}" data-k="calm" data-v="0">關</button><small class="hint" style="font-size:14px">適合容易緊張或比較敏感的孩子：關掉星星雨和跳出來慶祝的小動物、動畫放慢、音效變小聲</small></div>
       <div class="row tiles-row"><span>選單顯示</span>${GAMES.map(g => `<button class="pill${settings.tiles.includes(g.id) ? ' on' : ''}" data-tile="${g.id}">${g.name}</button>`).join('')}<small class="hint" style="font-size:14px">建議一次 8–10 格，每一兩週換幾格；「身體小祕密」請家長陪著看</small></div>
+      <div class="row"><span>動物叫聲</span><button class="pill${settings.realFx !== false ? ' on' : ''}" data-rfx="1">真實錄音</button><button class="pill${settings.realFx === false ? ' on' : ''}" data-rfx="0">合成音效</button><small class="hint" style="font-size:14px">真實錄音來自 ESC-50 環境聲音資料集（K. J. Piczak，CC BY-NC 3.0，原始錄音來自 Freesound）</small></div>
       <div class="row"><span>睡前故事</span>${[[1, '一晚 1 個'], [2, '一晚 2 個']].map(([v, n]) => `<button class="pill${(settings.bedN || 1) === v ? ' on' : ''}" data-bedn="${v}">${n}</button>`).join('')}<small class="hint" style="font-size:14px">每個約 4–5 分鐘；講完說晚安，畫面變全黑</small></div>
       <div class="row"><span>選單輪換</span><button class="pill${settings.tileRotate ? ' on' : ''}" data-rot="1">每週自動換一組</button><button class="pill${!settings.tileRotate ? ' on' : ''}" data-rot="0">我自己選</button><button class="act plain" id="pTen">現在換一組 10 格</button><small class="hint" style="font-size:14px">自動換：留下最常玩的 5 款，再換 5 款比較久沒玩的</small></div>
       <div class="row"><button class="act plain" id="pLog">學習紀錄</button></div>
@@ -5444,6 +5456,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
       saveSettings(); applyNight(); openPanel();
     }));
     $('pLog').addEventListener('click', showLog);
+    sheet.querySelectorAll('.pill[data-rfx]').forEach(p => p.addEventListener('click', () => { settings.realFx = p.dataset.rfx === '1'; saveSettings(); unlockAudio(); playFx('woof'); openPanel(); }));
     sheet.querySelectorAll('.pill[data-bedn]').forEach(p => p.addEventListener('click', () => { settings.bedN = +p.dataset.bedn; saveSettings(); openPanel(); }));
     sheet.querySelectorAll('.pill[data-rot]').forEach(p => p.addEventListener('click', () => { settings.tileRotate = p.dataset.rot === '1'; saveSettings(); openPanel(); }));
     $('pTen').addEventListener('click', () => { rotateTiles(true); renderMenu(); openPanel(); sheet.querySelector('.tiles-row').scrollIntoView({ block: 'center' }); });
