@@ -824,6 +824,11 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .maze .mwho.bump { animation: nope .4s ease; transform-box: fill-box; transform-origin: center; }
 .mappuz .mapbase .msil.in { stroke-dasharray: none; }
 .spbox:has(.spcell:nth-child(10)) .spcell { width: clamp(48px, 8.4vw, 96px); }
+.pt.hopit { animation: hop .45s ease; }
+.spitem { width: 72px !important; margin-left: -36px !important; padding: 0 22px !important; }
+.mulc { min-height: 64px; }
+.abcm .spot .label, .spot .label { min-width: 64px; }
+.maze .mwho.hey { animation: hop .5s ease 2; transform-box: fill-box; transform-origin: center; }
 @media (prefers-reduced-motion: reduce) { .mcard { transition: none; } }
 </style>
 
@@ -3195,7 +3200,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       return {
         html: `<div class="addrow"><div class="grp">${Array.from({ length: a }, (_, k) => `<span class="cnt${k >= d ? ' eaten' : ''}">${f.pic}</span>`).join('')}</div><b class="op">🐰</b></div><div class="eq">${a} − ${b} = <b class="ans">?</b></div>`,
         opts: opts.map(String), ok: opts.indexOf(d), cls: 'txt',
-        ask: () => say([`本來有${LI[a]}${f.u}${f.name}`, `小兔子吃掉${LI[b]}${f.u}`, `還剩下幾${f.u}？`]),
+        ask: () => say([`本來有${LI[a]}${f.u}`, f.name, `小兔子吃掉${LI[b]}${f.u}`, `還剩下幾${f.u}？`]),
         right: (st) => { const x = st.querySelector('.ans'); x.textContent = d; x.classList.add('pop'); say(`還剩下${LI[d]}${f.u}`); },
         mount: (st) => later(() => st.querySelectorAll('.eaten').forEach((e, k) => setTimeout(() => e.classList.add('gone'), k * 400)), 900),
         wait: 3400,
@@ -3476,9 +3481,10 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
   const TW_BIRD = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M52 60 96 86 92 92 46 66z" fill="#2F5E9E"/><path d="M60 64 98 74 96 80 56 70z" fill="#F2F0EC"/><ellipse cx="44" cy="52" rx="26" ry="16" fill="#3B6DB0"/><circle cx="24" cy="38" r="14" fill="#2B2B33"/><path d="M10 38 0 42 10 44z" fill="#D9453A"/><circle cx="20" cy="35" r="3" fill="#F3DC8C"/><path d="M30 60l-4 16M40 62l2 16" stroke="#D9453A" stroke-width="3" stroke-linecap="round"/></svg>';
   const BLACKBEAR = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><circle cx="24" cy="22" r="12" fill="#2E2A28"/><circle cx="76" cy="22" r="12" fill="#2E2A28"/><circle cx="50" cy="50" r="38" fill="#3A3532"/><ellipse cx="50" cy="62" rx="16" ry="12" fill="#B79A78"/><ellipse cx="50" cy="56" rx="6" ry="4" fill="#2E2A28"/><circle cx="36" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="64" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="36" cy="40" r="2.5" fill="#2E2A28"/><circle cx="64" cy="40" r="2.5" fill="#2E2A28"/><path d="M30 86l20 10 20-10" stroke="#F4EFE6" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const PYRAMID = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 14 92 86H8z" fill="#E2C27A"/><path d="M50 14 92 86H58z" fill="#C9A45E"/><path d="M4 86h92" stroke="#C9A45E" stroke-width="4"/></svg>';
+  const GULL = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M8 44q22-18 42 4 20-22 42-4-20-4-34 16h-16q-14-20-34-16z" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3" stroke-linejoin="round"/><path d="M8 44q8-3 14-2M92 44q-8-3-14-2" stroke="#4A4642" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="56" rx="9" ry="12" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3"/><circle cx="50" cy="44" r="8" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3"/><circle cx="48" cy="42" r="1.8" fill="#2E2A28"/><path d="M54 45l9 2-9 2z" fill="#E8B84A"/></svg>', SEACUC = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M12 62q2-22 38-22t40 18q-2 16-40 16t-38-12z" fill="#8E6A55" stroke="#5E4434" stroke-width="3"/><circle cx="24" cy="52" r="3.2" fill="#B08A70"/><circle cx="36" cy="46" r="3.2" fill="#B08A70"/><circle cx="50" cy="44" r="3.2" fill="#B08A70"/><circle cx="64" cy="46" r="3.2" fill="#B08A70"/><circle cx="76" cy="52" r="3.2" fill="#B08A70"/><circle cx="30" cy="62" r="3.2" fill="#B08A70"/><circle cx="46" cy="58" r="3.2" fill="#B08A70"/><circle cx="60" cy="58" r="3.2" fill="#B08A70"/><circle cx="74" cy="62" r="3.2" fill="#B08A70"/><path d="M12 62l-6-4M12 62l-6 4M12 62h-8" stroke="#5E4434" stroke-width="2.5" stroke-linecap="round"/></svg>', LCAT = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M26 30l-4-20 16 12zM74 30l4-20-16 12z" fill="#C9A06A" stroke="#6E5A44" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="54" rx="32" ry="30" fill="#D9B27A" stroke="#6E5A44" stroke-width="3"/><ellipse cx="30" cy="40" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="70" cy="40" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="26" cy="60" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="74" cy="60" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="38" cy="74" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="62" cy="74" rx="3" ry="2.2" fill="#6E5034"/><path d="M40 30v-8M50 28v-10M60 30v-8" stroke="#6E5034" stroke-width="3" stroke-linecap="round"/><path d="M36 50q4-6 10 0M54 50q4-6 10 0" stroke="#2E2A28" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M36 50q5 6 10 0" fill="#9DBB6E"/><ellipse cx="50" cy="64" rx="12" ry="8" fill="#F4EEE2"/><path d="M47 60h6l-3 4z" fill="#C97A6E"/><path d="M30 64h-14M30 68l-12 4M70 64h14M70 68l12 4" stroke="#6E5A44" stroke-width="2" stroke-linecap="round"/></svg>', EMU = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M30 92l6-30M54 92l-2-30" stroke="#8E7A64" stroke-width="5" stroke-linecap="round"/><ellipse cx="44" cy="54" rx="26" ry="18" fill="#6E5A48" stroke="#4A3C30" stroke-width="3"/><path d="M62 46q8-8 6-26" stroke="#7E8EA8" stroke-width="9" fill="none" stroke-linecap="round"/><ellipse cx="70" cy="18" rx="9" ry="8" fill="#7E8EA8" stroke="#4A3C30" stroke-width="2.5"/><circle cx="72" cy="16" r="2" fill="#2E2A28"/><path d="M78 19l9 2-9 3z" fill="#3E342A"/></svg>';
   const PLACES = {
     tw: [['台灣黑熊', BLACKBEAR, 'Formosan black bear', '台灣黑熊胸前有白色的 V 字', 'a'], ['台灣藍鵲', TW_BIRD, 'Taiwan blue magpie', '台灣藍鵲有長長的藍色尾巴', 'a'], ['梅花鹿', '🦌', 'Sika deer', '梅花鹿身上有白色的小點點', 'a'],
-      ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['石虎', '🐈', 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
+      ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['石虎', LCAT, 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
     as: [['貓熊', '🐼', 'Panda', '貓熊最喜歡吃竹子', 'a'], ['老虎', '🐯', 'Tiger', '老虎身上有黑色的條紋', 'a'], ['亞洲象', '🐘', 'Asian elephant', '大象用長長的鼻子喝水', 'a'], ['紅毛猩猩', '🦧', 'Orangutan', '紅毛猩猩住在樹上', 'a'],
       ['富士山', '🗻', 'Mount Fuji', '富士山在日本，山頂有白白的雪', 'p'], ['聖母峰', '🏔️', 'Mount Everest', '聖母峰是世界上最高的山', 'p'], ['萬里長城', '🧱', 'Great Wall', '萬里長城是很長很長的城牆', 'p']],
     af: [['獅子', '🦁', 'Lion', '公獅子有大大的鬃毛', 'a'], ['長頸鹿', '🦒', 'Giraffe', '長頸鹿的脖子最長了', 'a'], ['斑馬', '🦓', 'Zebra', '斑馬身上是黑白條紋', 'a'], ['河馬', '🦛', 'Hippo', '河馬喜歡泡在水裡', 'a'],
@@ -3489,7 +3495,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       ['自由女神像', '🗽', 'Statue of Liberty', '自由女神像在美國', 'p'], ['大峽谷', '🏜️', 'Grand Canyon', '大峽谷是又大又深的山谷', 'p']],
     sa: [['樹懶', '🦥', 'Sloth', '樹懶動作好慢好慢', 'a'], ['羊駝', '🦙', 'Alpaca', '羊駝的毛軟軟的', 'a'], ['鸚鵡', '🦜', 'Parrot', '鸚鵡的羽毛有好多顏色', 'a'], ['美洲豹', '🐆', 'Jaguar', '美洲豹身上有花花的斑點', 'a'],
       ['亞馬遜河', '🏞️', 'Amazon River', '亞馬遜河旁邊有好大的雨林', 'p'], ['雨林', '🌳', 'Rainforest', '雨林裡有好多好多動物', 'p']],
-    oc: [['袋鼠', '🦘', 'Kangaroo', '袋鼠媽媽把寶寶放在口袋裡', 'a'], ['無尾熊', '🐨', 'Koala', '無尾熊抱著樹睡覺', 'a'], ['鴯鶓', '🐦', 'Emu', '鴯鶓是很會跑的大鳥', 'a'],
+    oc: [['袋鼠', '🦘', 'Kangaroo', '袋鼠媽媽把寶寶放在口袋裡', 'a'], ['無尾熊', '🐨', 'Koala', '無尾熊抱著樹睡覺', 'a'], ['鴯鶓', EMU, 'Emu', '鴯鶓是很會跑的大鳥', 'a'],
       ['大堡礁', '🪸', 'Great Barrier Reef', '大堡礁有好多漂亮的珊瑚', 'p'], ['雪梨歌劇院', '🎭', 'Sydney Opera House', '雪梨歌劇院的屋頂像貝殼', 'p']],
     an: [['企鵝', '🐧', 'Penguin', '企鵝不會飛，可是很會游泳', 'a'], ['海豹', '🦭', 'Seal', '海豹在冰上睡覺', 'a'], ['鯨魚', '🐋', 'Whale', '鯨魚是很大很大的動物', 'a'],
       ['冰山', '🧊', 'Iceberg', '南極有很多冰山，冷冰冰的', 'p']],
@@ -3544,11 +3550,11 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         passport()[k] = 1; saveSettings();
         scene.hidden = false; scene.style.setProperty('--c', C.c);
         scene.innerHTML = `<div class="wtitle">${C.name}<small>${C.en}</small></div><div class="wcards">${set.map((x, i) => `<button class="wcard${focus === x ? ' focus' : ''}" data-i="${i}" style="animation-delay:${(.3 + i * .35).toFixed(2)}s">${x[1]}<span>${x[0]}</span></button>`).join('')}</div><button class="round-btn wgo" aria-label="繼續飛">✈️</button>`;
-        sayName(C.name, C.en, `${C.say || ''}${C.say ? '，' : ''}歡迎來到${C.name}`);
+        sayName(C.name, C.en, [C.say, `歡迎來到${C.name}`].filter(Boolean));
         const seen = new Set();
         scene.querySelectorAll('.wcard').forEach(b => b.addEventListener('click', () => {
           const x = set[+b.dataset.i]; seen.add(x); b.classList.add('seen'); ding(700 + seen.size * 80);
-          sayName(x[0], x[2], `${x[0]}，${x[3]}`);
+          sayName(x[0], x[2], [x[0], x[3]]);
           if (seen.size === set.length) { const go = scene.querySelector('.wgo'); go.classList.add('hint-me'); }
         }));
         scene.querySelector('.wgo').addEventListener('click', () => {
@@ -3582,13 +3588,13 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         if (mission && mission.ocean) { oops(`這裡是${CONT[k].name}，要找藍色的海喔`); return; }
         if (mission && mission.k !== k) {
           if (k === worldAt) return;
-          oops(`${mission.x[0]}不在${CONT[k].name}喔`);
+          oops([mission.x[0], `不在${CONT[k].name}喔`]);
           if (++wrong >= 2) svg.querySelector(`.land[data-k="${mission.k}"]`)?.classList.add('hint-me');
           return;
         }
         if (!mission && k === worldAt && trip > 0) return say(`我們已經在${CONT[k].name}了，飛去別的地方吧`);
         if (mission && !wrong) lvOk();
-        sayName(CONT[k].name, CONT[k].en, `出發，飛去${CONT[k].name}`);
+        sayName(CONT[k].name, CONT[k].en, ['出發', `飛去${CONT[k].name}`]);
         stage.querySelector('.wask')?.remove();
         const focus = mission && mission.x; flyTo(k, () => land(k, focus));
       };
@@ -3597,7 +3603,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         if (busy) return;
         const o = OCEANS.find(q => q.k === c.dataset.o);
         if (mission && mission.ocean) {
-          if (o === mission.ocean) { if (!wrong) lvOk(); ding(880); sayName(o.name, o.en, `答對了，${o.fact}`); cheer(); busy = true; later(() => { if (++trip >= TRIPS) { tray.innerHTML = ''; finishFree(again); } else next(); }, 3600); }
+          if (o === mission.ocean) { if (!wrong) lvOk(); ding(880); sayName(o.name, o.en, ['答對了', o.fact]); cheer(); busy = true; later(() => { if (++trip >= TRIPS) { tray.innerHTML = ''; finishFree(again); } else next(); }, 3600); }
           else { oops(`這是${o.name}`); if (++wrong >= 2) { c.classList.add('hint-me'); svg.querySelector(`.ohit[data-o="${mission.ocean.k}"]`)?.classList.add('hint-me'); } }
           return;
         }
@@ -3613,10 +3619,10 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       const STARFISH = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 6 61 38 95 40 68 60 78 94 50 74 22 94 32 60 5 40 39 38z" fill="#E98A6A" stroke="#C96A4E" stroke-width="3" stroke-linejoin="round"/><circle cx="44" cy="46" r="3" fill="#3E342A"/><circle cx="56" cy="46" r="3" fill="#3E342A"/><path d="M45 55q5 4 10 0" stroke="#3E342A" stroke-width="2.5" fill="none"/></svg>';
       const TURTLE = ANIMALS.find(a => a.name === '海龜').pic;
       const LAYERS = [
-        { name: '海面', en: 'Sea surface', bg: '#CFE6EE', fish: [['海豚', '🐬', 'Dolphin', '海豚很聰明，會跳出水面'], ['海鷗', '🕊️', 'Seagull', '海鷗在海上飛來飛去'], ['飛魚', '🐟', 'Flying fish', '飛魚可以跳出水面滑翔'], ['帆船', '⛵', 'Sailboat', '帆船靠風前進']] },
+        { name: '海面', en: 'Sea surface', bg: '#CFE6EE', fish: [['海豚', '🐬', 'Dolphin', '海豚很聰明，會跳出水面'], ['海鷗', GULL, 'Seagull', '海鷗在海上飛來飛去'], ['飛魚', '🐟', 'Flying fish', '飛魚可以跳出水面滑翔'], ['帆船', '⛵', 'Sailboat', '帆船靠風前進']] },
         { name: '珊瑚礁', en: 'Coral reef', bg: '#A8D0DE', fish: [['小丑魚', '🐠', 'Clownfish', '小丑魚住在海葵裡'], ['海龜', TURTLE, 'Sea turtle', '海龜可以游很遠很遠'], ['海星', STARFISH, 'Starfish', '海星有五隻手'], ['珊瑚', '🪸', 'Coral', '珊瑚是很多小動物的家'], ['章魚', '🐙', 'Octopus', '章魚有八隻腳']] },
         { name: '深海', en: 'Deep sea', bg: '#6F9AB8', fish: [['鯨鯊', '🦈', 'Whale shark', '鯨鯊是最大的魚，很溫和'], ['座頭鯨', '🐳', 'Humpback whale', '座頭鯨會唱歌'], ['水母', '🪼', 'Jellyfish', '水母軟軟的，輕輕飄'], ['魷魚', '🦑', 'Squid', '魷魚游得很快']] },
-        { name: '很深很暗的海底', en: 'Deep ocean floor', bg: '#3E5674', fish: [['燈籠魚', ANGLER, 'Anglerfish', '燈籠魚頭上有一盞小燈'], ['深海螃蟹', '🦀', 'Deep sea crab', '海底的螃蟹慢慢走'], ['貝殼', '🐚', 'Seashell', '海底有漂亮的貝殼'], ['海參', '🥒', 'Sea cucumber', '海參在海底慢慢爬']] },
+        { name: '很深很暗的海底', en: 'Deep ocean floor', bg: '#3E5674', fish: [['燈籠魚', ANGLER, 'Anglerfish', '燈籠魚頭上有一盞小燈'], ['深海螃蟹', '🦀', 'Deep sea crab', '海底的螃蟹慢慢走'], ['貝殼', '🐚', 'Seashell', '海底有漂亮的貝殼'], ['海參', SEACUC, 'Sea cucumber', '海參在海底慢慢爬']] },
       ].slice(0, NL);
       const SUB = `<svg viewBox="0 0 160 100" aria-hidden="true"><path d="M70 22v-14h16v14" fill="#E2C267" stroke="${OL}" stroke-width="3"/><ellipse cx="80" cy="56" rx="66" ry="34" fill="#E8C35E" stroke="${OL}" stroke-width="3"/><path d="M146 56l12-14v28z" fill="#D9A84A" stroke="${OL}" stroke-width="3" stroke-linejoin="round"/><circle cx="60" cy="54" r="16" fill="#CFE6EE" stroke="${OL}" stroke-width="3"/><circle cx="100" cy="54" r="11" fill="#CFE6EE" stroke="${OL}" stroke-width="3"/>
         <g transform="translate(60 56)"><ellipse cx="-5" cy="-14" rx="3" ry="8" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><ellipse cx="5" cy="-14" rx="3" ry="8" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><circle cx="0" cy="0" r="9" fill="#F6EFE4" stroke="${OL}" stroke-width="1.5"/><circle cx="-3" cy="-1" r="1.4" fill="${OL}"/><circle cx="3" cy="-1" r="1.4" fill="${OL}"/><ellipse cx="0" cy="3" rx="1.6" ry="1.1" fill="#EBB7B0"/></g></svg>`;
@@ -3633,10 +3639,10 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
           b.innerHTML = f[1]; b.setAttribute('aria-label', f[0]);
           b.style.cssText = `left:${12 + k * (76 / PER) + rnd(8)}%;top:${30 + rnd(40)}%;animation-duration:${6 + rnd(5)}s;animation-delay:-${rnd(5)}s`;
           b.addEventListener('click', () => {
-            if (mission && f !== mission) { oops(`這是${f[0]}，我們要找${mission[0]}`); if (++wrong >= 2) nudge([...box.querySelectorAll('.dfish')][set.indexOf(mission)]); return; }
+            if (mission && f !== mission) { oops([`這是${f[0]}`, `我們要找${mission[0]}`]); if (++wrong >= 2) nudge([...box.querySelectorAll('.dfish')][set.indexOf(mission)]); return; }
             if (mission && f === mission) { if (!wrong) lvOk(); mission = null; stage.querySelector('.dmission')?.remove(); cheer(); }
             if (!b.classList.contains('seen')) { b.classList.add('seen'); met++; } ding(760 + met * 40);
-            sayName(f[0], f[2], `${f[0]}，${f[3]}`);
+            sayName(f[0], f[2], [f[0], f[3]]);
             if (!mission && (met >= 2 || box.querySelectorAll('.dfish:not(.seen)').length === 0)) showGo();
           });
           box.appendChild(b);
@@ -3839,7 +3845,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       if (open.length < 2) return;
       const [a, c] = open; open = []; lock = true;
       if (cards[+a.dataset.i] === cards[+c.dataset.i]) {
-        later(() => { a.classList.add('got'); c.classList.add('got'); ding(880); sayName(MEM_NAMES[p][0], MEM_NAMES[p][1], `兩隻${MEM_NAMES[p][0]}，一樣的`); if (!miss) lvOk(); miss = 0; lock = false;
+        later(() => { a.classList.add('got'); c.classList.add('got'); ding(880); sayName(MEM_NAMES[p][0], MEM_NAMES[p][1], [MEM_NAMES[p][0], '兩張一樣的']); if (!miss) lvOk(); miss = 0; lock = false;
           if (--left === 0) later(() => { say('全部都找到了，記性好好'); finishFree(again); }, 1800); }, 500);
       } else {
         miss++; logErr();
@@ -3864,7 +3870,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       html: `<div class="patrow">${seq.slice(0, -1).map((p, k) => `<span class="pt" style="animation-delay:${(k * .12).toFixed(2)}s">${p}</span>`).join('')}<span class="pt q">?</span></div>`,
       opts: fin, ok: fin.indexOf(ans),
       ask: () => say('看一看，接下來是什麼呢？'),
-      mount: (st) => { const ps = st.querySelectorAll('.pt:not(.q)'); ps.forEach((p, k) => p.addEventListener('click', () => ding(500 + k * 60))); },
+      mount: (st) => { const ps = st.querySelectorAll('.pt:not(.q)'); ps.forEach((p, k) => p.addEventListener('click', () => { ding(500 + k * 60); p.classList.remove('hopit'); void p.offsetWidth; p.classList.add('hopit'); })); },
       right: (st) => { const q = st.querySelector('.pt.q'); q.textContent = ans; q.classList.remove('q'); q.classList.add('pop'); st.querySelector('.patrow').classList.add('alive'); say('對了，一直重複下去'); },
       wait: 3000,
     };
@@ -3900,7 +3906,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
       right: (s) => {
         s.querySelector('.sbun').innerHTML = bunnyFace(st[0]); s.querySelector('.sbun').classList.add('pop');
         const c = COPE[st[0]], [zh, en] = MOODS[st[0]];
-        if (c && L > 1) { s.querySelector('.story').insertAdjacentHTML('beforeend', `<span class="cope pop">${c[1]}<small>${c[0]}</small></span>`); sayName(zh, en, `小兔子覺得${zh}。${c[2]}`); }
+        if (c && L > 1) { s.querySelector('.story').insertAdjacentHTML('beforeend', `<span class="cope pop">${c[1]}<small>${c[0]}</small></span>`); sayName(zh, en, [`小兔子覺得${zh}`, c[2]]); }
         else sayName(zh, en, `小兔子覺得${zh}`);
       },
       wait: 4600,
@@ -3935,14 +3941,14 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     stage.innerHTML = `<div class="mazewrap"><svg class="maze" viewBox="-8 -8 ${W * C + 16} ${H * C + 16}"><rect x="0" y="0" width="${W * C}" height="${H * C}" rx="14" class="mfloor"/><polyline class="mpath" points=""/><g class="mwall">${s}<rect x="0" y="0" width="${W * C}" height="${H * C}" rx="14" fill="none"/></g>
       <text class="mgoal" x="${(W - .5) * C}" y="${(H - .5) * C}">${goal}</text><text class="mwho" x="${C / 2}" y="${C / 2}">${who}</text></svg></div>`;
     const svg = stage.querySelector('svg'), whoEl = svg.querySelector('.mwho'), path = svg.querySelector('.mpath');
-    let cx = 0, cy = 0, trail = [[C / 2, C / 2]], drag = false, done = false, bumps = 0;
+    let cx = 0, cy = 0, trail = [[C / 2, C / 2]], drag = false, done = false, bumps = 0, farHint = false;
     const open = (x, y, nx, ny) => { if (nx < 0 || ny < 0 || nx >= W || ny >= H) return false; if (nx > x) return !maze[y][x].r; if (nx < x) return !maze[y][nx].r; if (ny > y) return !maze[y][x].b; return !maze[ny][x].b; };
     const loc = (e) => { const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal; return [vb.x + (e.clientX - r.left) / r.width * vb.width, vb.y + (e.clientY - r.top) / r.height * vb.height]; };
     const move = (e) => {
       if (done) return;
       const [px, py] = loc(e), nx = Math.floor(px / C), ny = Math.floor(py / C);
       if (nx === cx && ny === cy) return;
-      if (Math.abs(nx - cx) + Math.abs(ny - cy) !== 1) return;
+      if (Math.abs(nx - cx) + Math.abs(ny - cy) !== 1) { if (e.type === 'pointerdown') { whoEl.classList.remove('hey'); void whoEl.getBBox(); whoEl.classList.add('hey'); if (!farHint) { farHint = true; say(`從${wn}這裡開始，一格一格走`); } } return; }
       if (!open(cx, cy, nx, ny)) { if (++bumps % 3 === 1) { ding(300); whoEl.classList.remove('bump'); void whoEl.getBBox(); whoEl.classList.add('bump'); } return; }
       // 走回頭路就把線收回來
       if (trail.length > 1 && trail[trail.length - 2][0] === (nx + .5) * C && trail[trail.length - 2][1] === (ny + .5) * C) trail.pop(); else trail.push([(nx + .5) * C, (ny + .5) * C]);
@@ -3994,7 +4000,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
     tray.innerHTML = '';
     dragMatch(targets, pieces.map(p => ({ k: p.k, name: p.name, en: p.en, pic: regSVG(p.pts, p.c), cls: 'item mpiece' + (p.k === 'an' ? ' wide' : '') })), {
       margin: world ? 20 : 26, own: true,
-      put: (t, g) => { const p = pieces.find(q => q.k === t.k); base.querySelectorAll(`.msil[data-k="${p.k}"]`).forEach(m => { m.setAttribute('style', `fill:${p.c}`); m.classList.add('in'); }); g.el.innerHTML = `<span class="micon pop">${p.icon || ''}</span>`; sayName(p.name, p.en, `${p.name}，${p.fact}`); },
+      put: (t, g) => { const p = pieces.find(q => q.k === t.k); base.querySelectorAll(`.msil[data-k="${p.k}"]`).forEach(m => { m.setAttribute('style', `fill:${p.c}`); m.classList.add('in'); }); g.el.innerHTML = `<span class="micon pop">${p.icon || ''}</span>`; sayName(p.name, p.en, p.fact); },
       onDone: () => { wrap.classList.add('lit'); say(world ? '世界地圖拼好了，七大洲都在這裡' : '台灣拼好了，這是我們住的地方'); finishFree(again); },
     });
     roundActive = true; say(world ? '把七大洲放回世界地圖上' : '把台灣的拼圖放回去，看形狀找位置');
@@ -4023,7 +4029,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         if (fy < .32) return 'top';
         return box ? 'in' : fy > .4 ? 'under' : 'top';
       };
-      const ask = () => say([`把${tn}放在${obj}的${PL_WORDS[w][0]}`]);
+      const ask = () => say([`把${tn}`, `放在${obj}的${PL_WORDS[w][0]}`]);
       let tries = 0;
       dragify(it, (x, y) => {
         let z = zoneOf(x, y); if (!z) return false;
@@ -4035,7 +4041,7 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
         const put = document.createElement('span'); put.className = 'plput pop'; put.textContent = tp;
         put.style.left = (r.left - sr.left + r.width * pos[0]) + 'px'; put.style.top = (r.top - sr.top + r.height * pos[1]) + 'px';
         scene.appendChild(put); it.remove(); ding(880);
-        sayName(PL_WORDS[w][0], PL_WORDS[w][1], `${tn}在${obj}的${PL_WORDS[w][0]}`);
+        sayName(PL_WORDS[w][0], PL_WORDS[w][1], [tn, `在${obj}的${PL_WORDS[w][0]}`]);
         later(() => { if (++i < N) one(); else { tray.innerHTML = ''; finishFree(again); } }, 2600);
         return true;
       }, ask);
