@@ -1370,7 +1370,54 @@
   "Quarter past eight": "en750.mp3",
   "Quarter past nine": "en751.mp3",
   "Quarter past ten": "en752.mp3",
-  "Quarter past eleven": "en753.mp3"
+  "Quarter past eleven": "en753.mp3",
+  "Amsterdam": "en754.mp3",
+  "Anglerfish": "en755.mp3",
+  "Argentina": "en756.mp3",
+  "Australia": "en757.mp3",
+  "Bangkok": "en758.mp3",
+  "Brazil": "en759.mp3",
+  "Buenos Aires": "en760.mp3",
+  "Cairo": "en761.mp3",
+  "Canada": "en762.mp3",
+  "Canberra": "en763.mp3",
+  "Clownfish": "en764.mp3",
+  "Coral reef": "en765.mp3",
+  "Deep ocean floor": "en766.mp3",
+  "Deep sea": "en767.mp3",
+  "Deep sea crab": "en768.mp3",
+  "Egypt": "en769.mp3",
+  "Flying fish": "en770.mp3",
+  "France": "en771.mp3",
+  "India": "en772.mp3",
+  "Japan": "en773.mp3",
+  "Korea": "en774.mp3",
+  "Lima": "en775.mp3",
+  "London": "en776.mp3",
+  "Mexico City": "en777.mp3",
+  "Nairobi": "en778.mp3",
+  "Netherlands": "en779.mp3",
+  "New Delhi": "en780.mp3",
+  "New Zealand": "en781.mp3",
+  "Ottawa": "en782.mp3",
+  "Paris": "en783.mp3",
+  "Peru": "en784.mp3",
+  "Pretoria": "en785.mp3",
+  "Rome": "en786.mp3",
+  "Sea cucumber": "en787.mp3",
+  "Sea surface": "en788.mp3",
+  "Seagull": "en789.mp3",
+  "Seoul": "en790.mp3",
+  "South Africa": "en791.mp3",
+  "Starfish": "en792.mp3",
+  "Taipei": "en793.mp3",
+  "Thailand": "en794.mp3",
+  "Tokyo": "en795.mp3",
+  "United Kingdom": "en796.mp3",
+  "United States": "en797.mp3",
+  "Washington, D.C.": "en798.mp3",
+  "Wellington": "en799.mp3",
+  "Whale shark": "en800.mp3"
  },
  "voices": [
   "A",
@@ -4396,6 +4443,194 @@
     "en753.mp3": [
      6032424,
      8157
+    ],
+    "en754.mp3": [
+     6040581,
+     5421
+    ],
+    "en755.mp3": [
+     6046002,
+     5853
+    ],
+    "en756.mp3": [
+     6051855,
+     5565
+    ],
+    "en757.mp3": [
+     6057420,
+     5277
+    ],
+    "en758.mp3": [
+     6062697,
+     4701
+    ],
+    "en759.mp3": [
+     6067398,
+     4557
+    ],
+    "en760.mp3": [
+     6071955,
+     6573
+    ],
+    "en761.mp3": [
+     6078528,
+     3693
+    ],
+    "en762.mp3": [
+     6082221,
+     4413
+    ],
+    "en763.mp3": [
+     6086634,
+     4557
+    ],
+    "en764.mp3": [
+     6091191,
+     4845
+    ],
+    "en765.mp3": [
+     6096036,
+     5277
+    ],
+    "en766.mp3": [
+     6101313,
+     7581
+    ],
+    "en767.mp3": [
+     6108894,
+     4845
+    ],
+    "en768.mp3": [
+     6113739,
+     6573
+    ],
+    "en769.mp3": [
+     6120312,
+     4125
+    ],
+    "en770.mp3": [
+     6124437,
+     5997
+    ],
+    "en771.mp3": [
+     6130434,
+     4269
+    ],
+    "en772.mp3": [
+     6134703,
+     4125
+    ],
+    "en773.mp3": [
+     6138828,
+     4557
+    ],
+    "en774.mp3": [
+     6143385,
+     3981
+    ],
+    "en775.mp3": [
+     6147366,
+     3981
+    ],
+    "en776.mp3": [
+     6151347,
+     4413
+    ],
+    "en777.mp3": [
+     6155760,
+     6573
+    ],
+    "en778.mp3": [
+     6162333,
+     4557
+    ],
+    "en779.mp3": [
+     6166890,
+     5421
+    ],
+    "en780.mp3": [
+     6172311,
+     4701
+    ],
+    "en781.mp3": [
+     6177012,
+     5277
+    ],
+    "en782.mp3": [
+     6182289,
+     4125
+    ],
+    "en783.mp3": [
+     6186414,
+     4269
+    ],
+    "en784.mp3": [
+     6190683,
+     3837
+    ],
+    "en785.mp3": [
+     6194520,
+     4701
+    ],
+    "en786.mp3": [
+     6199221,
+     3693
+    ],
+    "en787.mp3": [
+     6202914,
+     5997
+    ],
+    "en788.mp3": [
+     6208911,
+     5997
+    ],
+    "en789.mp3": [
+     6214908,
+     4125
+    ],
+    "en790.mp3": [
+     6219033,
+     3693
+    ],
+    "en791.mp3": [
+     6222726,
+     6429
+    ],
+    "en792.mp3": [
+     6229155,
+     5133
+    ],
+    "en793.mp3": [
+     6234288,
+     4557
+    ],
+    "en794.mp3": [
+     6238845,
+     4557
+    ],
+    "en795.mp3": [
+     6243402,
+     4701
+    ],
+    "en796.mp3": [
+     6248103,
+     6717
+    ],
+    "en797.mp3": [
+     6254820,
+     6717
+    ],
+    "en798.mp3": [
+     6261537,
+     9165
+    ],
+    "en799.mp3": [
+     6270702,
+     4989
+    ],
+    "en800.mp3": [
+     6275691,
+     5421
     ]
    }
   },
