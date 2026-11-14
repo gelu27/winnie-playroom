@@ -3738,7 +3738,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
     澳洲: ['坎培拉', 'Canberra', '袋鼠', '🦘', '代表動物'], 紐西蘭: ['威靈頓', 'Wellington', '奇異鳥', KIWI, '代表動物'],
   };
   const nationAll = () => Object.keys(PLACES).flatMap(k => PLACES[k].filter(x => x[4] === 'c').map(x => [...x, k]));
-  const nationSay = (it, L) => { const n = NATION[it[0]]; return n ? [it[0], it[3], ...(L >= 3 ? [`${it[0]}的首都是${n[0]}`] : []), `${it[0]}的${n[4]}是${n[2]}`] : [it[0], it[3]]; };
+  const nationSay = (it, L) => { const n = NATION[it[0]]; return n ? [it[3], ...(L >= 3 ? [`${it[0]}的首都是${n[0]}`] : []), `${it[0]}的${n[4]}是${n[2]}`] : [it[0], it[3]]; };
   const nationCard = (it) => { const n = NATION[it[0]]; return `<div class="ncard"><span class="nflag">${it[1]}</span>${n && n[3] ? `<span class="nani">${n[3]}</span>` : ''}${n ? `<div class="ncap">🏛️ 首都 ${n[0]}${n[3] ? '' : `　${n[4]} ${n[2]}`}</div>` : ''}</div>`; };
   const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇'], ['flag', '🏳️ 國旗'], ['nani', '🦘 國家動物']], run: {
     // 國旗：聽國家的名字，找出它的國旗；答對後說一個小知識
