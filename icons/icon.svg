@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0" stop-color="#FBF6EC"/>
+      <stop offset="1" stop-color="#E9DDC6"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- 柔和小草地 -->
+  <ellipse cx="256" cy="470" rx="300" ry="90" fill="#C9D8B6"/>
+  <!-- 小星星與愛心 -->
+  <path d="M96 128l9 19 21 3-15 15 4 21-19-10-19 10 4-21-15-15 21-3z" fill="#F2CF8A"/>
+  <path d="M410 150c0-12 16-18 23-7 7-11 23-5 23 7 0 15-23 27-23 27s-23-12-23-27z" fill="#EBAFA8"/>
+  <!-- 耳朵 -->
+  <g>
+    <ellipse cx="200" cy="150" rx="40" ry="92" fill="#FFFFFF" stroke="#D9C9B3" stroke-width="6" transform="rotate(-12 200 150)"/>
+    <ellipse cx="200" cy="158" rx="20" ry="64" fill="#F4C7C3" transform="rotate(-12 200 158)"/>
+    <ellipse cx="312" cy="150" rx="40" ry="92" fill="#FFFFFF" stroke="#D9C9B3" stroke-width="6" transform="rotate(12 312 150)"/>
+    <ellipse cx="312" cy="158" rx="20" ry="64" fill="#F4C7C3" transform="rotate(12 312 158)"/>
+  </g>
+  <!-- 小花 -->
+  <g transform="translate(330 210)">
+    <circle cx="0" cy="-16" r="13" fill="#F2CF8A"/><circle cx="15" cy="-5" r="13" fill="#F2CF8A"/>
+    <circle cx="9" cy="13" r="13" fill="#F2CF8A"/><circle cx="-9" cy="13" r="13" fill="#F2CF8A"/>
+    <circle cx="-15" cy="-5" r="13" fill="#F2CF8A"/><circle cx="0" cy="0" r="9" fill="#E6A86B"/>
+  </g>
+  <!-- 臉 -->
+  <ellipse cx="256" cy="318" rx="122" ry="108" fill="#FFFFFF" stroke="#D9C9B3" stroke-width="6"/>
+  <!-- 眼睛 -->
+  <ellipse cx="210" cy="306" rx="14" ry="17" fill="#5B4A3E"/>
+  <ellipse cx="302" cy="306" rx="14" ry="17" fill="#5B4A3E"/>
+  <circle cx="215" cy="299" r="5" fill="#FFFFFF"/>
+  <circle cx="307" cy="299" r="5" fill="#FFFFFF"/>
+  <!-- 腮紅 -->
+  <ellipse cx="178" cy="348" rx="22" ry="13" fill="#F4C7C3"/>
+  <ellipse cx="334" cy="348" rx="22" ry="13" fill="#F4C7C3"/>
+  <!-- 鼻子與嘴 -->
+  <path d="M244 334h24l-12 12z" fill="#E59C97" stroke="#E59C97" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M256 346v8M256 354c-6 10-18 10-22 2M256 354c6 10 18 10 22 2" fill="none" stroke="#8C7262" stroke-width="5" stroke-linecap="round"/>
+</svg>
