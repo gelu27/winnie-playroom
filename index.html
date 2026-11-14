@@ -695,6 +695,9 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .kidspot { position: absolute; width: 16%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 3px dashed #C9B49A; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: min(5vw, 6vh, 50px); }
 .kidspot.done { border-color: transparent; }
 .bigpic { font-size: min(18vw, 22vh, 180px); }
+.ncard { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 18px; font-size: min(14vw, 18vh, 140px); line-height: 1; }
+.ncard .ncap, .ncap { flex-basis: 100%; text-align: center; font-size: clamp(22px, 3.4vw, 34px); color: var(--ink); margin-top: 8px; }
+.ncard svg { width: 1em; height: 1em; }
 /* 看天氣穿衣服 */
 .drbox { display: flex; gap: min(5vw, 50px); align-items: center; justify-content: center; width: 100%; }
 .drwin { width: min(26vw, 240px); aspect-ratio: 1; border-radius: 22px; box-shadow: inset 0 0 0 10px #C8A577, var(--lift); display: flex; align-items: center; justify-content: center; font-size: min(14vw, 130px); }
@@ -703,6 +706,17 @@ svg.ic { display: inline-block; vertical-align: middle; width: 1.2em; height: 1.
 .drbun { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: min(30vh, 260px); line-height: 1; opacity: .9; } .drbun.hop { animation: hop .6s ease 2; }
 .drspot { position: absolute; width: 22%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 3px dashed #B9A58A; border-radius: 50%; background: rgba(255, 255, 255, .5); display: flex; align-items: center; justify-content: center; font-size: min(6vw, 7vh, 60px); z-index: 1; }
 .drspot.done { border-style: solid; border-color: var(--ok); }
+@media (max-height: 520px) and (orientation: landscape) {
+  .plbox { height: min(50vh, 540px); }
+  .kidbox { height: min(66vh, 560px); } .kidbox.face { height: min(62vh, 560px); } .drkid { height: min(66vh, 540px); }
+  /* 手機橫放：拼臉、穿衣服把托盤放右邊，人物才放得下 */
+  #play:has(.kidbox.face), #play:has(.drkid) { display: grid; grid-template-columns: minmax(0, 1fr) min(34vw, 240px); grid-template-rows: minmax(0, 1fr); gap: 10px; }
+  #play:has(.kidbox.face) .board, #play:has(.drkid) .board { grid-column: 1; grid-row: 1; min-height: 0; }
+  #play:has(.kidbox.face) .tray2, #play:has(.drkid) .tray2 { grid-column: 2; grid-row: 1; flex-wrap: wrap; align-content: center; justify-content: center; overflow-y: auto; align-self: center; max-height: 100%; box-sizing: border-box; }
+  #play:has(.drkid) .tray2 .item { width: 62px; height: 62px; font-size: 46px; }
+  .drwin { width: min(22vw, 30vh); font-size: min(12vw, 20vh); }
+  .ncard { font-size: min(10vw, 15vh); } .ncap { font-size: 20px; }
+}
 /* 唱歌律動 */
 .rhbox { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .rhdots { display: flex; gap: 14px; } .rhdots i { width: 34px; height: 34px; border-radius: 50%; background: #E2D6C4; transition: background .15s; } .rhdots i.h { width: 22px; height: 22px; margin-top: 6px; }
@@ -950,6 +964,15 @@ body:has(#bed:not([hidden])) { background: #12161F; }
 .abcm .spot .label, .spot .label { min-width: 64px; }
 .maze .mwho.hey { animation: hop .5s ease 2; transform-box: fill-box; transform-origin: center; }
 @media (prefers-reduced-motion: reduce) { .mcard { transition: none; } }
+/* 手機橫放（放最後，蓋過前面的尺寸） */
+@media (max-height: 520px) and (orientation: landscape) {
+  .bkpage { height: min(64vh, 520px); --bk: min(8vw, 14vh, 96px); } .bkpage .prog { bottom: 4px; transform: translateX(-50%) scale(.7); }
+  #tray2 .act.bdnext { min-width: 84px; min-height: 58px; font-size: 32px; }
+  .bkcov { padding: 8px 6px; } .bkcov span { font-size: min(8vw, 12vh, 72px); } .bkcov small { font-size: 14px; }
+  .wbox { width: min(100%, calc((100dvh - 190px) * 2)); }
+  .stamp { width: 38px; height: 38px; font-size: 22px; border-width: 2px; } .stamp svg { width: 24px; height: 24px; } .stamps { gap: 6px; }
+  .wask { font-size: 40px; padding: 6px 12px; } .wask span { font-size: 22px; }
+}
 </style>
 
 <div class="app" id="app">
@@ -3664,9 +3687,11 @@ body:has(#bed:not([hidden])) { background: #12161F; }
   const BLACKBEAR = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><circle cx="24" cy="22" r="12" fill="#2E2A28"/><circle cx="76" cy="22" r="12" fill="#2E2A28"/><circle cx="50" cy="50" r="38" fill="#3A3532"/><ellipse cx="50" cy="62" rx="16" ry="12" fill="#B79A78"/><ellipse cx="50" cy="56" rx="6" ry="4" fill="#2E2A28"/><circle cx="36" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="64" cy="40" r="4.5" fill="#F4EFE6"/><circle cx="36" cy="40" r="2.5" fill="#2E2A28"/><circle cx="64" cy="40" r="2.5" fill="#2E2A28"/><path d="M30 86l20 10 20-10" stroke="#F4EFE6" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const PYRAMID = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M50 14 92 86H8z" fill="#E2C27A"/><path d="M50 14 92 86H58z" fill="#C9A45E"/><path d="M4 86h92" stroke="#C9A45E" stroke-width="4"/></svg>';
   const GULL = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M8 44q22-18 42 4 20-22 42-4-20-4-34 16h-16q-14-20-34-16z" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3" stroke-linejoin="round"/><path d="M8 44q8-3 14-2M92 44q-8-3-14-2" stroke="#4A4642" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="56" rx="9" ry="12" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3"/><circle cx="50" cy="44" r="8" fill="#F4F2EE" stroke="#6E6A64" stroke-width="3"/><circle cx="48" cy="42" r="1.8" fill="#2E2A28"/><path d="M54 45l9 2-9 2z" fill="#E8B84A"/></svg>', SEACUC = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M12 62q2-22 38-22t40 18q-2 16-40 16t-38-12z" fill="#8E6A55" stroke="#5E4434" stroke-width="3"/><circle cx="24" cy="52" r="3.2" fill="#B08A70"/><circle cx="36" cy="46" r="3.2" fill="#B08A70"/><circle cx="50" cy="44" r="3.2" fill="#B08A70"/><circle cx="64" cy="46" r="3.2" fill="#B08A70"/><circle cx="76" cy="52" r="3.2" fill="#B08A70"/><circle cx="30" cy="62" r="3.2" fill="#B08A70"/><circle cx="46" cy="58" r="3.2" fill="#B08A70"/><circle cx="60" cy="58" r="3.2" fill="#B08A70"/><circle cx="74" cy="62" r="3.2" fill="#B08A70"/><path d="M12 62l-6-4M12 62l-6 4M12 62h-8" stroke="#5E4434" stroke-width="2.5" stroke-linecap="round"/></svg>', LCAT = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M26 30l-4-20 16 12zM74 30l4-20-16 12z" fill="#C9A06A" stroke="#6E5A44" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="54" rx="32" ry="30" fill="#D9B27A" stroke="#6E5A44" stroke-width="3"/><ellipse cx="30" cy="40" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="70" cy="40" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="26" cy="60" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="74" cy="60" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="38" cy="74" rx="3" ry="2.2" fill="#6E5034"/><ellipse cx="62" cy="74" rx="3" ry="2.2" fill="#6E5034"/><path d="M40 30v-8M50 28v-10M60 30v-8" stroke="#6E5034" stroke-width="3" stroke-linecap="round"/><path d="M36 50q4-6 10 0M54 50q4-6 10 0" stroke="#2E2A28" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M36 50q5 6 10 0" fill="#9DBB6E"/><ellipse cx="50" cy="64" rx="12" ry="8" fill="#F4EEE2"/><path d="M47 60h6l-3 4z" fill="#C97A6E"/><path d="M30 64h-14M30 68l-12 4M70 64h14M70 68l12 4" stroke="#6E5A44" stroke-width="2" stroke-linecap="round"/></svg>', EMU = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M30 92l6-30M54 92l-2-30" stroke="#8E7A64" stroke-width="5" stroke-linecap="round"/><ellipse cx="44" cy="54" rx="26" ry="18" fill="#6E5A48" stroke="#4A3C30" stroke-width="3"/><path d="M62 46q8-8 6-26" stroke="#7E8EA8" stroke-width="9" fill="none" stroke-linecap="round"/><ellipse cx="70" cy="18" rx="9" ry="8" fill="#7E8EA8" stroke="#4A3C30" stroke-width="2.5"/><circle cx="72" cy="16" r="2" fill="#2E2A28"/><path d="M78 19l9 2-9 3z" fill="#3E342A"/></svg>';
+  const KIWI = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M44 74v16M60 74v16M40 90h10M56 90h10" stroke="#C9A45E" stroke-width="4" stroke-linecap="round"/><ellipse cx="52" cy="56" rx="30" ry="22" fill="#8A6A48"/><circle cx="26" cy="44" r="12" fill="#8A6A48"/><circle cx="23" cy="41" r="2.4" fill="#2B2B33"/><path d="M16 46 2 64" stroke="#D9C9A0" stroke-width="4" stroke-linecap="round"/></svg>';
+  const PHEAS = '<svg viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><path d="M58 56 98 40 96 46 60 64z" fill="#6E7F52"/><ellipse cx="48" cy="60" rx="24" ry="16" fill="#3F6B4E"/><path d="M44 74v14M54 74v14" stroke="#B08850" stroke-width="4" stroke-linecap="round"/><circle cx="28" cy="40" r="11" fill="#2F4F6A"/><ellipse cx="25" cy="38" rx="5" ry="6" fill="#C8504A"/><circle cx="25" cy="37" r="1.8" fill="#2B2B33"/><path d="M18 42 10 46 18 46z" fill="#D9C9A0"/></svg>';
   const PLACES = {
     tw: [['台灣黑熊', BLACKBEAR, 'Formosan black bear', '台灣黑熊胸前有白色的 V 字', 'a'], ['台灣藍鵲', TW_BIRD, 'Taiwan blue magpie', '台灣藍鵲有長長的藍色尾巴', 'a'], ['梅花鹿', '🦌', 'Sika deer', '梅花鹿身上有白色的小點點', 'a'],
-      ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['石虎', LCAT, 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
+      ['玉山', '⛰️', 'Jade Mountain', '玉山是台灣最高的山', 'p'], ['日月潭', '🏞️', 'Sun Moon Lake', '日月潭是台灣很大的湖', 'p'], ['台北一零一', '🏙️', 'Taipei 101', '台北一零一是很高很高的大樓', 'p'], ['台灣', '🇹🇼', 'Taiwan', '台灣是我們住的地方，有高高的玉山', 'c'], ['石虎', LCAT, 'Leopard cat', '石虎是台灣的小野貓，耳朵後面有白點', 'a']],
     as: [['貓熊', '🐼', 'Panda', '貓熊最喜歡吃竹子', 'a'], ['老虎', '🐯', 'Tiger', '老虎身上有黑色的條紋', 'a'], ['亞洲象', '🐘', 'Asian elephant', '大象用長長的鼻子喝水', 'a'], ['紅毛猩猩', '🦧', 'Orangutan', '紅毛猩猩住在樹上', 'a'],
       ['富士山', '🗻', 'Mount Fuji', '富士山在日本，山頂有白白的雪', 'p'], ['聖母峰', '🏔️', 'Mount Everest', '聖母峰是世界上最高的山', 'p'], ['萬里長城', '🧱', 'Great Wall', '萬里長城是很長很長的城牆', 'p'],
       ['日本', '🇯🇵', 'Japan', '日本有富士山，還有好吃的壽司', 'c'], ['韓國', '🇰🇷', 'Korea', '韓國有好吃的泡菜和石鍋拌飯', 'c'], ['印度', '🇮🇳', 'India', '印度有大象，還有漂亮的孔雀', 'c'], ['泰國', '🇹🇭', 'Thailand', '泰國有很多大象和漂亮的寺廟', 'c']],
@@ -3702,16 +3727,45 @@ body:has(#bed:not([hidden])) { background: #12161F; }
   let worldAt = 'tw';
   const passport = () => (settings.passport = settings.passport || {});
   const stampRow = () => `<div class="stamps">${Object.keys(CONT).map(k => `<span class="stamp${passport()[k] ? ' on' : ''}" style="--c:${CONT[k].c}" title="${CONT[k].name}">${passport()[k] ? (PLACES[k].find(x => x[4] === 'a') || [])[1] || '⭐' : ''}</span>`).join('')}</div>`;
-  const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇'], ['flag', '🏳️ 國旗']], run: {
+  // 國家：[首都, 首都英文, 動物, 圖（沒有好圖就 null，不出題）, 叫法]。有法定的才說「國家動物」，其他說「代表動物」或「國鳥」
+  const NATION = {
+    台灣: ['台北', 'Taipei', '台灣黑熊', BLACKBEAR, '代表動物'], 日本: ['東京', 'Tokyo', '綠雉', PHEAS, '國鳥'], 韓國: ['首爾', 'Seoul', '老虎', '🐯', '代表動物'],
+    印度: ['新德里', 'New Delhi', '孟加拉虎', '🐅', '國家動物'], 泰國: ['曼谷', 'Bangkok', '大象', '🐘', '國家動物'], 埃及: ['開羅', 'Cairo', '老鷹', null, '代表動物'],
+    肯亞: ['奈洛比', 'Nairobi', '獅子', '🦁', '代表動物'], 南非: ['普利托利亞', 'Pretoria', '跳羚', null, '國家動物'], 法國: ['巴黎', 'Paris', '公雞', '🐓', '代表動物'],
+    英國: ['倫敦', 'London', '獅子', '🦁', '代表動物'], 義大利: ['羅馬', 'Rome', '狼', '🐺', '代表動物'], 荷蘭: ['阿姆斯特丹', 'Amsterdam', '獅子', '🦁', '代表動物'],
+    美國: ['華盛頓', 'Washington, D.C.', '白頭海鵰', '🦅', '國家動物'], 加拿大: ['渥太華', 'Ottawa', '河狸', '🦫', '國家動物'], 墨西哥: ['墨西哥城', 'Mexico City', '金鵰', null, '國家動物'],
+    巴西: ['巴西利亞', 'Brasília', '美洲豹', '🐆', '代表動物'], 秘魯: ['利馬', 'Lima', '小羊駝', '🦙', '國家動物'], 阿根廷: ['布宜諾斯艾利斯', 'Buenos Aires', '棕灶鳥', null, '國鳥'],
+    澳洲: ['坎培拉', 'Canberra', '袋鼠', '🦘', '代表動物'], 紐西蘭: ['威靈頓', 'Wellington', '奇異鳥', KIWI, '代表動物'],
+  };
+  const nationAll = () => Object.keys(PLACES).flatMap(k => PLACES[k].filter(x => x[4] === 'c').map(x => [...x, k]));
+  const nationSay = (it, L) => { const n = NATION[it[0]]; return n ? [it[3], ...(L >= 3 ? [`${it[0]}的首都是${n[0]}`] : []), `${it[0]}的${n[4]}是${n[2]}`] : [it[0], it[3]]; };
+  const nationCard = (it) => { const n = NATION[it[0]]; return `<div class="ncard"><span class="nflag">${it[1]}</span>${n && n[3] ? `<span class="nani">${n[3]}</span>` : ''}${n ? `<div class="ncap">🏛️ 首都 ${n[0]}${n[3] ? '' : `　${n[4]} ${n[2]}`}</div>` : ''}</div>`; };
+  const WORLD = { modes: [['fly', '✈️ 開飛機'], ['dive', '🤿 潛水艇'], ['flag', '🏳️ 國旗'], ['nani', '🦘 國家動物']], run: {
     // 國旗：聽國家的名字，找出它的國旗；答對後說一個小知識
     flag: (stage, tray, again) => quizRun(stage, tray, 3, () => {
-      const L = lvOf('world'), all = Object.keys(PLACES).flatMap(k => PLACES[k].filter(x => x[4] === 'c').map(x => [...x, k]));
+      const L = lvOf('world'), all = nationAll();
       const it = all[rnd(all.length)], opts = shuffle([it, ...shuffle(all.filter(x => x !== it && (L >= 3 || x[5] !== it[5]))).slice(0, L === 4 ? 3 : 2)]);
+      // 3 級以上，一半的題目改問首都（先當故事聽，答錯也只是再聽一次）
+      const cap = L >= 3 && NATION[it[0]] && Math.random() < .5;
       return {
-        name: it[0], html: `<div class="bigpic">🌏</div>`, opts: opts.map(x => x[1]), ok: opts.indexOf(it),
-        ask: () => say(`${it[0]}的國旗是哪一個？`),
-        right: (st) => { st.querySelector('.bigpic').textContent = it[1]; sayName(it[0], it[2], [it[0], it[3]]); },
-        wait: 4200,
+        name: it[0], html: `<div class="bigpic">${cap ? '🏛️' : '🌏'}</div>${cap ? `<div class="ncap">${NATION[it[0]][0]}</div>` : ''}`, opts: opts.map(x => x[1]), ok: opts.indexOf(it),
+        ask: () => say(cap ? `${NATION[it[0]][0]}是哪一個國家的首都？` : `${it[0]}的國旗是哪一個？`),
+        right: (st) => { st.querySelectorAll('.bigpic, .ncap').forEach(e => e.remove()); st.insertAdjacentHTML('afterbegin', nationCard(it)); sayName(it[0], it[2], nationSay(it, L)); },
+        wait: L >= 3 ? 7600 : 6200,
+      };
+    }, again),
+    // 國家動物：看動物，找是哪一國的國旗
+    nani: (stage, tray, again) => quizRun(stage, tray, 3, () => {
+      const L = lvOf('world'), all = nationAll().filter(x => NATION[x[0]] && NATION[x[0]][3]);
+      const it = all[rnd(all.length)], n = NATION[it[0]];
+      // 同一種動物的國家（例如獅子）不能一起當選項
+      const pool = shuffle(all.filter(x => NATION[x[0]][2] !== n[2] && (L >= 3 || x[5] !== it[5])));
+      const opts = shuffle([it, ...pool.slice(0, L === 1 ? 1 : L === 4 ? 3 : 2)]);
+      return {
+        name: n[2], html: `<div class="bigpic">${n[3]}</div>`, opts: opts.map(x => x[1]), ok: opts.indexOf(it),
+        ask: () => say(`${n[2]}是哪一個國家的${n[4]}？`),
+        right: (st) => { st.querySelectorAll('.bigpic').forEach(e => e.remove()); st.insertAdjacentHTML('afterbegin', nationCard(it)); sayName(it[0], it[2], nationSay(it, L)); },
+        wait: L >= 3 ? 7600 : 6200,
       };
     }, again),
     fly: (stage, tray, again) => {
@@ -3753,7 +3807,7 @@ body:has(#bed:not([hidden])) { background: #12161F; }
         const seen = new Set();
         scene.querySelectorAll('.wcard').forEach(b => b.addEventListener('click', () => {
           const x = set[+b.dataset.i]; seen.add(x); b.classList.add('seen'); ding(700 + seen.size * 80);
-          sayName(x[0], x[2], [x[0], x[3]]);
+          sayName(x[0], x[2], x[4] === 'c' ? nationSay(x, L) : [x[0], x[3]]);
           if (seen.size === set.length) { const go = scene.querySelector('.wgo'); go.classList.add('hint-me'); }
         }));
         scene.querySelector('.wgo').addEventListener('click', () => {
